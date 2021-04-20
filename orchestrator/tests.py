@@ -26,8 +26,7 @@ class SpectrumFlow(TestCase):
 
         print()
 
-        print("Running Batched Tasks")
-        spectrum_flow.run_batched_tasks_v2()
+        spectrum_flow.run_batched_tasks_v3()
 
         assert False
 
