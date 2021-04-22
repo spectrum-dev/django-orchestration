@@ -2,17 +2,12 @@ import json
 from django.shortcuts import render
 
 from django.http import (
-    HttpResponse,
     JsonResponse
 )
 
 from orchestrator.models import BlockRegistry
 
 # Create your views here.
-def post_flow(request):
-    request_body = json.loads(request.body)
-
-    return JsonResponse({})
 
 def get_metadata(request, block_type, block_id):
     block_registry = BlockRegistry.objects.all().filter(block_type=block_type).filter(block_id=block_id)[0]
@@ -26,3 +21,10 @@ def get_metadata(request, block_type, block_id):
     }
     
     return JsonResponse(metadata)
+
+def post_flow(request):
+    request_body = json.loads(request.body)
+
+    return JsonResponse({})
+
+

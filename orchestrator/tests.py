@@ -1,3 +1,4 @@
+import json
 from django.test import TestCase, Client
 
 from orchestrator.services.flow.run import run
@@ -26,7 +27,11 @@ class SpectrumFlow(TestCase):
 
         print()
 
-        spectrum_flow.run_batched_tasks_v3()
+        outputs = spectrum_flow.run_batched_tasks_v3()
+
+        # TODO: Remove once done debugging
+        with open("flow-outputs.json", "w") as outfile:
+            json.dump(outputs, outfile)
 
         assert False
 

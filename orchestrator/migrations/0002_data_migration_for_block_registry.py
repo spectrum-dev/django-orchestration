@@ -29,6 +29,17 @@ def seed_blocks_into_registry(apps, schema_editor):
         validations={"required": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 2}], "allowed_blocks": [{"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"}]}
     ).save()
 
+    # {
+    #     "input": {
+    #         "eventType": "Intersect"
+    #     },
+    #     "output": {
+    #         "COMPUTATION_BLOCK-1-2":[],
+    #         "COMPUTATION_BLOCK-1-3":[]
+    #     },
+    #     "metadata":{"keys":["COMPUTATION_BLOCK-1-2", "COMPUTATION_BLOCK-1-3"]}
+    # }
+    
     BlockRegistry(
         block_type="STRATEGY_BLOCK",
         block_id=1,
@@ -36,6 +47,17 @@ def seed_blocks_into_registry(apps, schema_editor):
         inputs=[],
         validations={"required": [{"blockType": "DATA_BLOCK", "number": 1}, {"blockType": "SIGNAL_BLOCK", "number": 1}], "allowed_blocks": [{"blockId": "1", "blockType": "SIGNAL_BLOCK"}, {"blockId": "1", "blockType": "DATA_BLOCK"}]}
     ).save()
+
+    # {
+    #     "input": {
+    #         "strategyType": "Backtest"
+    #     },
+    #     "output": {
+    #         "DATA_BLOCK-1-1":[],
+    #         "SIGNAL_BLOCK-1-4":[]
+    #     },
+    #     "metadata":{"keys":["COMPUTATION_BLOCK-1-2", "COMPUTATION_BLOCK-1-3"]}
+    # }
 
 def reverse_blocks_into_registry(apps, schema_editor):
     BlockRegistry = apps.get_model('orchestrator', 'BlockRegistry')

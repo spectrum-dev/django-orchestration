@@ -159,21 +159,31 @@ class SpectrumFlow:
                 "output": output_payload,
             }
 
+            # TODO: Remove once done debugging
+            # with open(f"input-payload-{block_id_in_flow}.json", "w") as outfile:
+            #     json.dump(request_payload, outfile)
+
             r = requests.post(request_url, json=request_payload)
             
             output = {}
             if (r.status_code == 200):       
                 # Updates the Block Outputs overall JSON
-                block_type_id_key = f"{block_registry_data.block_type}-{block_registry_data.block_id}"
-                if block_type_id_key not in output:
+                block_type_id_key = f"{block_registry_data.block_type}-{block_registry_data.block_id}-{block_id_in_flow}" # TODO: Add the block_id_in_flow to the cache key in case 2 blocks of same type are used
+                print ("Block Type ID Key: ", block_type_id_key)
+                if block_type_id_key not in list(output.keys()):
                     output[block_type_id_key] = {}
 
                 try:
-                    output[block_type_id_key][block_id_in_flow] = r.json()
+                    response_json = r.json()
+                    # Standardized Return From Block with key "response"
+                    if "response" in response_json:
+                        output[block_type_id_key] = response_json["response"]
                 except json.decoder.JSONDecodeError as e:
                     print ("JSON Decode Error")
+                except Exception as e:
+                    print ("Generic Exception: ", e)
             else:
-                logging.error(f"A Response {r.status_code} when querying URL {request_url} with payload {request_payload}")
+                logging.error(f"A Response {r.status_code} when querying URL {request_url} with ...")
 
             return output
 
@@ -189,10 +199,10 @@ class SpectrumFlow:
             block_data = get_block_by_id(block_id_in_flow)
             block_registry_data = get_block_data_from_registry(block_data, block_id_in_flow)
 
-            cache_key = f"{block_registry_data.block_type}-{block_registry_data.block_id}"
+            cache_key = f"{block_registry_data.block_type}-{block_registry_data.block_id}-{block_id_in_flow}"
 
             if cache_key in list(output_cache.keys()):
-                return output_cache[cache_key]
+                return cache_key, output_cache[cache_key]
             else:
                 print ("Cache Key: ", cache_key)
                 print ("Output Cache: ", output_cache.keys())
@@ -236,17 +246,17 @@ class SpectrumFlow:
                     # Assembles all dependency data into the output_payload variable
                     output_payload = {}
                     for block_id in blocks_found:
-                        response = get_data_from_cache(block_id)
+                        cache_key, response = get_data_from_cache(block_id)
 
                         output_payload = {
                             **output_payload,
-                            **response
+                            cache_key: response
                         }
                     
                     response = make_run_request(task_to_be_run, block_registry_data, block_data["data"]["input"], output_payload)
 
-                    print ("Response: ", response)
-                    
+                    # print ("Response: ", response)
+
                     # Adds to a cache to ensure that requests don't need to be re-run
                     output_cache = {
                         **output_cache,

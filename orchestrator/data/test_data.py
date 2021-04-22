@@ -62,14 +62,12 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                     "blockId": 1
                 },
                 "input": {
-                  "equityName": "AAPL",
-                  "dataType": "intraday",
-                  "interval": "15min",
-                  "equityType": "Stock",
-                  "outputSize": "full",
-                  "startDate": "2021-01-01",
-                  "endDate": "2021-04-01",
-                  "region": "US"
+                    "equity_name": "AAPL",
+                    "data_type": "daily_adjusted",
+                    "interval": "1min",
+                    "outputsize": "full",
+                    "start_date": "",
+                    "end_date": "",
                 },
                 "output": {},
                 "helpers": {}
@@ -115,7 +113,8 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                     "blockId": 1
                 },
                 "input": {
-                    "indicatorName": "MA",
+                    "short_name": "MA",
+                    "indicator_name": "MA",
                     "lookback_period": "10",
                     "lookback_unit": "DATA_POINT"
                 },
@@ -163,7 +162,8 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                     "blockId": 1
                 },
                 "input": {
-                    "indicatorName": "MA",
+                    "short_name": "MA",
+                    "indicator_name": "MA",
                     "lookback_period": "12",
                     "lookback_unit": "DATA_POINT"
                 },
@@ -219,8 +219,8 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                     "blockId": 1
                 },
                 "input": {
-                    "eventType": "INTERSECT",
-                    "eventAction": "BUY"
+                    "event_type": "INTERSECT",
+                    "event_action": "BUY"
                 },
                 "output": {},
                 "helpers": {}
@@ -280,12 +280,13 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                     "blockId": 1
                 },
                 "input": {
-                    "commission": "0",
-                    "impact": "0",
-                    "startValue": "10000",
-                    "stopLoss": "0",
-                    "takeProfit": "0",
-                    "tradeAmount": "1000"
+                    "start_value": 10000.00,
+                    "commission": 4.95,
+                    "impact": 0.01,
+                    "stop_loss": 0.1,
+                    "take_profit": 0.1,
+                    "trade_amount_value": 10.00,
+                    "trade_amount_unit": "PERCENTAGE"
                 },
                 "output": {},
                 "helpers": {}
