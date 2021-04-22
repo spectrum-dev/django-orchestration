@@ -130,3 +130,6 @@ dmypy.json
 
 # Environment Variables
 .env
+
+# Misc Files
+flow-outputs.json
