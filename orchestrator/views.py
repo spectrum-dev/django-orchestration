@@ -7,6 +7,7 @@ from django.http import (
 
 from orchestrator.models import BlockRegistry
 
+from orchestrator.services.flow.run import run
 # Create your views here.
 
 def get_metadata(request, block_type, block_id):
@@ -24,7 +25,13 @@ def get_metadata(request, block_type, block_id):
 
 def post_flow(request):
     request_body = json.loads(request.body)
+    spectrum_flow = run(
+        request_body["nodeList"],
+        request_body["edgeList"]
+    )
 
-    return JsonResponse({})
+    response = spectrum_flow.run_batched_tasks_v3()
+
+    return JsonResponse(response)
 
 
