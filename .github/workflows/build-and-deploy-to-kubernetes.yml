@@ -3,11 +3,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'config/**'
-      - 'src/**'
-      - 'Dockerfile'
-      - '.github/workflows/**'
 jobs:
   apply-update-to-kubernetes:
     name: Deploy Build to Kubernetes
