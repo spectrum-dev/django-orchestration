@@ -130,6 +130,10 @@ dmypy.json
 
 # Environment Variables
 .env
+*/.env
 
 # Misc Files
 flow-outputs.json
+
+# Kubernetes
+*/secrets.yml
