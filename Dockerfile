@@ -12,6 +12,14 @@ ENV PYTHONUNBUFFERED 1
 # set work directory
 WORKDIR /usr/src/app
 
+# Install GCC
+RUN apt-get update && \
+    apt-get -y install netcat && \
+    apt-get -y install tzdata && \
+    apt-get -y install build-essential && \
+    apt-get -y install wget && \
+    apt-get clean
+    
 # install dependencies 
 RUN pip install --upgrade pip
 COPY ./requirements.txt .
