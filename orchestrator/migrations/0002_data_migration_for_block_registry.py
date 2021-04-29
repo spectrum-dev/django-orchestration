@@ -9,55 +9,52 @@ def seed_blocks_into_registry(apps, schema_editor):
         block_type="DATA_BLOCK",
         block_id=1,
         block_name="Raw Data",
-        inputs=[{"fieldData": {"base": "/equityTypes", "method": "GET"}, "fieldName": "Equity Type", "fieldType": "dropdown", "fieldVariableName": "equityType"}, {"fieldData": {"base": "/regions", "method": "GET"}, "fieldName": "Region", "fieldType": "dropdown", "fieldVariableName": "region"}, {"fieldData": {"base": "/equityNames", "method": "GET"}, "fieldName": "Equity Name", "fieldType": "dropdown", "fieldVariableName": "equityName"}, {"fieldData": {"base": "/dataTypes", "method": "GET"}, "fieldName": "Data Type", "fieldType": "dropdown", "fieldVariableName": "dataType"}, {"fieldData": {"base": "/intervals", "method": "GET"}, "fieldName": "Interval", "fieldType": "dropdown", "fieldVariableName": "interval"}, {"fieldData": {"base": "/outputSizes", "method": "GET"}, "fieldName": "Output Size", "fieldType": "dropdown", "fieldVariableName": "outputSize"}, {"fieldName": "Start Date", "fieldType": "input", "fieldVariableName": "startDate"}, {"fieldName": "End Date", "fieldType": "input", "fieldVariableName": "endDate"}],
-        validations={"required": [], "allowed_blocks": []}
+        inputs=[
+            {"fieldData": {"base": "/equityName", "method": "GET"}, "fieldName": "Equity Name", "fieldType": "dropdown", "fieldVariableName": "equity_name"}, # TODO: Change fieldType from dropdown to search
+            {"fieldData": {"base": "/dataType", "method": "GET"}, "fieldName": "Data Type", "fieldType": "dropdown", "fieldVariableName": "data_type"},
+            {"fieldData": {"base": "/interval", "method": "GET"}, "fieldName": "Interval", "fieldType": "dropdown", "fieldVariableName": "interval"},
+            {"fieldData": {"base": "/outputSize", "method": "GET"}, "fieldName": "Output Size", "fieldType": "dropdown", "fieldVariableName": "outputsize"},
+            {"fieldName": "Start Date", "fieldType": "input", "fieldVariableName": "start_date"},
+            {"fieldName": "End Date", "fieldType": "input", "fieldVariableName": "end_date"},
+        ],
+        validations={"input": {"required": [], "allowed_blocks": []}, "output": [{"blockType": "DATA_BLOCK", "number": 1}]}
     ).save()
 
     BlockRegistry(
         block_type="COMPUTATIONAL_BLOCK",
         block_id=1,
         block_name="Technical Analysis",
-        inputs=[{"fieldData": {"base": "/indicatorNames", "method": "GET", "onChange": "indicatorFields?indicatorName="}, "fieldName": "Indicator Name", "fieldType": "dropdown", "fieldVariableName": "indicatorName"}],
-        validations={"required": [{"blockType": "DATA_BLOCK", "number": 1}], "allowed_blocks": [{"blockId": "1", "blockType": "DATA_BLOCK"}]}
+        inputs=[
+            {"fieldData": {"base": "/indicator", "method": "GET", "onChange": "indicatorField?indicatorName="}, "fieldName": "Indicator Name", "fieldType": "dropdown", "fieldVariableName": "indicator_name"},
+        ],
+        validations={"input": {"required": [{"blockType": "DATA_BLOCK", "number": 1}], "allowed_blocks": [{"blockId": "1", "blockType": "DATA_BLOCK"}]}, "output": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 1}]}
     ).save()
 
     BlockRegistry(
         block_type="SIGNAL_BLOCK",
         block_id=1,
         block_name="Event",
-        inputs=[],
-        validations={"required": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 2}], "allowed_blocks": [{"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"}]}
+        inputs=[
+            {"fieldData": {"base": "/eventType", "method": "GET"}, "fieldName": "Event Type", "fieldType": "dropdown", "fieldVariableName": "event_type"},
+            {"fieldData": {"base": "/eventAction", "method": "GET"}, "fieldName": "Event Action", "fieldType": "dropdown", "fieldVariableName": "event_action"},
+        ],
+        validations={"input": {"required": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 2}], "allowed_blocks": [{"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"}]}, "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}]}
     ).save()
-
-    # {
-    #     "input": {
-    #         "eventType": "Intersect"
-    #     },
-    #     "output": {
-    #         "COMPUTATION_BLOCK-1-2":[],
-    #         "COMPUTATION_BLOCK-1-3":[]
-    #     },
-    #     "metadata":{"keys":["COMPUTATION_BLOCK-1-2", "COMPUTATION_BLOCK-1-3"]}
-    # }
     
     BlockRegistry(
         block_type="STRATEGY_BLOCK",
         block_id=1,
         block_name="Backtest",
-        inputs=[],
-        validations={"required": [{"blockType": "DATA_BLOCK", "number": 1}, {"blockType": "SIGNAL_BLOCK", "number": 1}], "allowed_blocks": [{"blockId": "1", "blockType": "SIGNAL_BLOCK"}, {"blockId": "1", "blockType": "DATA_BLOCK"}]}
+        inputs=[
+            {"fieldName": "Commission", "fieldVariableName": "commission", "fieldType": "input"},
+            {"fieldName": "Impact", "fieldVariableName": "impact", "fieldType": "input"},
+            {"fieldName": "Start Value", "fieldVariableName": "start_value", "fieldType": "input"},
+            {"fieldName": "Stop Loss", "fieldVariableName": "stop_loss", "fieldType": "input"},
+            {"fieldName": "Take Profit", "fieldVariableName": "take_profit", "fieldType": "input"},
+            {"fieldName": "Trade Amount", "fieldVariableName": "trade_amount", "fieldType": "input"},
+        ],
+        validations={"input": {"required": [{"blockType": "DATA_BLOCK", "number": 1}, {"blockType": "SIGNAL_BLOCK", "number": 1}], "allowed_blocks": [{"blockId": "1", "blockType": "SIGNAL_BLOCK"}, {"blockId": "1", "blockType": "DATA_BLOCK"}]}, "output": [{"blockType": "STRATEGY_BLOCK", "number": 1}]}
     ).save()
-
-    # {
-    #     "input": {
-    #         "strategyType": "Backtest"
-    #     },
-    #     "output": {
-    #         "DATA_BLOCK-1-1":[],
-    #         "SIGNAL_BLOCK-1-4":[]
-    #     },
-    #     "metadata":{"keys":["COMPUTATION_BLOCK-1-2", "COMPUTATION_BLOCK-1-3"]}
-    # }
 
 def reverse_blocks_into_registry(apps, schema_editor):
     BlockRegistry = apps.get_model('orchestrator', 'BlockRegistry')
