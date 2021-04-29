@@ -51,7 +51,7 @@ def seed_blocks_into_registry(apps, schema_editor):
             {"fieldName": "Start Value", "fieldVariableName": "start_value", "fieldType": "input"},
             {"fieldName": "Stop Loss", "fieldVariableName": "stop_loss", "fieldType": "input"},
             {"fieldName": "Take Profit", "fieldVariableName": "take_profit", "fieldType": "input"},
-            {"fieldName": "Trade Amount", "fieldVariableName": "trade_amount", "fieldType": "input"},
+            {"fieldName": "Trade Amount", "fieldVariableName": "trade_amount_value", "fieldType": "input"},
         ],
         validations={"input": {"required": [{"blockType": "DATA_BLOCK", "number": 1}, {"blockType": "SIGNAL_BLOCK", "number": 1}], "allowed_blocks": [{"blockId": "1", "blockType": "SIGNAL_BLOCK"}, {"blockId": "1", "blockType": "DATA_BLOCK"}]}, "output": [{"blockType": "STRATEGY_BLOCK", "number": 1}]}
     ).save()
