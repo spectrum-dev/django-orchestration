@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('metadata/<block_type>/<block_id>', orchestrator.views.get_metadata),
-    path('run', orchestrator.views.post_flow)
+    path('run', orchestrator.views.post_flow),
+    path('rest-auth/google/', orchestrator.views.GoogleLogin.as_view(), name='google_login')
 ]
