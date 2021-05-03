@@ -235,11 +235,11 @@ class SpectrumFlow:
                     # Contains list of Block ID's from the flow that are dependencies 
                     # for running the block associated with the `task_to_be_run`
                     blocks_found = []
-                    for required_block in block_registry_data.validations["required"]:
+                    for required_block in block_registry_data.validations["input"]["required"]:
                         # Visited Set
                         visited = set()
                         
-                        dfs(visited, task_to_be_run, block_registry_data.validations["allowed_blocks"], required_block, blocks_found)
+                        dfs(visited, task_to_be_run, block_registry_data.validations["input"]["allowed_blocks"], required_block, blocks_found)
 
                     print (f"Task {task_to_be_run} - {blocks_found}")
 

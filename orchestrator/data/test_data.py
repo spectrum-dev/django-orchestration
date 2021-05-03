@@ -331,3 +331,89 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
         }
     ]
 }
+
+SINGLE_RAW_DATA_BLOCK_FLOW = {
+  "nodeList": [
+    {
+      "id": "1",
+      "type": "blockGenerator",
+      "position": {
+        "x": 540,
+        "y": 140
+      },
+      "data": {
+        "metadata": {
+          "header": "Raw Data",
+          "inputHandles": [],
+          "outputHandles": [
+            {
+              "number": 1,
+              "blockType": "DATA_BLOCK"
+            }
+          ],
+          "dataInputs": [
+            {
+              "fieldData": {
+                "base": "/equityName",
+                "method": "GET"
+              },
+              "fieldName": "Equity Name",
+              "fieldType": "dropdown",
+              "fieldVariableName": "equity_name"
+            },
+            {
+              "fieldData": {
+                "base": "/dataType",
+                "method": "GET"
+              },
+              "fieldName": "Data Type",
+              "fieldType": "dropdown",
+              "fieldVariableName": "data_type"
+            },
+            {
+              "fieldData": {
+                "base": "/interval",
+                "method": "GET"
+              },
+              "fieldName": "Interval",
+              "fieldType": "dropdown",
+              "fieldVariableName": "interval"
+            },
+            {
+              "fieldData": {
+                "base": "/outputSize",
+                "method": "GET"
+              },
+              "fieldName": "Output Size",
+              "fieldType": "dropdown",
+              "fieldVariableName": "outputsize"
+            },
+            {
+              "fieldName": "Start Date",
+              "fieldType": "input",
+              "fieldVariableName": "start_date"
+            },
+            {
+              "fieldName": "End Date",
+              "fieldType": "input",
+              "fieldVariableName": "end_date"
+            }
+          ],
+          "blockType": "DATA_BLOCK",
+          "blockId": 1
+        },
+        "input": {
+          "equity_name": "AAPL",
+          "data_type": "full",
+          "interval": "1min",
+          "outputsize": "full",
+          "start_date": "2020-01-01",
+          "end_date": "2021-01-0"
+        },
+        "output": {},
+        "helpers": {}
+      }
+    }
+  ],
+  "edgeList": []
+}
