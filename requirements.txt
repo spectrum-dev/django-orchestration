@@ -8,6 +8,7 @@ django-environ==0.4.5
 django-excel-base==1.0.4
 django-excel-response2==3.0.2
 django-six==1.0.4
+djangorestframework==3.12.4
 idna==2.10
 psycopg2-binary==2.8.6
 pytz==2021.1
