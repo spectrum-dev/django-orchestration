@@ -3,6 +3,7 @@ certifi==2020.12.5
 chardet==4.0.0
 Django==3.2
 django-admin==2.0.1
+django-cors-headers==3.7.0
 django-environ==0.4.5
 django-excel-base==1.0.4
 django-excel-response2==3.0.2
