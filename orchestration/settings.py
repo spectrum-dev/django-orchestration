@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     'rest_auth',
 
     #for social login
-    'django.contrib.sites',
     'allauth',
     'allauth.account',
     'rest_auth.registration',

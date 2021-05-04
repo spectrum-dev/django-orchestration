@@ -7,8 +7,6 @@ from django.http import (
     JsonResponse
 )
 
-from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-from rest_auth.registration.views import SocialLoginView
 from orchestration.settings import env
 
 from orchestrator.models import BlockRegistry
@@ -70,6 +68,3 @@ def post_flow(request):
     response = spectrum_flow.run_batched_tasks_v3()
 
     return JsonResponse(response)
-
-class GoogleLogin(SocialLoginView):
-    adapter_class = GoogleOAuth2Adapter
