@@ -21,6 +21,7 @@ import orchestrator.views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    path('orchestration/rest-auth/google/', orchestrator.views.GoogleLogin.as_view(), name='google_login')
     path('orchestration/metadata', orchestrator.views.get_all_metadata),
     path('orchestration/<block_type>/<block_id>/metadata', orchestrator.views.get_metadata),
     path('orchestration/<block_type>/<block_id>/<action_name>', orchestrator.views.proxy_block_action),
