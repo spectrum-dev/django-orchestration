@@ -18,17 +18,17 @@ from orchestrator.services.flow.run import run
 def get_all_metadata(request):
     all_blocks_from_registry = BlockRegistry.objects.all()
 
-    response = []
+    response = {}
     for block_registry in all_blocks_from_registry:
-        metadata = {
-            "blockName": block_registry.block_name,
-            "blockType": block_registry.block_type,
-            "blockId": block_registry.block_id,
-            "inputs": block_registry.inputs,
-            "validation": block_registry.validations
+        response = {
+            **response,
+            block_registry.block_type: {
+                block_registry.block_id: {
+                    "blockName": block_registry.block_name,
+                    "blockMetadata": f"/orchestration/${block_registry.block_type}/${block_registry.block_id}/"
+                }
+            }
         }
-
-        response.append(metadata)
 
     return JsonResponse({"response": response})
 
@@ -57,6 +57,15 @@ def proxy_block_action(request, block_type, block_id, action_name):
         response = requests.get(f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}")
 
     return JsonResponse(response.json())
+
+def validate_flow(request):
+    request_body = json.loads(request.body)
+    spectrum_flow = run(
+        request_body["nodeList"],
+        request_body["edgeList"]
+    )
+
+    pass
 
 def post_flow(request):
     request_body = json.loads(request.body)

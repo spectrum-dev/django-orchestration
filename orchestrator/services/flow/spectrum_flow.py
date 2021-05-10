@@ -82,7 +82,7 @@ class SpectrumFlow:
             batches.append({name for name in nodes_with_no_dependencies})
         
         return batches
-    
+
     def run_batched_tasks_v3(self):
         def get_block_by_id(id):
             """

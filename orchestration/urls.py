@@ -27,6 +27,7 @@ urlpatterns = [
     path('orchestration/metadata', orchestrator.views.get_all_metadata),
     path('orchestration/<block_type>/<block_id>/metadata', orchestrator.views.get_metadata),
     path('orchestration/<block_type>/<block_id>/<action_name>', orchestrator.views.proxy_block_action),
+    path('orchestration/validate', orchestrator.views.validate_flow),
     path('orchestration/run', orchestrator.views.post_flow),
     path('strategy/strategyId', strategy.views.get_strategy_id),
     path('strategy/<strategy_id>/commitId', strategy.views.get_commit_id),
