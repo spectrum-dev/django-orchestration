@@ -1,118 +1,29 @@
 import json
 from django.test import TestCase, Client
 
-from orchestrator.services.flow.run import run
-from orchestrator.data.test_data import FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW, SINGLE_RAW_DATA_BLOCK_FLOW
+from orchestrator.services.flow.spectrum_flow_v2 import DependencyGraph, SpectrumFlow
 
-# Create your tests here.
-class SpectrumFlow(TestCase):
-    # def test_full_single_flow(self):
-    #     spectrum_flow = run(
-    #         FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW["nodeList"],
-    #         FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW["edgeList"]
-    #     )
-    #
-    #     print ("Adjacency List")
-    #     print (spectrum_flow.graph.adjacency_list)
-    #
-    #     print()
-    #
-    #     print ("Dependency Graph")
-    #     print (spectrum_flow.dependency_graph.adjacency_list)
-    #
-    #     print()
-    #
-    #     print ("Batches")
-    #     print (spectrum_flow.batched_tasks)
-    #
-    #     print()
-    #
-    #     outputs = spectrum_flow.run_batched_tasks_v3()
-    #
-    #     # TODO: Remove once done debugging
-    #     with open("flow-outputs.json", "w") as outfile:
-    #         json.dump(outputs, outfile)
-    #
-    #     assert True
-    #
-    # def test_single_data_block_flow(self):
-    #     spectrum_flow = run(
-    #         SINGLE_RAW_DATA_BLOCK_FLOW["nodeList"],
-    #         SINGLE_RAW_DATA_BLOCK_FLOW["edgeList"]
-    #     )
-    #
-    #     print("Adjacency List")
-    #     print(spectrum_flow.graph.adjacency_list)
-    #
-    #     print()
-    #
-    #     print("Dependency Graph")
-    #     print(spectrum_flow.dependency_graph.adjacency_list)
-    #
-    #     print()
-    #
-    #     print("Batches")
-    #     print(spectrum_flow.batched_tasks)
-    #
-    #     print()
-    #
-    #     outputs = spectrum_flow.run_batched_tasks_v3()
-    #
-    #     # TODO: Remove once done debugging
-    #     with open("flow-outputs.json", "w") as outfile:
-    #         json.dump(outputs, outfile)
-    #
-    #     assert True
+# Test Data
+from orchestrator.data.test_data_validation import SINGLE_FULL_FLOW
 
-    def test_validate_single_flow(self):
-        spectrum_flow = run(
-            FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW["nodeList"],
-            FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW["edgeList"]
-        )
 
-        print("Adjacency List")
-        print(spectrum_flow.graph.adjacency_list)
+class DependencyGraphTest(TestCase):
+    def test_full_single_flow(self):
+        graph = DependencyGraph(SINGLE_FULL_FLOW["nodeList"], SINGLE_FULL_FLOW["edgeList"])
 
-        print()
+        assert (graph.graph.adjacency_list == {'1': {'2', '3'}, '2': {'4'}, '3': {'4'}, '4': {'5'}, '5': set()})
+        assert (graph.dependency_graph.adjacency_list == {'1': set(), '2': {'1'}, '3': {'1'}, '4': {'2', '3'},
+                                                          '5': {'4'}})
+        assert (graph.batched_tasks == [{'1'}, {'2', '3'}, {'4'}, {'5'}])
 
-        print("Dependency Graph")
-        print(spectrum_flow.dependency_graph.adjacency_list)
 
-        print()
+class SpectrumFlowValidateTest(TestCase):
+    def test_full_single_flow(self):
+        flow = SpectrumFlow(SINGLE_FULL_FLOW["nodeList"], SINGLE_FULL_FLOW["edgeList"])
 
-        print("Batches")
-        print(spectrum_flow.batched_tasks)
+        assert flow.is_valid is True
 
-        print()
 
-        is_valid = spectrum_flow.validate_strategy()
-
-        assert is_valid is True
-
-    def test_validate_single_data_block_flow(self):
-        spectrum_flow = run(
-            FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW["nodeList"],
-            FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW["edgeList"]
-        )
-
-        print("Adjacency List")
-        print(spectrum_flow.graph.adjacency_list)
-
-        print()
-
-        print("Dependency Graph")
-        print(spectrum_flow.dependency_graph.adjacency_list)
-
-        print()
-
-        print("Batches")
-        print(spectrum_flow.batched_tasks)
-
-        print()
-
-        is_valid = spectrum_flow.validate_strategy()
-
-        assert is_valid is True
-
-    def test_run_batched_tasks(self):
+class SpectrumFlowRunTest(TestCase):
+    def test_full_single_flow(self):
         pass

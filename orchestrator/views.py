@@ -52,8 +52,10 @@ def proxy_block_action(request, block_type, block_id, action_name):
     potential_url_param = request.GET.get("indicatorName", None)
 
     if potential_url_param:
+        print ("In potential url param")
         response = requests.get(f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}?indicatorName={potential_url_param}")
     else:
+        print ("Request URL: ", f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}")
         response = requests.get(f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}")
 
     return JsonResponse(response.json())
@@ -64,8 +66,11 @@ def validate_flow(request):
         request_body["nodeList"],
         request_body["edgeList"]
     )
+    is_valid = spectrum_flow.validate_strategy()
 
-    pass
+    return JsonResponse({
+        "valid": is_valid
+    })
 
 def post_flow(request):
     request_body = json.loads(request.body)
