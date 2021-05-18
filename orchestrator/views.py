@@ -12,6 +12,10 @@ from orchestration.settings import env
 from orchestrator.models import BlockRegistry
 
 from orchestrator.services.flow.run import run
+
+from orchestrator.services.flow.spectrum_flow_v2 import SpectrumFlow
+
+
 # Create your views here.
 
 
@@ -43,7 +47,7 @@ def get_metadata(request, block_type, block_id):
         "inputs": block_registry.inputs,
         "validation": block_registry.validations
     }
-    
+
     return JsonResponse(metadata)
 
 
@@ -52,33 +56,31 @@ def proxy_block_action(request, block_type, block_id, action_name):
     potential_url_param = request.GET.get("indicatorName", None)
 
     if potential_url_param:
-        print ("In potential url param")
-        response = requests.get(f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}?indicatorName={potential_url_param}")
+        print("In potential url param")
+        response = requests.get(
+            f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}?indicatorName={potential_url_param}")
     else:
-        print ("Request URL: ", f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}")
+        print("Request URL: ", f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}")
         response = requests.get(f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}")
 
     return JsonResponse(response.json())
 
+
 def validate_flow(request):
     request_body = json.loads(request.body)
-    spectrum_flow = run(
-        request_body["nodeList"],
-        request_body["edgeList"]
-    )
-    is_valid = spectrum_flow.validate_strategy()
+
+    flow = SpectrumFlow(request_body["nodeList"], request_body["edgeList"])
 
     return JsonResponse({
-        "valid": is_valid
+        "valid": flow.is_valid
     })
+
 
 def post_flow(request):
     request_body = json.loads(request.body)
-    spectrum_flow = run(
-        request_body["nodeList"],
-        request_body["edgeList"]
-    )
 
-    response = spectrum_flow.run_batched_tasks_v3()
+    flow = SpectrumFlow(request_body["nodeList"], request_body["edgeList"])
 
-    return JsonResponse(response)
+    response = flow.run(mode="RUN")
+
+    return JsonResponse({"response": response})
