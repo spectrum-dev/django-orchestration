@@ -137,3 +137,5 @@ flow-outputs.json
 
 # Kubernetes
 */secrets.yml
+
+*/postgres-data
