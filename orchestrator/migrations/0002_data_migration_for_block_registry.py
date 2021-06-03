@@ -10,7 +10,7 @@ def seed_blocks_into_registry(apps, schema_editor):
         block_id=1,
         block_name="Raw Data",
         inputs=[
-            {"fieldData": {"base": "/equityName", "method": "GET"}, "fieldName": "Equity Name", "fieldType": "dropdown", "fieldVariableName": "equity_name"}, # TODO: Change fieldType from dropdown to search
+            {"fieldData": {"base": "/equityName?name=", "method": "GET", }, "fieldName": "Equity Name", "fieldType": "search", "fieldVariableName": "equity_name"}, # TODO: Change fieldType from dropdown to search
             {"fieldData": {"base": "/dataType", "method": "GET"}, "fieldName": "Data Type", "fieldType": "dropdown", "fieldVariableName": "data_type"},
             {"fieldData": {"base": "/interval", "method": "GET"}, "fieldName": "Interval", "fieldType": "dropdown", "fieldVariableName": "interval"},
             {"fieldData": {"base": "/outputSize", "method": "GET"}, "fieldName": "Output Size", "fieldType": "dropdown", "fieldVariableName": "outputsize"},

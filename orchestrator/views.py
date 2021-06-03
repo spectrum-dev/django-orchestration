@@ -54,11 +54,14 @@ def get_metadata(request, block_type, block_id):
 def proxy_block_action(request, block_type, block_id, action_name):
     # TODO: Make this more generic for all URL Parameters
     potential_url_param = request.GET.get("indicatorName", None)
+    potential_url_param_two = request.GET.get("name", None)
 
     if potential_url_param:
-        print("In potential url param")
         response = requests.get(
             f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}?indicatorName={potential_url_param}")
+    elif potential_url_param_two:
+        response = requests.get(
+            f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}?name={potential_url_param_two}")
     else:
         print("Request URL: ", f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}")
         response = requests.get(f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}")
