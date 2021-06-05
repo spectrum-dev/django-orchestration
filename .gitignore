@@ -139,5 +139,10 @@ flow-outputs.json
 # Kubernetes
 */secrets.yml
 
+# Postgres Data
 */postgres-data
 postgres-data
+
+# PyCharm Files
+.idea/
+*/.idea
