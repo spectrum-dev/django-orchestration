@@ -1,8 +1,9 @@
 from django.db import models
 
+
 class BlockRegistry(models.Model):
     class Meta:
-        unique_together = (('block_type', 'block_id'),)
+        unique_together = (("block_type", "block_id"),)
 
     block_type = models.CharField(max_length=32)
     block_id = models.IntegerField()

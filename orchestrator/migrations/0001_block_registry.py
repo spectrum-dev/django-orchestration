@@ -7,22 +7,27 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='BlockRegistry',
+            name="BlockRegistry",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('block_type', models.CharField(max_length=32)),
-                ('block_id', models.IntegerField()),
-                ('block_name', models.CharField(max_length=128)),
-                ('inputs', models.JSONField()),
-                ('validations', models.JSONField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("block_type", models.CharField(max_length=32)),
+                ("block_id", models.IntegerField()),
+                ("block_name", models.CharField(max_length=128)),
+                ("inputs", models.JSONField()),
+                ("validations", models.JSONField()),
             ],
-            options={
-                'unique_together': {('block_type', 'block_id')},
-            },
+            options={"unique_together": {("block_type", "block_id")},},
         ),
     ]

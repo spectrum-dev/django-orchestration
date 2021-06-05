@@ -6,7 +6,7 @@ from django.db import models
 
 class Strategy(models.Model):
     class Meta:
-        unique_together = (('strategy_id', 'commit_id'))
+        unique_together = ("strategy_id", "commit_id")
 
     strategy_id = models.UUIDField(default=uuid.uuid4)
     commit_id = models.UUIDField(default=uuid.uuid4)

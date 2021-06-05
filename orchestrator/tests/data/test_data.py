@@ -4,10 +4,7 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
         {
             "id": "1",
             "type": "blockGenerator",
-            "position": {
-                "x": 580,
-                "y": 140
-            },
+            "position": {"x": 580, "y": 140},
             "data": {
                 "metadata": {
                     "header": "Raw Data",
@@ -16,7 +13,7 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                         {
                             "fieldName": "",
                             "fieldVariableName": "",
-                            "validConnections": []
+                            "validConnections": [],
                         }
                     ],
                     "dataInputs": [
@@ -26,8 +23,8 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                             "fieldType": "dropdown",
                             "fieldData": {
                                 "method": "GET",
-                                "base": "/dataBlock/1/equityType"
-                            }
+                                "base": "/dataBlock/1/equityType",
+                            },
                         },
                         {
                             "fieldName": "Region",
@@ -35,8 +32,8 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                             "fieldType": "dropdown",
                             "fieldData": {
                                 "method": "GET",
-                                "base": "/dataBlock/1/equityRegion"
-                            }
+                                "base": "/dataBlock/1/equityRegion",
+                            },
                         },
                         {
                             "fieldName": "Equity Name",
@@ -44,22 +41,22 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                             "fieldType": "search",
                             "fieldData": {
                                 "method": "GET",
-                                "base": "/dataBlock/1/searchTicker"
-                            }
+                                "base": "/dataBlock/1/searchTicker",
+                            },
                         },
                         {
                             "fieldName": "Start Date",
                             "fieldVariableName": "startDate",
-                            "fieldType": "input"
+                            "fieldType": "input",
                         },
                         {
                             "fieldName": "End Date",
                             "fieldVariableName": "endDate",
-                            "fieldType": "input"
-                        }
+                            "fieldType": "input",
+                        },
                     ],
                     "blockType": "DATA_BLOCK",
-                    "blockId": 1
+                    "blockId": 1,
                 },
                 "input": {
                     "equity_name": "AAPL",
@@ -70,16 +67,13 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                     "end_date": "",
                 },
                 "output": {},
-                "helpers": {}
-            }
+                "helpers": {},
+            },
         },
         {
             "id": "2",
             "type": "blockGenerator",
-            "position": {
-                "x": 660,
-                "y": 40
-            },
+            "position": {"x": 660, "y": 40},
             "data": {
                 "metadata": {
                     "header": "Technical Analysis",
@@ -87,14 +81,14 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                         {
                             "fieldName": "",
                             "fieldVariableName": "",
-                            "validConnections": []
+                            "validConnections": [],
                         }
                     ],
                     "outputHandles": [
                         {
                             "fieldName": "",
                             "fieldVariableName": "",
-                            "validConnections": []
+                            "validConnections": [],
                         }
                     ],
                     "dataInputs": [
@@ -105,30 +99,27 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                             "fieldData": {
                                 "method": "GET",
                                 "base": "/computationBlock/1/indicatorNames",
-                                "onChange": "/computationBlock/1/indicatorFields?indicatorName="
-                            }
+                                "onChange": "/computationBlock/1/indicatorFields?indicatorName=",
+                            },
                         }
                     ],
                     "blockType": "COMPUTATIONAL_BLOCK",
-                    "blockId": 1
+                    "blockId": 1,
                 },
                 "input": {
                     "short_name": "MA",
                     "indicator_name": "MA",
                     "lookback_period": "10",
-                    "lookback_unit": "DATA_POINT"
+                    "lookback_unit": "DATA_POINT",
                 },
                 "output": {},
-                "helpers": {}
-            }
+                "helpers": {},
+            },
         },
         {
             "id": "3",
             "type": "blockGenerator",
-            "position": {
-                "x": 900,
-                "y": 380
-            },
+            "position": {"x": 900, "y": 380},
             "data": {
                 "metadata": {
                     "header": "Technical Analysis",
@@ -136,14 +127,14 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                         {
                             "fieldName": "",
                             "fieldVariableName": "",
-                            "validConnections": []
+                            "validConnections": [],
                         }
                     ],
                     "outputHandles": [
                         {
                             "fieldName": "",
                             "fieldVariableName": "",
-                            "validConnections": []
+                            "validConnections": [],
                         }
                     ],
                     "dataInputs": [
@@ -154,30 +145,27 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                             "fieldData": {
                                 "method": "GET",
                                 "base": "/computationBlock/1/indicatorNames",
-                                "onChange": "/computationBlock/1/indicatorFields?indicatorName="
-                            }
+                                "onChange": "/computationBlock/1/indicatorFields?indicatorName=",
+                            },
                         }
                     ],
                     "blockType": "COMPUTATIONAL_BLOCK",
-                    "blockId": 1
+                    "blockId": 1,
                 },
                 "input": {
                     "short_name": "MA",
                     "indicator_name": "MA",
                     "lookback_period": "12",
-                    "lookback_unit": "DATA_POINT"
+                    "lookback_unit": "DATA_POINT",
                 },
                 "output": {},
-                "helpers": {}
-            }
+                "helpers": {},
+            },
         },
         {
             "id": "4",
             "type": "blockGenerator",
-            "position": {
-                "x": 1260,
-                "y": 220
-            },
+            "position": {"x": 1260, "y": 220},
             "data": {
                 "metadata": {
                     "header": "Event Block",
@@ -185,14 +173,14 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                         {
                             "fieldName": "",
                             "fieldVariableName": "",
-                            "validConnections": []
+                            "validConnections": [],
                         }
                     ],
                     "outputHandles": [
                         {
                             "fieldName": "",
                             "fieldVariableName": "",
-                            "validConnections": []
+                            "validConnections": [],
                         }
                     ],
                     "dataInputs": [
@@ -202,8 +190,8 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                             "fieldType": "dropdown",
                             "fieldData": {
                                 "method": "GET",
-                                "base": "/signalBlock/1/eventTypes"
-                            }
+                                "base": "/signalBlock/1/eventTypes",
+                            },
                         },
                         {
                             "fieldName": "Event Action",
@@ -211,28 +199,22 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                             "fieldType": "dropdown",
                             "fieldData": {
                                 "method": "GET",
-                                "base": "/signalBlock/1/eventActions"
-                            }
-                        }
+                                "base": "/signalBlock/1/eventActions",
+                            },
+                        },
                     ],
                     "blockType": "SIGNAL_BLOCK",
-                    "blockId": 1
+                    "blockId": 1,
                 },
-                "input": {
-                    "event_type": "INTERSECT",
-                    "event_action": "BUY"
-                },
+                "input": {"event_type": "INTERSECT", "event_action": "BUY"},
                 "output": {},
-                "helpers": {}
-            }
+                "helpers": {},
+            },
         },
         {
             "id": "5",
             "type": "blockGenerator",
-            "position": {
-                "x": 1640,
-                "y": 120
-            },
+            "position": {"x": 1640, "y": 120},
             "data": {
                 "metadata": {
                     "header": "Backtest",
@@ -240,7 +222,7 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                         {
                             "fieldName": "",
                             "fieldVariableName": "",
-                            "validConnections": []
+                            "validConnections": [],
                         }
                     ],
                     "outputHandles": [],
@@ -248,36 +230,36 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                         {
                             "fieldName": "Commission",
                             "fieldVariableName": "commission",
-                            "fieldType": "input"
+                            "fieldType": "input",
                         },
                         {
                             "fieldName": "Impact",
                             "fieldVariableName": "impact",
-                            "fieldType": "input"
+                            "fieldType": "input",
                         },
                         {
                             "fieldName": "Start Value",
                             "fieldVariableName": "startValue",
-                            "fieldType": "input"
+                            "fieldType": "input",
                         },
                         {
                             "fieldName": "Stop Loss",
                             "fieldVariableName": "stopLoss",
-                            "fieldType": "input"
+                            "fieldType": "input",
                         },
                         {
                             "fieldName": "Take Profit",
                             "fieldVariableName": "takeProfit",
-                            "fieldType": "input"
+                            "fieldType": "input",
                         },
                         {
                             "fieldName": "Trade Amount",
                             "fieldVariableName": "tradeAmount",
-                            "fieldType": "input"
-                        }
+                            "fieldType": "input",
+                        },
                     ],
                     "blockType": "STRATEGY_BLOCK",
-                    "blockId": 1
+                    "blockId": 1,
                 },
                 "input": {
                     "start_value": 10000.00,
@@ -286,12 +268,12 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
                     "stop_loss": 0.1,
                     "take_profit": 0.1,
                     "trade_amount_value": 10.00,
-                    "trade_amount_unit": "PERCENTAGE"
+                    "trade_amount_unit": "PERCENTAGE",
                 },
                 "output": {},
-                "helpers": {}
-            }
-        }
+                "helpers": {},
+            },
+        },
     ],
     "edgeList": [
         {
@@ -299,121 +281,101 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
             "sourceHandle": "undefined_input_0",
             "target": "2",
             "targetHandle": "undefined_input_0",
-            "id": "reactflow__edge-1undefined_input_0-2undefined_input_0"
+            "id": "reactflow__edge-1undefined_input_0-2undefined_input_0",
         },
         {
             "source": "1",
             "sourceHandle": "undefined_input_0",
             "target": "3",
             "targetHandle": "undefined_input_0",
-            "id": "reactflow__edge-1undefined_input_0-3undefined_input_0"
+            "id": "reactflow__edge-1undefined_input_0-3undefined_input_0",
         },
         {
             "source": "2",
             "sourceHandle": "undefined_input_0",
             "target": "4",
             "targetHandle": "undefined_input_0",
-            "id": "reactflow__edge-2undefined_input_0-4undefined_input_0"
+            "id": "reactflow__edge-2undefined_input_0-4undefined_input_0",
         },
         {
             "source": "3",
             "sourceHandle": "undefined_input_0",
             "target": "4",
             "targetHandle": "undefined_input_0",
-            "id": "reactflow__edge-3undefined_input_0-4undefined_input_0"
+            "id": "reactflow__edge-3undefined_input_0-4undefined_input_0",
         },
         {
             "source": "4",
             "sourceHandle": "undefined_input_0",
             "target": "5",
             "targetHandle": "undefined_input_0",
-            "id": "reactflow__edge-4undefined_input_0-5undefined_input_0"
-        }
-    ]
+            "id": "reactflow__edge-4undefined_input_0-5undefined_input_0",
+        },
+    ],
 }
 
 SINGLE_RAW_DATA_BLOCK_FLOW = {
-  "nodeList": [
-    {
-      "id": "1",
-      "type": "blockGenerator",
-      "position": {
-        "x": 540,
-        "y": 140
-      },
-      "data": {
-        "metadata": {
-          "header": "Raw Data",
-          "inputHandles": [],
-          "outputHandles": [
-            {
-              "number": 1,
-              "blockType": "DATA_BLOCK"
-            }
-          ],
-          "dataInputs": [
-            {
-              "fieldData": {
-                "base": "/equityName",
-                "method": "GET"
-              },
-              "fieldName": "Equity Name",
-              "fieldType": "dropdown",
-              "fieldVariableName": "equity_name"
+    "nodeList": [
+        {
+            "id": "1",
+            "type": "blockGenerator",
+            "position": {"x": 540, "y": 140},
+            "data": {
+                "metadata": {
+                    "header": "Raw Data",
+                    "inputHandles": [],
+                    "outputHandles": [{"number": 1, "blockType": "DATA_BLOCK"}],
+                    "dataInputs": [
+                        {
+                            "fieldData": {"base": "/equityName", "method": "GET"},
+                            "fieldName": "Equity Name",
+                            "fieldType": "dropdown",
+                            "fieldVariableName": "equity_name",
+                        },
+                        {
+                            "fieldData": {"base": "/dataType", "method": "GET"},
+                            "fieldName": "Data Type",
+                            "fieldType": "dropdown",
+                            "fieldVariableName": "data_type",
+                        },
+                        {
+                            "fieldData": {"base": "/interval", "method": "GET"},
+                            "fieldName": "Interval",
+                            "fieldType": "dropdown",
+                            "fieldVariableName": "interval",
+                        },
+                        {
+                            "fieldData": {"base": "/outputSize", "method": "GET"},
+                            "fieldName": "Output Size",
+                            "fieldType": "dropdown",
+                            "fieldVariableName": "outputsize",
+                        },
+                        {
+                            "fieldName": "Start Date",
+                            "fieldType": "input",
+                            "fieldVariableName": "start_date",
+                        },
+                        {
+                            "fieldName": "End Date",
+                            "fieldType": "input",
+                            "fieldVariableName": "end_date",
+                        },
+                    ],
+                    "blockType": "DATA_BLOCK",
+                    "blockId": 1,
+                },
+                "input": {
+                    "equity_name": "AAPL",
+                    "data_type": "full",
+                    "interval": "1min",
+                    "outputsize": "full",
+                    "start_date": "2020-01-01",
+                    "end_date": "2021-01-0",
+                },
+                "output": {},
+                "helpers": {},
             },
-            {
-              "fieldData": {
-                "base": "/dataType",
-                "method": "GET"
-              },
-              "fieldName": "Data Type",
-              "fieldType": "dropdown",
-              "fieldVariableName": "data_type"
-            },
-            {
-              "fieldData": {
-                "base": "/interval",
-                "method": "GET"
-              },
-              "fieldName": "Interval",
-              "fieldType": "dropdown",
-              "fieldVariableName": "interval"
-            },
-            {
-              "fieldData": {
-                "base": "/outputSize",
-                "method": "GET"
-              },
-              "fieldName": "Output Size",
-              "fieldType": "dropdown",
-              "fieldVariableName": "outputsize"
-            },
-            {
-              "fieldName": "Start Date",
-              "fieldType": "input",
-              "fieldVariableName": "start_date"
-            },
-            {
-              "fieldName": "End Date",
-              "fieldType": "input",
-              "fieldVariableName": "end_date"
-            }
-          ],
-          "blockType": "DATA_BLOCK",
-          "blockId": 1
-        },
-        "input": {
-          "equity_name": "AAPL",
-          "data_type": "full",
-          "interval": "1min",
-          "outputsize": "full",
-          "start_date": "2020-01-01",
-          "end_date": "2021-01-0"
-        },
-        "output": {},
-        "helpers": {}
-      }
-    }
-  ],
-  "edgeList": []
+        }
+    ],
+    "edgeList": [],
 }

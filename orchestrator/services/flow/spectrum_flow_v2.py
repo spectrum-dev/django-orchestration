@@ -84,7 +84,9 @@ class DependencyGraph:
 
         while dependency_graph.adjacency_list:
             # Retrieves nodes with no dependencies
-            nodes_with_no_dependencies = {k for k, v in dependency_graph.adjacency_list.items() if not v}
+            nodes_with_no_dependencies = {
+                k for k, v in dependency_graph.adjacency_list.items() if not v
+            }
 
             if not nodes_with_no_dependencies:
                 raise ValueError("Circular Dependency Found")
@@ -122,21 +124,28 @@ class SpectrumFlow:
         try:
             return self.vertices[block_id]
         except KeyError:
-            raise Exception(f'The Block ID {block_id} could not be found')
+            raise Exception(f"The Block ID {block_id} could not be found")
 
     @staticmethod
     def _get_block_data_from_registry(block_type, block_id):
         try:
-            return BlockRegistry. \
-                objects. \
-                all(). \
-                filter(block_type=block_type). \
-                filter(block_id=block_id). \
-                first()
+            return (
+                BlockRegistry.objects.all()
+                .filter(block_type=block_type)
+                .filter(block_id=block_id)
+                .first()
+            )
         except Exception as e:
-            raise Exception(e);
+            raise Exception(e)
 
-    def _dfs(self, visited, block_id_in_flow, allowed_block_data, target_block_data, blocks_found):
+    def _dfs(
+        self,
+        visited,
+        block_id_in_flow,
+        allowed_block_data,
+        target_block_data,
+        blocks_found,
+    ):
         """
             Recursively iterates through directed adjancency list
 
@@ -152,10 +161,9 @@ class SpectrumFlow:
 
         if block_data["blockType"] == target_block_data["blockType"]:
             for allowed_block in allowed_block_data:
-                if (
-                        str(block_data["blockType"]) == str(allowed_block["blockType"])
-                        and str(block_data["blockId"]) == str(allowed_block["blockId"])
-                ):
+                if str(block_data["blockType"]) == str(
+                    allowed_block["blockType"]
+                ) and str(block_data["blockId"]) == str(allowed_block["blockId"]):
                     blocks_found.append(block_id_in_flow)
 
                     if len(blocks_found) == int(target_block_data["number"]):
@@ -165,9 +173,17 @@ class SpectrumFlow:
             visited.add(block_id_in_flow)
 
             for neighbor in self.dependency_graph[block_id_in_flow]:
-                self._dfs(visited, neighbor, allowed_block_data, target_block_data, blocks_found)
+                self._dfs(
+                    visited,
+                    neighbor,
+                    allowed_block_data,
+                    target_block_data,
+                    blocks_found,
+                )
 
-    def _make_run_request(self, block_id_in_flow, block_registry_data, input_payload, output_payload):
+    def _make_run_request(
+        self, block_id_in_flow, block_registry_data, input_payload, output_payload
+    ):
         """
             Hits the `/run` endpoint for each block to complete the request
 
@@ -183,13 +199,10 @@ class SpectrumFlow:
         # Input Transformation
         input_cleaned_payload = {}
         for k, v in input_payload.items():
-            if type(v) is dict and 'value' in v:
-                input_cleaned_payload[k] = v['value']
+            if type(v) is dict and "value" in v:
+                input_cleaned_payload[k] = v["value"]
 
-        request_payload = {
-            "input": input_cleaned_payload,
-            "output": output_payload
-        }
+        request_payload = {"input": input_cleaned_payload, "output": output_payload}
 
         r = requests.post(request_url, json=request_payload)
 
@@ -229,15 +242,18 @@ class SpectrumFlow:
                block_id: Block ID from Flow
             """
             block_data = self._get_block_by_id(block_id_in_flow)
-            block_registry_data = self._get_block_data_from_registry(block_data["blockType"], block_data["blockId"])
+            block_registry_data = self._get_block_data_from_registry(
+                block_data["blockType"], block_data["blockId"]
+            )
 
             cache_key = f"{block_registry_data.block_type}-{block_registry_data.block_id}-{block_id_in_flow}"
 
             if cache_key in output_cache.keys():
                 return cache_key, output_cache[cache_key]
             else:
-                raise Exception(f"Data does not exist in cache for {block_id_in_flow} with {cache_key}")
-
+                raise Exception(
+                    f"Data does not exist in cache for {block_id_in_flow} with {cache_key}"
+                )
 
         is_valid = True
 
@@ -247,67 +263,90 @@ class SpectrumFlow:
         for task in self.batched_tasks:
             for task_to_be_run in task:
                 block_data = self._get_block_by_id(task_to_be_run)
-                block_registry_data = self._get_block_data_from_registry(block_data["blockType"], block_data["blockId"])
+                block_registry_data = self._get_block_data_from_registry(
+                    block_data["blockType"], block_data["blockId"]
+                )
 
                 # Iterate through block data to gauge whether inputs exist
                 for key, value in block_data.items():
-                    if type(value) is dict and 'value' in value.keys():
-                        if value['value'] == "":
+                    if type(value) is dict and "value" in value.keys():
+                        if value["value"] == "":
                             is_valid = False
 
                 if len(self.dependency_graph[task_to_be_run]) == 0:
-                    is_valid = is_valid and len(block_registry_data.validations["input"]["required"]) == 0
+                    is_valid = (
+                        is_valid
+                        and len(block_registry_data.validations["input"]["required"])
+                        == 0
+                    )
 
                     if mode == "RUN":
-                        response = self._make_run_request(task_to_be_run, block_registry_data, block_data, {})
+                        response = self._make_run_request(
+                            task_to_be_run, block_registry_data, block_data, {}
+                        )
 
                         # Adds to a cache to ensure that requests don't need to be re-run
-                        output_cache = {
-                            **output_cache,
-                            **response
-                        }
+                        output_cache = {**output_cache, **response}
                 else:
                     blocks_found = []
-                    for required_block in block_registry_data.validations["input"]["required"]:
+                    for required_block in block_registry_data.validations["input"][
+                        "required"
+                    ]:
                         visited = set()
-                        self._dfs(visited, task_to_be_run, block_registry_data.validations["input"]["allowed_blocks"],
-                                  required_block, blocks_found)
+                        self._dfs(
+                            visited,
+                            task_to_be_run,
+                            block_registry_data.validations["input"]["allowed_blocks"],
+                            required_block,
+                            blocks_found,
+                        )
 
                     output_payload = {}
                     assembled_dependency_list_from_flow = {}
                     for item in set(blocks_found):
                         item_block_data = self._get_block_by_id(item)
 
-                        if item_block_data["blockType"] not in assembled_dependency_list_from_flow:
-                            assembled_dependency_list_from_flow[item_block_data["blockType"]] = 0
-                        assembled_dependency_list_from_flow[item_block_data["blockType"]] += 1
+                        if (
+                            item_block_data["blockType"]
+                            not in assembled_dependency_list_from_flow
+                        ):
+                            assembled_dependency_list_from_flow[
+                                item_block_data["blockType"]
+                            ] = 0
+                        assembled_dependency_list_from_flow[
+                            item_block_data["blockType"]
+                        ] += 1
 
                         if mode == "RUN":
                             cache_key, response = _get_data_from_cache(item)
-                            output_payload = {
-                                **output_payload,
-                                cache_key: response
-                            }
+                            output_payload = {**output_payload, cache_key: response}
 
                     if mode == "RUN":
-                        response = self._make_run_request(task_to_be_run, block_registry_data, block_data,
-                                                          output_payload)
+                        response = self._make_run_request(
+                            task_to_be_run,
+                            block_registry_data,
+                            block_data,
+                            output_payload,
+                        )
 
                         # Adds to a cache to ensure that requests don't need to be re-run
-                        output_cache = {
-                            **output_cache,
-                            **response
-                        }
+                        output_cache = {**output_cache, **response}
 
-                    for required in block_registry_data.validations["input"]["required"]:
+                    for required in block_registry_data.validations["input"][
+                        "required"
+                    ]:
                         # print("Block Type:", required["blockType"])
                         # print("Required Block Number: ", required["number"])
                         # print(assembled_dependency_list_from_flow)
 
                         if required["blockType"] in assembled_dependency_list_from_flow:
-                            is_valid = is_valid and assembled_dependency_list_from_flow[required["blockType"]] == \
-                                       required[
-                                           "number"]
+                            is_valid = (
+                                is_valid
+                                and assembled_dependency_list_from_flow[
+                                    required["blockType"]
+                                ]
+                                == required["number"]
+                            )
                         else:
                             is_valid = False
 
