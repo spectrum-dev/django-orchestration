@@ -1,7 +1,7 @@
 name: Run CI Tests
 on:
   push:
-    branches: [ master ]
+    branches: [ master, rahul/setup-testing-ci ]
   pull_request:
     branches: [ master ]
 
@@ -13,9 +13,9 @@ jobs:
       matrix:
         db: [ postgres ]
         python-version: [ 3.9.0 ]
-      include:
-        - db: postgres
-          db_port: 5432
+        include:
+          - db: postgres
+            db_port: 5432
     
     services:
       postgres:
