@@ -47,6 +47,7 @@ jobs:
     - name: Run Tests
       env:
         DB: ${{ matrix.db }}
+        DATABASE_NAME: postgres
         DATABASE_USER: postgres
         DATABASE_PASSWORD: postgres
         DATABASE_HOST: "127.0.0.1"
