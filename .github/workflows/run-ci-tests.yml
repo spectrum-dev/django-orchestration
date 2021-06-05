@@ -55,3 +55,7 @@ jobs:
         API_BASE_URL: "https://api.imbue.dev"
       run: |
         python manage.py test
+    
+    - name: Run Lint
+      run: |
+        black . --check
