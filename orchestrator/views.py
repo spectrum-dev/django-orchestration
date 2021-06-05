@@ -2,22 +2,12 @@ import json
 import requests
 
 from django.shortcuts import render
-
-from django.http import (
-    JsonResponse
-)
+from django.http import JsonResponse
 
 from orchestration.settings import env
-
 from orchestrator.models import BlockRegistry
-
 from orchestrator.services.flow.run import run
-
 from orchestrator.services.flow.spectrum_flow_v2 import SpectrumFlow
-
-
-# Create your views here.
-
 
 def get_all_metadata(request):
     all_blocks_from_registry = BlockRegistry.objects.all()
