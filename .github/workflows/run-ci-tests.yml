@@ -13,9 +13,9 @@ jobs:
       matrix:
         db: [ postgres ]
         python-version: [ 3.9.0 ]
-      include:
-        - db: postgres
-          db_port: 5432
+        include:
+          - db: postgres
+            db_port: 5432
     
     services:
       postgres:
@@ -47,8 +47,11 @@ jobs:
     - name: Run Tests
       env:
         DB: ${{ matrix.db }}
-        DB_HOST: 127.0.0.1
-        DB_PORT: ${{ matrix.db_port }}
-        DB_PASSWORD: postgres
+        DATABASE_NAME: postgres
+        DATABASE_USER: postgres
+        DATABASE_PASSWORD: postgres
+        DATABASE_HOST: "127.0.0.1"
+        DATABASE_PORT: ${{ matrix.db_port }}
+        API_BASE_URL: "https://api.imbue.dev"
       run: |
         python manage.py test
