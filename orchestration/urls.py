@@ -22,7 +22,7 @@ import orchestrator.views
 import authentication.views
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("orchestration/admin/", admin.site.urls),
     path(
         "rest-auth/google/",
         authentication.views.GoogleLogin.as_view(),
