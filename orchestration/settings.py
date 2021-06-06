@@ -151,6 +151,8 @@ SITE_ID = 1
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..'))
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-STATIC_URL = '/static/'
 
 DISABLE_COLLECTSTATIC = 1
+
+ROOT_URLCONF = 'django_app.urls'
+WSGI_APPLICATION = 'django_app.wsgi.application'
