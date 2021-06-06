@@ -146,5 +146,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SITE_ID = 1
 
-ROOT_URLCONF = 'orchestration.urls'
-WSGI_APPLICATION = 'orchestration.wsgi.application'
+ROOT_URLCONF = "orchestration.urls"
+WSGI_APPLICATION = "orchestration.wsgi.application"
