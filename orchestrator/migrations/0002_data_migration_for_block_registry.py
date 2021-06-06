@@ -12,7 +12,10 @@ def seed_blocks_into_registry(apps, schema_editor):
         block_name="Raw Data",
         inputs=[
             {
-                "fieldData": {"base": "/equityName?name=", "method": "GET",},
+                "fieldData": {
+                    "base": "/equityName?name=",
+                    "method": "GET",
+                },
                 "fieldName": "Equity Name",
                 "fieldType": "search",
                 "fieldVariableName": "equity_name",

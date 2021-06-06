@@ -58,4 +58,4 @@ jobs:
     
     - name: Run Lint
       run: |
-        black . --check
+        python -m black . -t py38 --check

@@ -28,6 +28,8 @@ class Migration(migrations.Migration):
                 ("inputs", models.JSONField()),
                 ("validations", models.JSONField()),
             ],
-            options={"unique_together": {("block_type", "block_id")},},
+            options={
+                "unique_together": {("block_type", "block_id")},
+            },
         ),
     ]
