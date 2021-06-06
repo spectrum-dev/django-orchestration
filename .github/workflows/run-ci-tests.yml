@@ -52,7 +52,7 @@ jobs:
         DATABASE_PASSWORD: postgres
         DATABASE_HOST: "127.0.0.1"
         DATABASE_PORT: ${{ matrix.db_port }}
-        API_BASE_URL: "https://api.imbue.dev"
+        API_BASE_URL: "https://spectrum-ccxwr.ondigitalocean.app/django-block-monolith"
       run: |
         python manage.py test
     

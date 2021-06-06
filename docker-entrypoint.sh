@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Collect static files
-echo "Collect static files"
-python manage.py collectstatic --noinput
-
 # Removes existing migrations in database
 # TODO: Remove this before we start releasing to people
 echo "Removing existing migrations in database"
