@@ -1,8 +1,8 @@
 import json
 import requests
+from os import environ
 from copy import deepcopy
 
-from orchestration.settings import env
 from orchestrator.models import BlockRegistry
 
 
@@ -194,7 +194,7 @@ class SpectrumFlow:
             output_payload: Output Payload
         """
 
-        request_url = f"{env('API_BASE_URL')}/{block_registry_data.block_type}/{block_registry_data.block_id}/run"
+        request_url = f"{environ['API_BASE_URL']}/{block_registry_data.block_type}/{block_registry_data.block_id}/run"
 
         # Input Transformation
         input_cleaned_payload = {}

@@ -10,8 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-import os
-import environ
+from os import environ
+from dotenv import load_dotenv
 
 from pathlib import Path
 
@@ -19,9 +19,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Environment Variable Setup
-env = environ.Env()
-
-environ.Env.read_env()
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -101,14 +99,13 @@ WSGI_APPLICATION = "orchestration.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("DATABASE_NAME"),
-        "USER": env("DATABASE_USER"),
-        "PASSWORD": env("DATABASE_PASSWORD"),
-        "HOST": env("DATABASE_HOST"),
-        "PORT": env("DATABASE_PORT"),
+        "NAME": environ["DATABASE_NAME"],
+        "USER": environ["DATABASE_USER"],
+        "PASSWORD": environ["DATABASE_PASSWORD"],
+        "HOST": environ["DATABASE_HOST"],
+        "PORT": environ["DATABASE_PORT"],
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -148,11 +145,6 @@ STATIC_URL = "/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SITE_ID = 1
-
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..'))
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-
-DISABLE_COLLECTSTATIC = 1
 
 ROOT_URLCONF = 'orchestration.urls'
 WSGI_APPLICATION = 'orchestration.wsgi.application'

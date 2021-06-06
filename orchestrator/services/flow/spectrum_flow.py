@@ -1,9 +1,9 @@
 import json
 import logging
 import requests
+from os import environ
 from copy import deepcopy
 
-from orchestration.settings import env
 from orchestrator.models import BlockRegistry
 from orchestrator.services.flow.graph import Graph
 
@@ -313,7 +313,7 @@ class SpectrumFlow:
                 output_payload: JSON Payload of required information from previous steps
             """
             # Make a POST request to a run endpoint to run the block
-            request_url = f"{env('API_BASE_URL')}/{block_registry_data.block_type}/{block_registry_data.block_id}/run"
+            request_url = f"{environ['API_BASE_URL']}/{block_registry_data.block_type}/{block_registry_data.block_id}/run"
 
             request_payload = {
                 "input": input_payload,

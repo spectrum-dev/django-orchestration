@@ -1,10 +1,10 @@
 import json
 import requests
+from os import environ
 
 from django.shortcuts import render
 from django.http import JsonResponse
 
-from orchestration.settings import env
 from orchestrator.models import BlockRegistry
 from orchestrator.services.flow.run import run
 from orchestrator.services.flow.spectrum_flow_v2 import SpectrumFlow
@@ -53,19 +53,19 @@ def proxy_block_action(request, block_type, block_id, action_name):
 
     if potential_url_param:
         response = requests.get(
-            f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}?indicatorName={potential_url_param}"
+            f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}?indicatorName={potential_url_param}"
         )
     elif potential_url_param_two:
         response = requests.get(
-            f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}?name={potential_url_param_two}"
+            f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}?name={potential_url_param_two}"
         )
     else:
         print(
             "Request URL: ",
-            f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}",
+            f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}",
         )
         response = requests.get(
-            f"{env('API_BASE_URL')}/{block_type}/{block_id}/{action_name}"
+            f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}"
         )
 
     return JsonResponse(response.json())
