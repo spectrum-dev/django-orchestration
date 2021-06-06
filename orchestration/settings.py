@@ -154,5 +154,5 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 
 DISABLE_COLLECTSTATIC = 1
 
-ROOT_URLCONF = 'django_app.urls'
-WSGI_APPLICATION = 'django_app.wsgi.application'
+ROOT_URLCONF = 'orchestration.urls'
+WSGI_APPLICATION = 'orchestration.wsgi.application'
