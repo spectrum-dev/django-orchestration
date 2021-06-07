@@ -1,6 +1,7 @@
 import uuid
 import json
 from django.http import JsonResponse
+from allauth.socialaccount.models import SocialToken
 
 from strategy.models import Strategy
 
@@ -35,16 +36,22 @@ def get_commit_id(request, strategy_id):
 
 
 def save_strategy(request, strategy_id, commit_id):
-    request_body = json.loads(request.body)
-
     try:
+        # User ID Extraction
+        bearer_token = request.headers["Authorization"].split(" ")[1]
+        social_token_object = SocialToken.objects.filter(token=bearer_token)
+        user = social_token_object[0].account.user
+
+        request_body = json.loads(request.body)
+
         Strategy.objects.create(
             strategy_id=strategy_id,
             commit_id=commit_id,
+            user=user,
             flow_metadata=request_body["metadata"],
             input={},
             output=request_body["outputs"],
         )
         return JsonResponse({"message": "Successfully saved strategy "})
-    except:
+    except Exception:
         return JsonResponse({"error": "There was an error saving the strategy"})
