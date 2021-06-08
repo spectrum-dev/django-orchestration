@@ -26,7 +26,7 @@ class GoogleLogin(SocialLoginView):
 
 
 class ValidateAccountWhitelistView(APIView):
-    def get(request):
+    def post(self, request):
         try:
             request_body = json.loads(request.body)
 
