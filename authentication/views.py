@@ -4,6 +4,8 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
+from rest_framework.views import APIView
+
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView, SocialLoginSerializer
@@ -23,20 +25,21 @@ class GoogleLogin(SocialLoginView):
         return serializer_class(*args, **kwargs)
 
 
-def validate_account_on_whitelist(request):
-    request_body = json.loads(request.body)
+class ValidateAccountWhitelistView(APIView):
+    def get(request):
+        try:
+            request_body = json.loads(request.body)
 
-    try:
-        account_exists = (
-            AccountWhitelist.objects.all()
-            .filter(email=request_body["email"])
-            .filter(active=True)
-            .exists()
-        )
-        status_code = 200
-        if not account_exists:
-            status_code = 401
+            account_exists = (
+                AccountWhitelist.objects.all()
+                .filter(email=request_body["email"])
+                .filter(active=True)
+                .exists()
+            )
+            status_code = 200
+            if not account_exists:
+                status_code = 401
 
-        return JsonResponse({"status": account_exists}, status=status_code)
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status_code=401)
+            return JsonResponse({"status": account_exists}, status=status_code)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status_code=401)

@@ -29,19 +29,24 @@ urlpatterns = [
         name="google_login",
     ),
     url(r"^authentication/", include("allauth.urls"), name="socialaccount_signup"),
-    path("authentication/validate", authentication.views.validate_account_on_whitelist),
-    path("orchestration/metadata", orchestrator.views.get_all_metadata),
+    path(
+        "authentication/validate",
+        authentication.views.ValidateAccountWhitelistView.as_view(),
+    ),
+    path("orchestration/metadata", orchestrator.views.AllMetadataView.as_view()),
     path(
         "orchestration/<block_type>/<block_id>/metadata",
-        orchestrator.views.get_metadata,
+        orchestrator.views.MetadataView.as_view(),
     ),
     path(
         "orchestration/<block_type>/<block_id>/<action_name>",
-        orchestrator.views.proxy_block_action,
+        orchestrator.views.ProxyBlockActionView.as_view(),
     ),
-    path("orchestration/validate", orchestrator.views.validate_flow),
-    path("orchestration/run", orchestrator.views.post_flow),
+    path("orchestration/validate", orchestrator.views.ValidateFlow.as_view()),
+    path("orchestration/run", orchestrator.views.RunFlow.as_view()),
     path("strategy/strategyId", strategy.views.StrategyIdView.as_view()),
-    path("strategy/<strategy_id>/commitId", strategy.views.get_commit_id),
-    path("strategy/<strategy_id>/<commit_id>", strategy.views.save_strategy),
+    path("strategy/<strategy_id>/commitId", strategy.views.CommitIdView.as_view()),
+    path(
+        "strategy/<strategy_id>/<commit_id>", strategy.views.SaveStrategyView.as_view()
+    ),
 ]

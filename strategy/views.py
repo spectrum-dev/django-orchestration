@@ -3,17 +3,17 @@ import json
 
 from django.http import JsonResponse
 from rest_framework.views import APIView
-from allauth.socialaccount.models import SocialToken
 
 from authentication.decorators import SpectrumAuthentication, SpectrumIsAuthenticated
 from strategy.models import Strategy
 
 # Create your views here.
 
+
 class StrategyIdView(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]
-    
+
     def get(self, request):
         strategy_id = uuid.uuid4()
 
@@ -21,43 +21,48 @@ class StrategyIdView(APIView):
         if not strategy_exists:
             return JsonResponse({"strategy_id": strategy_id})
         else:
-            return JsonResponse({"error": "Strategy does not exist"})    
+            return JsonResponse({"error": "Strategy does not exist"})
 
 
-def get_commit_id(request, strategy_id):
-    strategy_exists = Strategy.objects.filter(strategy_id=strategy_id).exists()
+class CommitIdView(APIView):
+    authentication_classes = [SpectrumAuthentication]
+    permission_classes = [SpectrumIsAuthenticated]
 
-    # if not strategy_exists:
-    #     return JsonResponse({"error": "Strategy does not exist"})
+    def get(self, request, strategy_id):
+        # strategy_exists = Strategy.objects.filter(strategy_id=strategy_id).exists()
 
-    commit_id = uuid.uuid4()
-    strategy_commit_pair_exist = Strategy.objects.filter(
-        strategy_id=strategy_id, commit_id=commit_id
-    )
+        # if not strategy_exists:
+        #     return JsonResponse({"error": "Strategy does not exist"})
 
-    if not strategy_commit_pair_exist:
-        return JsonResponse({"strategy_id": strategy_id, "commit_id": commit_id})
-    else:
-        return JsonResponse({"error": "Commit ID already exists"})
+        commit_id = uuid.uuid4()
 
-
-def save_strategy(request, strategy_id, commit_id):
-    try:
-        # User ID Extraction
-        bearer_token = request.headers["Authorization"].split(" ")[1]
-        social_token_object = SocialToken.objects.filter(token=bearer_token)
-        user = social_token_object[0].account.user
-
-        request_body = json.loads(request.body)
-
-        Strategy.objects.create(
-            strategy_id=strategy_id,
-            commit_id=commit_id,
-            user=user,
-            flow_metadata=request_body["metadata"],
-            input={},
-            output=request_body["outputs"],
+        strategy_commit_pair_exist = Strategy.objects.filter(
+            strategy_id=strategy_id, commit_id=commit_id
         )
-        return JsonResponse({"message": "Successfully saved strategy "})
-    except Exception:
-        return JsonResponse({"error": "There was an error saving the strategy"})
+
+        if not strategy_commit_pair_exist:
+            return JsonResponse({"strategy_id": strategy_id, "commit_id": commit_id})
+        else:
+            return JsonResponse({"error": "Commit ID already exists"})
+
+
+class SaveStrategyView(APIView):
+    authentication_classes = [SpectrumAuthentication]
+    permission_classes = [SpectrumIsAuthenticated]
+
+    def post(self, request, strategy_id, commit_id):
+        try:
+            user = request.user
+            request_body = json.loads(request.body)
+
+            Strategy.objects.create(
+                strategy_id=strategy_id,
+                commit_id=commit_id,
+                user=user,
+                flow_metadata=request_body["metadata"],
+                input={},
+                output=request_body["outputs"],
+            )
+            return JsonResponse({"message": "Successfully saved strategy "})
+        except Exception:
+            return JsonResponse({"error": "There was an error saving the strategy"})
