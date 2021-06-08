@@ -18,7 +18,7 @@ class AllMetadataView(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]
 
-    def get(request):
+    def get(self, request):
         all_blocks_from_registry = BlockRegistry.objects.all()
 
         response = {}
@@ -40,7 +40,7 @@ class MetadataView(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]
 
-    def get(request, block_type, block_id):
+    def get(self, request, block_type, block_id):
         block_registry = (
             BlockRegistry.objects.all()
             .filter(block_type=block_type)
@@ -62,7 +62,7 @@ class ProxyBlockActionView(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]
 
-    def get(request, block_type, block_id, action_name):
+    def get(self, request, block_type, block_id, action_name):
         # TODO: Make this more generic for all URL Parameters
         potential_url_param = request.GET.get("indicatorName", None)
         potential_url_param_two = request.GET.get("name", None)
@@ -91,7 +91,7 @@ class ValidateFlow(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]
 
-    def post(request):
+    def post(self, request):
         request_body = json.loads(request.body)
 
         flow = SpectrumFlow(request_body["nodeList"], request_body["edgeList"])
@@ -103,7 +103,7 @@ class RunFlow(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]
 
-    def post(request):
+    def post(self, request):
         request_body = json.loads(request.body)
 
         flow = SpectrumFlow(request_body["nodeList"], request_body["edgeList"])
