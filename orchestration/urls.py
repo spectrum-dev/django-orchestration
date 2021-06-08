@@ -41,7 +41,7 @@ urlpatterns = [
     ),
     path("orchestration/validate", orchestrator.views.validate_flow),
     path("orchestration/run", orchestrator.views.post_flow),
-    path("strategy/strategyId", strategy.views.get_strategy_id),
+    path("strategy/strategyId", strategy.views.StrategyIdView.as_view()),
     path("strategy/<strategy_id>/commitId", strategy.views.get_commit_id),
     path("strategy/<strategy_id>/<commit_id>", strategy.views.save_strategy),
 ]

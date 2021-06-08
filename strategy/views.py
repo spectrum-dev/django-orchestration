@@ -1,21 +1,27 @@
 import uuid
 import json
+
 from django.http import JsonResponse
+from rest_framework.views import APIView
 from allauth.socialaccount.models import SocialToken
 
+from authentication.decorators import SpectrumAuthentication, SpectrumIsAuthenticated
 from strategy.models import Strategy
 
 # Create your views here.
 
+class StrategyIdView(APIView):
+    authentication_classes = [SpectrumAuthentication]
+    permission_classes = [SpectrumIsAuthenticated]
+    
+    def get(self, request):
+        strategy_id = uuid.uuid4()
 
-def get_strategy_id(request):
-    strategy_id = uuid.uuid4()
-
-    strategy_exists = Strategy.objects.filter(strategy_id=strategy_id).exists()
-    if not strategy_exists:
-        return JsonResponse({"strategy_id": strategy_id})
-    else:
-        return JsonResponse({"error": "Strategy does not exist"})
+        strategy_exists = Strategy.objects.filter(strategy_id=strategy_id).exists()
+        if not strategy_exists:
+            return JsonResponse({"strategy_id": strategy_id})
+        else:
+            return JsonResponse({"error": "Strategy does not exist"})    
 
 
 def get_commit_id(request, strategy_id):
