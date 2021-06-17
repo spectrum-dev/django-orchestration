@@ -16,30 +16,60 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='UserStrategy',
+            name="UserStrategy",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('strategy', models.UUIDField(default=uuid.uuid4)),
-                ('user', models.ForeignKey(default=10, on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("strategy", models.UUIDField(default=uuid.uuid4)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        default=10,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'unique_together': {('user', 'strategy')},
+                "unique_together": {("user", "strategy")},
             },
         ),
         migrations.CreateModel(
-            name='Strategy',
+            name="Strategy",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('commit', models.UUIDField(default=uuid.uuid4)),
-                ('flow_metadata', models.JSONField()),
-                ('input', models.JSONField()),
-                ('output', models.JSONField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('strategy', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='strategy_strategy', to='strategy.userstrategy')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("commit", models.UUIDField(default=uuid.uuid4)),
+                ("flow_metadata", models.JSONField()),
+                ("input", models.JSONField()),
+                ("output", models.JSONField()),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "strategy",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="strategy_strategy",
+                        to="strategy.userstrategy",
+                    ),
+                ),
             ],
             options={
-                'unique_together': {('strategy', 'commit')},
+                "unique_together": {("strategy", "commit")},
             },
         ),
     ]

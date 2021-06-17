@@ -90,12 +90,13 @@ class ValidateFlow(APIView):
     def post(self, request):
         request_body = json.loads(request.body)
 
-        if (request_body["nodeList"] is not {} and request_body["edgeList"] is not []):
+        if request_body["nodeList"] is not {} and request_body["edgeList"] is not []:
             flow = SpectrumFlow(request_body["nodeList"], request_body["edgeList"])
 
             return JsonResponse({"valid": flow.is_valid})
         else:
             return JsonResponse({"valid": False})
+
 
 class RunFlow(APIView):
     authentication_classes = [SpectrumAuthentication]

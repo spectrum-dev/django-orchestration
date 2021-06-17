@@ -18,11 +18,14 @@ class StrategyIdView(APIView):
         strategy_id = uuid.uuid4()
         user = request.user
 
-        strategy_exists = UserStrategy.objects.filter(strategy=strategy_id, user=user).exists()
+        strategy_exists = UserStrategy.objects.filter(
+            strategy=strategy_id, user=user
+        ).exists()
         if not strategy_exists:
             return JsonResponse({"strategy_id": strategy_id})
         else:
             return JsonResponse({"error": "Strategy does not exist"})
+
 
 class StrategyView(APIView):
     authentication_classes = [SpectrumAuthentication]
@@ -30,35 +33,36 @@ class StrategyView(APIView):
 
     def get(self, request, strategy_id):
         try:
-          user = request.user
+            user = request.user
 
-          user_strategy = UserStrategy.objects.filter(strategy=strategy_id, user=user)
-        
-          if (user_strategy.exists()):
-              strategy = Strategy.objects.filter(
-                strategy=user_strategy[0],
-              ).order_by('-updated_at')
+            user_strategy = UserStrategy.objects.filter(strategy=strategy_id, user=user)
 
-              if len(strategy) > 0:
-                strategy = strategy[0]
+            if user_strategy.exists():
+                strategy = Strategy.objects.filter(
+                    strategy=user_strategy[0],
+                ).order_by("-updated_at")
 
-                response = {
-                  'elements': strategy.flow_metadata,
-                  'inputs': strategy.input,
-                  'outputs': strategy.output,
-                }
-              else:
-                response = {
-                    'elements': [],
-                    'inputs': {},
-                    'outputs': {}
-                }
+                if len(strategy) > 0:
+                    strategy = strategy[0]
 
-              return JsonResponse(response)
-          else:
-            return JsonResponse({'error': 'You are not authorized to view this strategy'}, status=401)
+                    response = {
+                        "elements": strategy.flow_metadata,
+                        "inputs": strategy.input,
+                        "outputs": strategy.output,
+                    }
+                else:
+                    response = {"elements": [], "inputs": {}, "outputs": {}}
+
+                return JsonResponse(response)
+            else:
+                return JsonResponse(
+                    {"error": "You are not authorized to view this strategy"},
+                    status=401,
+                )
         except Exception as e:
-          return JsonResponse({ 'error': 'There was an unhandled error with the response'}, status=500)
+            return JsonResponse(
+                {"error": "There was an unhandled error with the response"}, status=500
+            )
 
 
 class CommitIdView(APIView):
@@ -89,27 +93,32 @@ class StrategyCommitView(APIView):
 
     def get(self, request, strategy_id, commit_id):
         try:
-          user = request.user
+            user = request.user
 
-          user_strategy = UserStrategy.objects.filter(strategy=strategy_id, user=user)
-          
-          if (user_strategy.exists()):
-              strategy = Strategy.objects.get(
-                strategy=user_strategy[0],
-                commit=commit_id,
-              )
+            user_strategy = UserStrategy.objects.filter(strategy=strategy_id, user=user)
 
-              response = {
-                'elements': strategy.flow_metadata,
-                'inputs': strategy.input,
-                'outputs': strategy.output,
-              }
+            if user_strategy.exists():
+                strategy = Strategy.objects.get(
+                    strategy=user_strategy[0],
+                    commit=commit_id,
+                )
 
-              return JsonResponse(response)
-          else:
-            return JsonResponse({'error': 'You are not authorized to view this strategy'}, status=401)
+                response = {
+                    "elements": strategy.flow_metadata,
+                    "inputs": strategy.input,
+                    "outputs": strategy.output,
+                }
+
+                return JsonResponse(response)
+            else:
+                return JsonResponse(
+                    {"error": "You are not authorized to view this strategy"},
+                    status=401,
+                )
         except Exception as e:
-          return JsonResponse({ 'error': 'There was an unhandled error with the response'}, status=500)
+            return JsonResponse(
+                {"error": "There was an unhandled error with the response"}, status=500
+            )
 
     def post(self, request, strategy_id, commit_id):
         try:
@@ -117,11 +126,10 @@ class StrategyCommitView(APIView):
             request_body = json.loads(request.body)
 
             user_strategy = UserStrategy.objects.filter(strategy=strategy_id, user=user)
-            
-            if (not user_strategy.exists()):
+
+            if not user_strategy.exists():
                 user_strategy = UserStrategy.objects.create(
-                    user=user,
-                    strategy=strategy_id
+                    user=user, strategy=strategy_id
                 )
             else:
                 user_strategy = user_strategy[0]
