@@ -218,10 +218,6 @@ class SpectrumFlow:
                             assembled_dependency_list_from_flow[required["blockType"]]
                             == required["number"]
                         )
-
-                    # print ("Assembled Dependency List: ", assembled_dependency_list_from_flow)
-                    # print(f"Task {task_to_be_run} - {set(blocks_found)}")
-
         return is_valid
 
     def run_batched_tasks_v3(self):
@@ -433,8 +429,6 @@ class SpectrumFlow:
                         block_data["data"]["input"],
                         output_payload,
                     )
-
-                    # print ("Response: ", response)
 
                     # Adds to a cache to ensure that requests don't need to be re-run
                     output_cache = {**output_cache, **response}

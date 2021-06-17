@@ -3,18 +3,26 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 
+
 # Create your models here.
-
-
-class Strategy(models.Model):
+class UserStrategy(models.Model):
     class Meta:
-        unique_together = ("strategy_id", "commit_id")
+        unique_together = ("user", "strategy")
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, default=10
     )
-    strategy_id = models.UUIDField(default=uuid.uuid4)
-    commit_id = models.UUIDField(default=uuid.uuid4)
+    strategy = models.UUIDField(default=uuid.uuid4)
+
+
+class Strategy(models.Model):
+    class Meta:
+        unique_together = ("strategy", "commit")
+
+    strategy = models.ForeignKey(
+        UserStrategy, related_name="%(class)s_strategy", on_delete=models.PROTECT
+    )
+    commit = models.UUIDField(default=uuid.uuid4)
     flow_metadata = models.JSONField()
     input = models.JSONField()
     output = models.JSONField()
