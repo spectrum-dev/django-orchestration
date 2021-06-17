@@ -72,6 +72,8 @@ class ProxyBlockActionView(APIView):
                 f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}?indicatorName={potential_url_param}"
             )
         elif potential_url_param_two:
+            print ('In potential param 2');
+            print ('Request URL: ', f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}?name={potential_url_param_two}")
             response = requests.get(
                 f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}?name={potential_url_param_two}"
             )
@@ -84,6 +86,7 @@ class ProxyBlockActionView(APIView):
                 f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}"
             )
 
+        print (response.json())
         return JsonResponse(response.json())
 
 
@@ -94,10 +97,12 @@ class ValidateFlow(APIView):
     def post(self, request):
         request_body = json.loads(request.body)
 
-        flow = SpectrumFlow(request_body["nodeList"], request_body["edgeList"])
+        if (request_body["nodeList"] is not {} and request_body["edgeList"] is not []):
+            flow = SpectrumFlow(request_body["nodeList"], request_body["edgeList"])
 
-        return JsonResponse({"valid": flow.is_valid})
-
+            return JsonResponse({"valid": flow.is_valid})
+        else:
+            return JsonResponse({"valid": False})
 
 class RunFlow(APIView):
     authentication_classes = [SpectrumAuthentication]

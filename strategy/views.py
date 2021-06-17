@@ -33,17 +33,30 @@ class StrategyView(APIView):
           user = request.user
 
           user_strategy = UserStrategy.objects.filter(strategy=strategy_id, user=user)
-          
+        
+          print ('User Strategy: ', user_strategy)
           if (user_strategy.exists()):
+              print ('User strategy exists')
               strategy = Strategy.objects.filter(
                 strategy=user_strategy[0],
-              ).order_by('-updated_at')[0]
+              ).order_by('-updated_at')
 
-              response = {
-                'elements': strategy.flow_metadata,
-                'inputs': strategy.input,
-                'outputs': strategy.output,
-              }
+              if len(strategy) > 0:
+                strategy = strategy[0]
+                print ('Strategy: ', strategy)
+
+                response = {
+                  'elements': strategy.flow_metadata,
+                  'inputs': strategy.input,
+                  'outputs': strategy.output,
+                }
+              else:
+                print ('User strategy DNE')
+                response = {
+                    'elements': [],
+                    'inputs': {},
+                    'outputs': {}
+                }
 
               return JsonResponse(response)
           else:
