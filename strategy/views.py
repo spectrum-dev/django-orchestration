@@ -34,16 +34,13 @@ class StrategyView(APIView):
 
           user_strategy = UserStrategy.objects.filter(strategy=strategy_id, user=user)
         
-          print ('User Strategy: ', user_strategy)
           if (user_strategy.exists()):
-              print ('User strategy exists')
               strategy = Strategy.objects.filter(
                 strategy=user_strategy[0],
               ).order_by('-updated_at')
 
               if len(strategy) > 0:
                 strategy = strategy[0]
-                print ('Strategy: ', strategy)
 
                 response = {
                   'elements': strategy.flow_metadata,
@@ -51,7 +48,6 @@ class StrategyView(APIView):
                   'outputs': strategy.output,
                 }
               else:
-                print ('User strategy DNE')
                 response = {
                     'elements': [],
                     'inputs': {},
@@ -139,5 +135,4 @@ class StrategyCommitView(APIView):
             )
             return JsonResponse({"message": "Successfully saved strategy "})
         except Exception as e:
-            print (e)
             return JsonResponse({"error": "There was an error saving the strategy"})

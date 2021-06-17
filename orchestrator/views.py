@@ -72,21 +72,14 @@ class ProxyBlockActionView(APIView):
                 f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}?indicatorName={potential_url_param}"
             )
         elif potential_url_param_two:
-            print ('In potential param 2');
-            print ('Request URL: ', f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}?name={potential_url_param_two}")
             response = requests.get(
                 f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}?name={potential_url_param_two}"
             )
         else:
-            print(
-                "Request URL: ",
-                f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}",
-            )
             response = requests.get(
                 f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}"
             )
 
-        print (response.json())
         return JsonResponse(response.json())
 
 
