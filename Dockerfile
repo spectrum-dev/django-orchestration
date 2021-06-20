@@ -3,7 +3,6 @@ FROM python:3.9.4-slim
 
 # Maintainer Info
 LABEL maintainer="Rahul Brahmal <rahul@imbue.dev>"
-LABEL maintainer="Ronak Bansal <ronak@imbue.dev>"
 
 # Environment Variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -28,6 +27,4 @@ RUN pip install -r requirements.txt
 # copy project
 COPY . .
 
-EXPOSE 8000
-
-CMD ["sh", "docker-entrypoint.sh"]
+RUN ["chmod", "+x", "./docker-entrypoint.sh"]
