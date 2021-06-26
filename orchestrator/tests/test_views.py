@@ -268,11 +268,19 @@ class ProxyBlockActionViewTest(TestCase):
             },
         )
 
+    @responses.activate
     def test_block_type_dne(self):
         auth = set_up_authentication()
         block_type = "DATA_BLOCK_DNE"
         block_id = 1
         action_name = "dataType"
+
+        responses.add(
+            responses.GET,
+            "http://block-monolith:8000/DATA_BLOCK_DNE/1/dataType",
+            json={"error": "Unhandled error"},
+            status=404,
+        )
 
         response = self.client.get(
             f"/orchestration/{block_type}/{block_id}/{action_name}",
@@ -281,11 +289,19 @@ class ProxyBlockActionViewTest(TestCase):
 
         self.assertDictEqual(response.json(), {"error": "Unhandled error"})
 
+    @responses.activate
     def test_block_id_dne(self):
         auth = set_up_authentication()
         block_type = "DATA_BLOCK"
         block_id = -1
         action_name = "dataType"
+
+        responses.add(
+            responses.GET,
+            "http://block-monolith:8000/DATA_BLOCK/-1/dataType",
+            json={"error": "Unhandled error"},
+            status=404,
+        )
 
         response = self.client.get(
             f"/orchestration/{block_type}/{block_id}/{action_name}",
@@ -321,3 +337,22 @@ class ValidateFlowTest(TestCase):
 
 class RunFlowTest(TestCase):
     pass
+    # # @responses.activate
+    # def test_ok(self):
+    #     auth = set_up_authentication()
+
+    #     # responses.add(
+    #     #     responses.POST,
+    #     #     "http://block-monolith:8000/DATA_BLOCK/1/run",
+    #     #     json={},
+    #     #     status=200,
+    #     # )
+
+    #     response = self.client.post(
+    #         "/orchestration/run",
+    #         json.dumps(SINGLE_FULL_FLOW_VALID),
+    #         content_type="application/json",
+    #         **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+    #     )
+
+    #     print(response.json())
