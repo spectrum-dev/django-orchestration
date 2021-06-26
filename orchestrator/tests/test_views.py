@@ -1,8 +1,13 @@
+import json
 import responses
 
 from django.test import TestCase
 
 from authentication.factories import set_up_authentication
+from orchestrator.tests.data.test_data_validation import (
+    SINGLE_FULL_FLOW_INVALID,
+    SINGLE_FULL_FLOW_VALID,
+)
 
 
 class AllMetadataViewTest(TestCase):
@@ -291,7 +296,27 @@ class ProxyBlockActionViewTest(TestCase):
 
 
 class ValidateFlowTest(TestCase):
-    pass
+    def test_ok(self):
+        auth = set_up_authentication()
+        response = self.client.post(
+            "/orchestration/validate",
+            json.dumps(SINGLE_FULL_FLOW_VALID),
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(response.json(), {"valid": True})
+
+    def test_invalid(self):
+        auth = set_up_authentication()
+        response = self.client.post(
+            "/orchestration/validate",
+            json.dumps(SINGLE_FULL_FLOW_INVALID),
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(response.json(), {"valid": False})
 
 
 class RunFlowTest(TestCase):
