@@ -18,9 +18,7 @@ class StrategyIdView(APIView):
     def get(self, request):
         strategy_id = uuid.uuid4()
 
-        strategy_exists = UserStrategy.objects.filter(
-            strategy=strategy_id
-        ).exists()
+        strategy_exists = UserStrategy.objects.filter(strategy=strategy_id).exists()
         if not strategy_exists:
             return JsonResponse({"strategy_id": strategy_id})
         else:
@@ -33,7 +31,7 @@ class StrategyView(APIView):
 
     def get(self, request, strategy_id):
         """
-            Gets the latest saves strategy data
+        Gets the latest saves strategy data
         """
         try:
             user = request.user
@@ -99,7 +97,7 @@ class StrategyCommitView(APIView):
             user = request.user
 
             user_strategy = UserStrategy.objects.filter(strategy=strategy_id, user=user)
-            
+
             if user_strategy.exists():
                 strategy = Strategy.objects.get(
                     strategy=user_strategy[0],
@@ -119,13 +117,9 @@ class StrategyCommitView(APIView):
                     status=401,
                 )
         except ValidationError as e:
-            return JsonResponse(
-                {"validation_error": "There was a validation error"}
-            )
+            return JsonResponse({"validation_error": "There was a validation error"})
         except ObjectDoesNotExist as e:
-            return JsonResponse(
-                {"error": "ID does not exist"}
-            )
+            return JsonResponse({"error": "ID does not exist"})
         except Exception as e:
             return JsonResponse(
                 {"error": "There was an unhandled error with the response"}, status=500
