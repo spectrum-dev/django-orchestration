@@ -336,23 +336,220 @@ class ValidateFlowTest(TestCase):
 
 
 class RunFlowTest(TestCase):
-    pass
-    # # @responses.activate
-    # def test_ok(self):
-    #     auth = set_up_authentication()
+    @responses.activate
+    def test_ok(self):
+        auth = set_up_authentication()
 
-    #     # responses.add(
-    #     #     responses.POST,
-    #     #     "http://block-monolith:8000/DATA_BLOCK/1/run",
-    #     #     json={},
-    #     #     status=200,
-    #     # )
+        responses.add(
+            responses.POST,
+            "http://block-monolith:8000/DATA_BLOCK/1/run",
+            content_type="application/json",
+            json={
+                "response": [
+                    {
+                        "timestamp": "01/01/2020",
+                        "timezone": "UTC/EST",
+                        "open": "10.00",
+                        "high": "10.00",
+                        "low": "10.00",
+                        "close": "10.00",
+                        "volume": "10.00",
+                    },
+                    {
+                        "timestamp": "01/02/2020",
+                        "timezone": "UTC/EST",
+                        "open": "11.00",
+                        "high": "11.00",
+                        "low": "11.00",
+                        "close": "11.00",
+                        "volume": "11.00",
+                    },
+                    {
+                        "timestamp": "01/03/2020",
+                        "timezone": "UTC/EST",
+                        "open": "12.00",
+                        "high": "12.00",
+                        "low": "12.00",
+                        "close": "12.00",
+                        "volume": "12.00",
+                    },
+                    {
+                        "timestamp": "01/04/2020",
+                        "timezone": "UTC/EST",
+                        "open": "13.00",
+                        "high": "13.00",
+                        "low": "13.00",
+                        "close": "13.00",
+                        "volume": "13.00",
+                    },
+                    {
+                        "timestamp": "01/05/2020",
+                        "timezone": "UTC/EST",
+                        "open": "14.00",
+                        "high": "14.00",
+                        "low": "14.00",
+                        "close": "14.00",
+                        "volume": "14.00",
+                    },
+                ]
+            },
+            status=200,
+        )
 
-    #     response = self.client.post(
-    #         "/orchestration/run",
-    #         json.dumps(SINGLE_FULL_FLOW_VALID),
-    #         content_type="application/json",
-    #         **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
-    #     )
+        responses.add(
+            responses.POST,
+            "http://block-monolith:8000/COMPUTATIONAL_BLOCK/1/run",
+            content_type="application/json",
+            json={
+                "response": [
+                    {"timestamp": "01/01/2020", "data": None},
+                    {"timestamp": "01/02/2020", "data": 10.5},
+                    {"timestamp": "01/03/2020", "data": 12.0},
+                    {"timestamp": "01/04/2020", "data": 12.5},
+                    {"timestamp": "01/05/2020", "data": 13.0},
+                ]
+            },
+            status=200,
+        )
 
-    #     print(response.json())
+        responses.add(
+            responses.POST,
+            "http://block-monolith:8000/SIGNAL_BLOCK/1/run",
+            content_type="application/json",
+            json={
+                "response": [
+                    {"timestamp": "2020-01-02", "order": "BUY"},
+                    {"order": "BUY", "timestamp": "2020-01-04"},
+                ]
+            },
+            status=200,
+        )
+
+        responses.add(
+            responses.POST,
+            "http://block-monolith:8000/STRATEGY_BLOCK/1/run",
+            content_type="application/json",
+            json={
+                "response": {
+                    "portVals": [
+                        {"value": 10000.0, "timestamp": "01/01/2020"},
+                        {"value": 8995.150000000009, "timestamp": "01/02/2020"},
+                        {"value": 18085.15000000001, "timestamp": "01/03/2020"},
+                    ],
+                    "trades": [
+                        {
+                            "date": "01/02/2020",
+                            "symbol": "close",
+                            "order": "BUY",
+                            "monetary_amount": 100000.0,
+                            "trade_id": "",
+                            "stop_loss": "",
+                            "take_profit": "",
+                            "shares": 9090,
+                            "cash_value": 100989.9,
+                        }
+                    ],
+                }
+            },
+            status=200,
+        )
+
+        response = self.client.post(
+            "/orchestration/run",
+            json.dumps(SINGLE_FULL_FLOW_VALID),
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(),
+            {
+                "response": {
+                    "DATA_BLOCK-1-1": [
+                        {
+                            "timestamp": "01/01/2020",
+                            "timezone": "UTC/EST",
+                            "open": "10.00",
+                            "high": "10.00",
+                            "low": "10.00",
+                            "close": "10.00",
+                            "volume": "10.00",
+                        },
+                        {
+                            "timestamp": "01/02/2020",
+                            "timezone": "UTC/EST",
+                            "open": "11.00",
+                            "high": "11.00",
+                            "low": "11.00",
+                            "close": "11.00",
+                            "volume": "11.00",
+                        },
+                        {
+                            "timestamp": "01/03/2020",
+                            "timezone": "UTC/EST",
+                            "open": "12.00",
+                            "high": "12.00",
+                            "low": "12.00",
+                            "close": "12.00",
+                            "volume": "12.00",
+                        },
+                        {
+                            "timestamp": "01/04/2020",
+                            "timezone": "UTC/EST",
+                            "open": "13.00",
+                            "high": "13.00",
+                            "low": "13.00",
+                            "close": "13.00",
+                            "volume": "13.00",
+                        },
+                        {
+                            "timestamp": "01/05/2020",
+                            "timezone": "UTC/EST",
+                            "open": "14.00",
+                            "high": "14.00",
+                            "low": "14.00",
+                            "close": "14.00",
+                            "volume": "14.00",
+                        },
+                    ],
+                    "COMPUTATIONAL_BLOCK-1-2": [
+                        {"timestamp": "01/01/2020", "data": None},
+                        {"timestamp": "01/02/2020", "data": 10.5},
+                        {"timestamp": "01/03/2020", "data": 12.0},
+                        {"timestamp": "01/04/2020", "data": 12.5},
+                        {"timestamp": "01/05/2020", "data": 13.0},
+                    ],
+                    "COMPUTATIONAL_BLOCK-1-3": [
+                        {"timestamp": "01/01/2020", "data": None},
+                        {"timestamp": "01/02/2020", "data": 10.5},
+                        {"timestamp": "01/03/2020", "data": 12.0},
+                        {"timestamp": "01/04/2020", "data": 12.5},
+                        {"timestamp": "01/05/2020", "data": 13.0},
+                    ],
+                    "SIGNAL_BLOCK-1-4": [
+                        {"timestamp": "2020-01-02", "order": "BUY"},
+                        {"order": "BUY", "timestamp": "2020-01-04"},
+                    ],
+                    "STRATEGY_BLOCK-1-5": {
+                        "portVals": [
+                            {"value": 10000.0, "timestamp": "01/01/2020"},
+                            {"value": 8995.150000000009, "timestamp": "01/02/2020"},
+                            {"value": 18085.15000000001, "timestamp": "01/03/2020"},
+                        ],
+                        "trades": [
+                            {
+                                "date": "01/02/2020",
+                                "symbol": "close",
+                                "order": "BUY",
+                                "monetary_amount": 100000.0,
+                                "trade_id": "",
+                                "stop_loss": "",
+                                "take_profit": "",
+                                "shares": 9090,
+                                "cash_value": 100989.9,
+                            }
+                        ],
+                    },
+                }
+            },
+        )
