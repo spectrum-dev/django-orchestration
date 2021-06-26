@@ -29,7 +29,7 @@ class StrategyIdViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertDictEqual(
             response.json(),
-            {'strategy_id': '00000000-0000-0000-0000-000000000001'}
+            {'strategy_id': '00000000-0000-0000-0000-000000000002'}
         )
     
     @patch('uuid.uuid4', fixed_mock_uuid)
