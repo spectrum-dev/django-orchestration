@@ -2,6 +2,7 @@ import uuid
 import json
 
 from django.http import JsonResponse
+from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from rest_framework.views import APIView
 
@@ -147,5 +148,12 @@ class StrategyCommitView(APIView):
                 output=request_body["outputs"],
             )
             return JsonResponse({"message": "Successfully saved strategy "})
+
+        except IntegrityError:
+            return JsonResponse({"error": "The strategy-commit pair already exist"})
+        except ValidationError:
+            return JsonResponse({"error": "There was a validation error"})
         except Exception as e:
+            print(type(e))
+            print(e)
             return JsonResponse({"error": "There was an error saving the strategy"})

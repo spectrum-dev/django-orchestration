@@ -1,8 +1,7 @@
-import strategy
+import json
 import uuid
 
 from unittest.mock import patch
-from django.contrib.auth.models import User
 from django.test import TestCase
 
 from authentication.factories import UserFactory, set_up_authentication
@@ -30,7 +29,7 @@ class StrategyIdViewTest(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        # TODO: Behaviour here is a little flaky
+        # TODO: Testing behaviour here is a little flaky
         self.assertDictEqual(
             response.json(), {"strategy_id": "00000000-0000-0000-0000-000000000002"}
         )
@@ -294,4 +293,100 @@ class StrategyCommitGetViewTest(TestCase):
 
 
 class StrategyCommitPostViewTest(TestCase):
-    pass
+    def test_ok(self):
+        auth = set_up_authentication()
+        strategy_id = "136f0d6e-1e32-4edb-ac5e-1676047425d2"
+        commit_id = "c98d7e19-673b-4609-9b32-6f827fe515e6"
+
+        UserStrategyFactory(user=auth["user"], strategy=strategy_id)
+
+        payload = {"metadata": {}, "inputs": {}, "outputs": {}}
+
+        response = self.client.post(
+            f"/strategy/{strategy_id}/{commit_id}",
+            json.dumps(payload),
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(), {"message": "Successfully saved strategy "}
+        )
+
+    def test_strategy_id_doesnt_exist(self):
+        auth = set_up_authentication()
+        strategy_id = "136f0d6e-1e32-4edb-ac5e-1676047425d2"
+        commit_id = "c98d7e19-673b-4609-9b32-6f827fe515e6"
+
+        payload = {"metadata": {}, "inputs": {}, "outputs": {}}
+
+        response = self.client.post(
+            f"/strategy/{strategy_id}/{commit_id}",
+            json.dumps(payload),
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(), {"message": "Successfully saved strategy "}
+        )
+
+    def test_strategy_commit_already_exists(self):
+        auth = set_up_authentication()
+        strategy_id = "136f0d6e-1e32-4edb-ac5e-1676047425d2"
+        commit_id = "c98d7e19-673b-4609-9b32-6f827fe515e6"
+
+        user_strategy = UserStrategyFactory(user=auth["user"], strategy=strategy_id)
+
+        StrategyFactory(
+            strategy=user_strategy,
+            commit=commit_id,
+            flow_metadata={},
+            input={"1": {}},
+            output={"1": {}},
+        )
+
+        payload = {"metadata": {}, "inputs": {}, "outputs": {}}
+
+        response = self.client.post(
+            f"/strategy/{strategy_id}/{commit_id}",
+            json.dumps(payload),
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(), {"error": "The strategy-commit pair already exist"}
+        )
+
+    def test_strategy_id_not_valid(self):
+        auth = set_up_authentication()
+        strategy_id = "strategy_id_invalid"
+        commit_id = "c98d7e19-673b-4609-9b32-6f827fe515e6"
+
+        payload = {"metadata": {}, "inputs": {}, "outputs": {}}
+
+        response = self.client.post(
+            f"/strategy/{strategy_id}/{commit_id}",
+            json.dumps(payload),
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(response.json(), {"error": "There was a validation error"})
+
+    def test_commit_id_not_valid(self):
+        auth = set_up_authentication()
+        strategy_id = "136f0d6e-1e32-4edb-ac5e-1676047425d2"
+        commit_id = "commit_id_invalid"
+
+        payload = {"metadata": {}, "inputs": {}, "outputs": {}}
+
+        response = self.client.post(
+            f"/strategy/{strategy_id}/{commit_id}",
+            json.dumps(payload),
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(response.json(), {"error": "There was a validation error"})
