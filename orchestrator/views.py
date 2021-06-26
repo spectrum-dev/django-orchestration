@@ -75,24 +75,27 @@ class ProxyBlockActionView(APIView):
     permission_classes = [SpectrumIsAuthenticated]
 
     def get(self, request, block_type, block_id, action_name):
-        # TODO: Make this more generic for all URL Parameters
-        potential_url_param = request.GET.get("indicatorName", None)
-        potential_url_param_two = request.GET.get("name", None)
+        try:
+            # TODO: Make this more generic for all URL Parameters
+            potential_url_param = request.GET.get("indicatorName", None)
+            potential_url_param_two = request.GET.get("name", None)
 
-        if potential_url_param:
-            response = requests.get(
-                f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}?indicatorName={potential_url_param}"
-            )
-        elif potential_url_param_two:
-            response = requests.get(
-                f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}?name={potential_url_param_two}"
-            )
-        else:
-            response = requests.get(
-                f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}"
-            )
+            if potential_url_param:
+                response = requests.get(
+                    f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}?indicatorName={potential_url_param}"
+                )
+            elif potential_url_param_two:
+                response = requests.get(
+                    f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}?name={potential_url_param_two}"
+                )
+            else:
+                response = requests.get(
+                    f"{environ['API_BASE_URL']}/{block_type}/{block_id}/{action_name}"
+                )
 
-        return JsonResponse(response.json())
+            return JsonResponse(response.json())
+        except Exception as e:
+            return JsonResponse({"error": "Unhandled error"})
 
 
 class ValidateFlow(APIView):
