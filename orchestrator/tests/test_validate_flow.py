@@ -1,3 +1,5 @@
+import responses
+
 from django.test import TestCase
 
 from orchestrator.services.flow.spectrum_flow_v2 import SpectrumFlow
@@ -9,8 +11,18 @@ from orchestrator.tests.data.test_data_validation import (
 
 class ValildateFlowTest(TestCase):
     pass
-    # @staticmethod
-    # def test_full_single_flow_invalid():
+    # @responses.activate
+    # def test_full_single_flow_invalid(self):
+    #     # responses.add(
+    #     #     responses.POST,
+    #     #     f"https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=Ticker%20Name%20DNE&apikey=demo&datatype=json",
+    #     #     json={
+    #     #         "bestMatches": [],
+    #     #     },
+    #     #     status=200,
+    #     # )
+
+    #     print ('Running Test')
     #     flow = SpectrumFlow(
     #         SINGLE_FULL_FLOW_INVALID["nodeList"], SINGLE_FULL_FLOW_INVALID["edgeList"]
     #     )

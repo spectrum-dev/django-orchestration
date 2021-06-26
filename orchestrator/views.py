@@ -4,6 +4,7 @@ from os import environ
 
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.views import APIView
 
@@ -41,21 +42,32 @@ class MetadataView(APIView):
     permission_classes = [SpectrumIsAuthenticated]
 
     def get(self, request, block_type, block_id):
-        block_registry = (
-            BlockRegistry.objects.all()
-            .filter(block_type=block_type)
-            .filter(block_id=block_id)[0]
-        )
+        try:
+            # block_registry = (
+            #     BlockRegistry.objects.all()
+            #     .filter(block_type=block_type)
+            #     .filter(block_id=block_id)[0]
+            # )
 
-        metadata = {
-            "blockName": block_registry.block_name,
-            "blockType": block_registry.block_type,
-            "blockId": block_registry.block_id,
-            "inputs": block_registry.inputs,
-            "validation": block_registry.validations,
-        }
+            block_registry = BlockRegistry.objects.get(
+                block_type=block_type, block_id=block_id
+            )
 
-        return JsonResponse(metadata)
+            metadata = {
+                "blockName": block_registry.block_name,
+                "blockType": block_registry.block_type,
+                "blockId": block_registry.block_id,
+                "inputs": block_registry.inputs,
+                "validation": block_registry.validations,
+            }
+
+            return JsonResponse(metadata)
+        except ObjectDoesNotExist:
+            return JsonResponse({"error": "Block Type - ID Pair does not exist"})
+        except Exception as e:
+            print(type(e))
+            print(e)
+            return JsonResponse({"error": "Unhandled error"})
 
 
 class ProxyBlockActionView(APIView):
