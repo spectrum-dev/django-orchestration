@@ -2,6 +2,8 @@ import uuid
 import json
 
 from django.http import JsonResponse
+from django.db.utils import IntegrityError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from rest_framework.views import APIView
 
 from authentication.decorators import SpectrumAuthentication, SpectrumIsAuthenticated
@@ -16,15 +18,12 @@ class StrategyIdView(APIView):
 
     def get(self, request):
         strategy_id = uuid.uuid4()
-        user = request.user
 
-        strategy_exists = UserStrategy.objects.filter(
-            strategy=strategy_id, user=user
-        ).exists()
+        strategy_exists = UserStrategy.objects.filter(strategy=strategy_id).exists()
         if not strategy_exists:
             return JsonResponse({"strategy_id": strategy_id})
         else:
-            return JsonResponse({"error": "Strategy does not exist"})
+            return JsonResponse({"error": "Strategy does not exist"}, status=404)
 
 
 class StrategyView(APIView):
@@ -32,6 +31,9 @@ class StrategyView(APIView):
     permission_classes = [SpectrumIsAuthenticated]
 
     def get(self, request, strategy_id):
+        """
+        Gets the latest saves strategy data
+        """
         try:
             user = request.user
 
@@ -115,6 +117,10 @@ class StrategyCommitView(APIView):
                     {"error": "You are not authorized to view this strategy"},
                     status=401,
                 )
+        except ValidationError as e:
+            return JsonResponse({"validation_error": "There was a validation error"})
+        except ObjectDoesNotExist as e:
+            return JsonResponse({"error": "ID does not exist"})
         except Exception as e:
             return JsonResponse(
                 {"error": "There was an unhandled error with the response"}, status=500
@@ -142,5 +148,12 @@ class StrategyCommitView(APIView):
                 output=request_body["outputs"],
             )
             return JsonResponse({"message": "Successfully saved strategy "})
+
+        except IntegrityError:
+            return JsonResponse({"error": "The strategy-commit pair already exist"})
+        except ValidationError:
+            return JsonResponse({"error": "There was a validation error"})
         except Exception as e:
+            print(type(e))
+            print(e)
             return JsonResponse({"error": "There was an error saving the strategy"})
