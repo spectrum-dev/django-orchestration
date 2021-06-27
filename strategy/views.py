@@ -26,6 +26,27 @@ class StrategyIdView(APIView):
             return JsonResponse({"error": "Strategy does not exist"}, status=404)
 
 
+class CreateStrategyView(APIView):
+    authentication_classes = [SpectrumAuthentication]
+    permission_classes = [SpectrumIsAuthenticated]
+
+    def post(self, request):
+        try:
+            user = request.user
+            strategy_id = uuid.uuid4()
+
+            UserStrategy.objects.create(strategy=strategy_id, user=user)
+
+            return JsonResponse({"strategy_id": strategy_id})
+        except IntegrityError:
+            return JsonResponse({"error": "The strategy id already exists"}, status=400)
+        except Exception as e:
+            return JsonResponse(
+                {"error": "There was an unhandled error creating the user strategy"},
+                status=400,
+            )
+
+
 class StrategyView(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]

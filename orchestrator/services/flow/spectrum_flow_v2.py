@@ -224,6 +224,8 @@ class SpectrumFlow:
                 raise Exception("JSON Decode Error")
             except Exception as e:
                 raise Exception("Unhandled Exception: ", e)
+        else:
+            print("Error: ", r.json())
 
         return output
 
