@@ -62,6 +62,7 @@ class StrategyIdViewTest(TestCase):
 
 
 class CreateStrategyViewTest(TestCase):
+    @patch("uuid.uuid4", fixed_mock_uuid)
     def test_ok(self):
         auth = set_up_authentication()
         payload = {}
@@ -73,7 +74,7 @@ class CreateStrategyViewTest(TestCase):
         )
 
         self.assertDictEqual(
-            response.json(), {"strategy_id": "1413de9f-2e68-4219-a855-e24c669b0c10"}
+            response.json(), {"strategy_id": "00000000-0000-0000-0000-000000000002"}
         )
 
     @patch("uuid.uuid4", fixed_mock_uuid)
