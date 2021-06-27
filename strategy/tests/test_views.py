@@ -112,7 +112,7 @@ class GetAllStrategiesViewTest(TestCase):
 
         self.assertDictEqual(
             response.json(),
-            {'strategies': [{'strategy_id': 1}, {'strategy_id': 2}]}
+            {'strategies': [{'strategy_id': 5}, {'strategy_id': 6}]}
         )
     
     def test_no_strategies(self):
