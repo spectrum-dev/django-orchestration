@@ -31,7 +31,7 @@ class StrategyIdViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         # TODO: Testing behaviour here is a little flaky
         self.assertDictEqual(
-            response.json(), {"strategy_id": "00000000-0000-0000-0000-000000000002"}
+            response.json(), {"strategy_id": "00000000-0000-0000-0000-000000000004"}
         )
 
     @patch("uuid.uuid4", fixed_mock_uuid)
@@ -95,6 +95,34 @@ class CreateStrategyViewTest(TestCase):
         self.assertDictEqual(
             response.json(), {"error": "The strategy id already exists"}
         )
+
+
+class GetAllStrategiesViewTest(TestCase):
+    @patch("uuid.uuid4", mock_uuid)
+    def test_ok(self):
+        auth = set_up_authentication()
+
+        UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4())
+        UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4())
+
+        response = self.client.get(
+            f"/strategy/getStrategies",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(), {"strategies": [{"strategy_id": 5}, {"strategy_id": 6}]}
+        )
+
+    def test_no_strategies(self):
+        auth = set_up_authentication()
+
+        response = self.client.get(
+            f"/strategy/getStrategies",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(response.json(), {"strategies": []})
 
 
 class StrategyViewTest(TestCase):

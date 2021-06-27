@@ -47,6 +47,24 @@ class CreateStrategyView(APIView):
             )
 
 
+class GetAllStrategiesView(APIView):
+    authentication_classes = [SpectrumAuthentication]
+    permission_classes = [SpectrumIsAuthenticated]
+
+    def get(self, request):
+        try:
+            user = request.user
+            user_strategies = UserStrategy.objects.filter(user=user)
+
+            response = []
+            for user_strategy in user_strategies:
+                response.append({"strategy_id": user_strategy.id})
+
+            return JsonResponse({"strategies": response})
+        except Exception as e:
+            return JsonResponse({"error": "Unhandled error"}, status=400)
+
+
 class StrategyView(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]
