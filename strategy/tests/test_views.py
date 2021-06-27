@@ -97,6 +97,36 @@ class CreateStrategyViewTest(TestCase):
         )
 
 
+class GetAllStrategiesViewTest(TestCase):
+    @patch("uuid.uuid4", mock_uuid)
+    def test_ok(self):
+        auth = set_up_authentication()
+
+        UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4())
+        UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4())
+
+        response = self.client.get(
+            f"/strategy/getStrategies",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(),
+            {'strategies': [{'strategy_id': 1}, {'strategy_id': 2}]}
+        )
+    
+    def test_no_strategies(self):
+        auth = set_up_authentication()
+
+        response = self.client.get(
+            f"/strategy/getStrategies",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+        
+        self.assertDictEqual(
+            response.json(),
+            {'strategies': []}
+        )
 class StrategyViewTest(TestCase):
     @patch("uuid.uuid4", fixed_mock_uuid)
     def test_ok(self):

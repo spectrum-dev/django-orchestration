@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include, url
+from django.views.generic.base import View
 
 import strategy.views
 import orchestrator.views
@@ -46,6 +47,7 @@ urlpatterns = [
     path("orchestration/run", orchestrator.views.RunFlow.as_view()),
     path("strategy/strategyId", strategy.views.StrategyIdView.as_view()),
     path("strategy/createStrategy", strategy.views.CreateStrategyView.as_view()),
+    path("strategy/getStrategies", strategy.views.GetAllStrategiesView.as_view()),
     path("strategy/<strategy_id>", strategy.views.StrategyView.as_view()),
     path("strategy/<strategy_id>/commitId", strategy.views.CommitIdView.as_view()),
     path(
