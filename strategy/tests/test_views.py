@@ -111,10 +111,9 @@ class GetAllStrategiesViewTest(TestCase):
         )
 
         self.assertDictEqual(
-            response.json(),
-            {'strategies': [{'strategy_id': 5}, {'strategy_id': 6}]}
+            response.json(), {"strategies": [{"strategy_id": 5}, {"strategy_id": 6}]}
         )
-    
+
     def test_no_strategies(self):
         auth = set_up_authentication()
 
@@ -122,11 +121,10 @@ class GetAllStrategiesViewTest(TestCase):
             f"/strategy/getStrategies",
             **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
         )
-        
-        self.assertDictEqual(
-            response.json(),
-            {'strategies': []}
-        )
+
+        self.assertDictEqual(response.json(), {"strategies": []})
+
+
 class StrategyViewTest(TestCase):
     @patch("uuid.uuid4", fixed_mock_uuid)
     def test_ok(self):
