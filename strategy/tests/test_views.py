@@ -74,7 +74,7 @@ class CreateStrategyViewTest(TestCase):
         )
 
         self.assertDictEqual(
-            response.json(), {"strategy_id": "00000000-0000-0000-0000-000000000002"}
+            response.json(), {"strategy_id": "00000000-0000-0000-0000-000000000000"}
         )
 
     @patch("uuid.uuid4", fixed_mock_uuid)
