@@ -111,7 +111,13 @@ class GetAllStrategiesViewTest(TestCase):
         )
 
         self.assertDictEqual(
-            response.json(), {'strategies': [{'strategy_id': '00000000-0000-0000-0000-000000000002'}, {'strategy_id': '00000000-0000-0000-0000-000000000003'}]}
+            response.json(),
+            {
+                "strategies": [
+                    {"strategy_id": "00000000-0000-0000-0000-000000000002"},
+                    {"strategy_id": "00000000-0000-0000-0000-000000000003"},
+                ]
+            },
         )
 
     def test_no_strategies(self):
