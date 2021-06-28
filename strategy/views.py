@@ -58,7 +58,7 @@ class GetAllStrategiesView(APIView):
 
             response = []
             for user_strategy in user_strategies:
-                response.append({"strategy_id": user_strategy.strategy})
+                response.append({"strategy_id": user_strategy.strategy, "strategy_name": user_strategy.strategy_name})
 
             return JsonResponse({"strategies": response})
         except Exception as e:

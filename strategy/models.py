@@ -11,6 +11,9 @@ class UserStrategy(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, default=10
     )
     strategy = models.UUIDField(default=uuid.uuid4)
+    strategy_name = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class Strategy(models.Model):

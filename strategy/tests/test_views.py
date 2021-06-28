@@ -102,8 +102,8 @@ class GetAllStrategiesViewTest(TestCase):
     def test_ok(self):
         auth = set_up_authentication()
 
-        UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4())
-        UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4())
+        UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4(), strategy_name="Strategy 1")
+        UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4(), strategy_name="Strategy 2")
 
         response = self.client.get(
             f"/strategy/getStrategies",
@@ -114,8 +114,8 @@ class GetAllStrategiesViewTest(TestCase):
             response.json(),
             {
                 "strategies": [
-                    {"strategy_id": "00000000-0000-0000-0000-000000000002"},
-                    {"strategy_id": "00000000-0000-0000-0000-000000000003"},
+                    {"strategy_id": "00000000-0000-0000-0000-000000000002", "strategy_name": "Strategy 1"},
+                    {"strategy_id": "00000000-0000-0000-0000-000000000003", "strategy_name": "Strategy 2"},
                 ]
             },
         )
