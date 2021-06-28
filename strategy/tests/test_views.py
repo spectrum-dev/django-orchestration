@@ -84,9 +84,7 @@ class CreateStrategyViewTest(TestCase):
     @patch("uuid.uuid4", fixed_mock_uuid)
     def test_strategy_user_pair_exists(self):
         auth = set_up_authentication()
-        payload = {
-            "strategy_name": "Test Strategy"
-        }
+        payload = {"strategy_name": "Test Strategy"}
 
         UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4())
 
@@ -404,7 +402,12 @@ class StrategyCommitPostViewTest(TestCase):
         strategy_id = "136f0d6e-1e32-4edb-ac5e-1676047425d2"
         commit_id = "c98d7e19-673b-4609-9b32-6f827fe515e6"
 
-        payload = {"strategy_name": "Test Strategy", "metadata": {}, "inputs": {}, "outputs": {}}
+        payload = {
+            "strategy_name": "Test Strategy",
+            "metadata": {},
+            "inputs": {},
+            "outputs": {},
+        }
 
         response = self.client.post(
             f"/strategy/{strategy_id}/{commit_id}",
@@ -466,7 +469,12 @@ class StrategyCommitPostViewTest(TestCase):
         strategy_id = "136f0d6e-1e32-4edb-ac5e-1676047425d2"
         commit_id = "commit_id_invalid"
 
-        payload = {"strategy_name": "Test Strategy", "metadata": {}, "inputs": {}, "outputs": {}}
+        payload = {
+            "strategy_name": "Test Strategy",
+            "metadata": {},
+            "inputs": {},
+            "outputs": {},
+        }
 
         response = self.client.post(
             f"/strategy/{strategy_id}/{commit_id}",

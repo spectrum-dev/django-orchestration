@@ -43,7 +43,12 @@ class CreateStrategyView(APIView):
                 strategy_name=request_body["strategy_name"],
             )
 
-            return JsonResponse({"strategy_id": strategy_id, "strategy_name": request_body["strategy_name"]})
+            return JsonResponse(
+                {
+                    "strategy_id": strategy_id,
+                    "strategy_name": request_body["strategy_name"],
+                }
+            )
         except IntegrityError:
             return JsonResponse({"error": "The strategy id already exists"}, status=400)
         except Exception as e:
