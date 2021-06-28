@@ -192,7 +192,7 @@ class StrategyCommitView(APIView):
                 user_strategy = UserStrategy.objects.create(
                     user=user,
                     strategy=strategy_id,
-                    strategy_name=request_body["strategy_name"],
+                    strategy_name=request_body.get("strategy_name", ""),
                 )
             else:
                 user_strategy = user_strategy[0]
