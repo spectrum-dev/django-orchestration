@@ -35,9 +35,15 @@ class CreateStrategyView(APIView):
             user = request.user
             strategy_id = uuid.uuid4()
 
-            UserStrategy.objects.create(strategy=strategy_id, user=user)
+            request_body = json.loads(request.body)
 
-            return JsonResponse({"strategy_id": strategy_id})
+            UserStrategy.objects.create(
+                strategy=strategy_id,
+                user=user,
+                strategy_name=request_body["strategy_name"],
+            )
+
+            return JsonResponse({"strategy_id": strategy_id, "strategy_name": request_body["strategy_name"]})
         except IntegrityError:
             return JsonResponse({"error": "The strategy id already exists"}, status=400)
         except Exception as e:
@@ -58,7 +64,12 @@ class GetAllStrategiesView(APIView):
 
             response = []
             for user_strategy in user_strategies:
-                response.append({"strategy_id": user_strategy.strategy, "strategy_name": user_strategy.strategy_name})
+                response.append(
+                    {
+                        "strategy_id": user_strategy.strategy,
+                        "strategy_name": user_strategy.strategy_name,
+                    }
+                )
 
             return JsonResponse({"strategies": response})
         except Exception as e:
@@ -174,7 +185,9 @@ class StrategyCommitView(APIView):
 
             if not user_strategy.exists():
                 user_strategy = UserStrategy.objects.create(
-                    user=user, strategy=strategy_id
+                    user=user,
+                    strategy=strategy_id,
+                    strategy_name=request_body["strategy_name"],
                 )
             else:
                 user_strategy = user_strategy[0]

@@ -7,25 +7,27 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('strategy', '0001_created_strategy_table'),
+        ("strategy", "0001_created_strategy_table"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='userstrategy',
-            name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            model_name="userstrategy",
+            name="created_at",
+            field=models.DateTimeField(
+                auto_now_add=True, default=django.utils.timezone.now
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='userstrategy',
-            name='strategy_name',
-            field=models.TextField(default=''),
+            model_name="userstrategy",
+            name="strategy_name",
+            field=models.TextField(default=""),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='userstrategy',
-            name='updated_at',
+            model_name="userstrategy",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True),
         ),
     ]

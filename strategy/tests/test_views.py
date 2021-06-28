@@ -65,7 +65,7 @@ class CreateStrategyViewTest(TestCase):
     @patch("uuid.uuid4", fixed_mock_uuid)
     def test_ok(self):
         auth = set_up_authentication()
-        payload = {}
+        payload = {"strategy_name": "Test Strategy"}
         response = self.client.post(
             f"/strategy/createStrategy",
             json.dumps(payload),
@@ -74,13 +74,19 @@ class CreateStrategyViewTest(TestCase):
         )
 
         self.assertDictEqual(
-            response.json(), {"strategy_id": "00000000-0000-0000-0000-000000000000"}
+            response.json(),
+            {
+                "strategy_id": "00000000-0000-0000-0000-000000000000",
+                "strategy_name": "Test Strategy",
+            },
         )
 
     @patch("uuid.uuid4", fixed_mock_uuid)
     def test_strategy_user_pair_exists(self):
         auth = set_up_authentication()
-        payload = {}
+        payload = {
+            "strategy_name": "Test Strategy"
+        }
 
         UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4())
 
@@ -102,8 +108,12 @@ class GetAllStrategiesViewTest(TestCase):
     def test_ok(self):
         auth = set_up_authentication()
 
-        UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4(), strategy_name="Strategy 1")
-        UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4(), strategy_name="Strategy 2")
+        UserStrategyFactory(
+            user=auth["user"], strategy=uuid.uuid4(), strategy_name="Strategy 1"
+        )
+        UserStrategyFactory(
+            user=auth["user"], strategy=uuid.uuid4(), strategy_name="Strategy 2"
+        )
 
         response = self.client.get(
             f"/strategy/getStrategies",
@@ -114,8 +124,14 @@ class GetAllStrategiesViewTest(TestCase):
             response.json(),
             {
                 "strategies": [
-                    {"strategy_id": "00000000-0000-0000-0000-000000000002", "strategy_name": "Strategy 1"},
-                    {"strategy_id": "00000000-0000-0000-0000-000000000003", "strategy_name": "Strategy 2"},
+                    {
+                        "strategy_id": "00000000-0000-0000-0000-000000000002",
+                        "strategy_name": "Strategy 1",
+                    },
+                    {
+                        "strategy_id": "00000000-0000-0000-0000-000000000003",
+                        "strategy_name": "Strategy 2",
+                    },
                 ]
             },
         )
@@ -388,7 +404,7 @@ class StrategyCommitPostViewTest(TestCase):
         strategy_id = "136f0d6e-1e32-4edb-ac5e-1676047425d2"
         commit_id = "c98d7e19-673b-4609-9b32-6f827fe515e6"
 
-        payload = {"metadata": {}, "inputs": {}, "outputs": {}}
+        payload = {"strategy_name": "Test Strategy", "metadata": {}, "inputs": {}, "outputs": {}}
 
         response = self.client.post(
             f"/strategy/{strategy_id}/{commit_id}",
@@ -450,7 +466,7 @@ class StrategyCommitPostViewTest(TestCase):
         strategy_id = "136f0d6e-1e32-4edb-ac5e-1676047425d2"
         commit_id = "commit_id_invalid"
 
-        payload = {"metadata": {}, "inputs": {}, "outputs": {}}
+        payload = {"strategy_name": "Test Strategy", "metadata": {}, "inputs": {}, "outputs": {}}
 
         response = self.client.post(
             f"/strategy/{strategy_id}/{commit_id}",
