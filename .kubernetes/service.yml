@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: spectrum-orchestration
+  name: spectrum-orchestration
+  namespace: staging
+spec:
+  ports:
+  - port: 8000 # External Port
+    protocol: TCP
+    targetPort: 8000 # Internal Port (of container)
+  selector:
+    app: spectrum-orchestration
+status:
+  loadBalancer: {} # No Load Balancer Exposed

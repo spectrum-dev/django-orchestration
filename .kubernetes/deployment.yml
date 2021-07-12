@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spectrum-orchestration
+  namespace: staging
+  labels:
+    app: spectrum-orchestration
+spec:
+  replicas: 1 # By default 1 pod only
+  selector:
+    matchLabels:
+      app: spectrum-orchestration
+  template:
+    metadata:
+      labels:
+        app: spectrum-orchestration
+    spec:
+      containers:
+        - name: spectrum-orchestration
+          image: <CONTAINER_IMAGE_URL>
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            - name: "DATABASE_NAME"
+              valueFrom:
+                secretKeyRef:
+                  name: "spectrum-orchestration"
+                  key: "DATABASE_NAME"
+            - name: "DATABASE_USER"
+              valueFrom:
+                secretKeyRef:
+                  name: "spectrum-orchestration"
+                  key: "DATABASE_USER"
+            - name: "DATABASE_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: "spectrum-orchestration"
+                  key: "DATABASE_PASSWORD"
+            - name: "DATABASE_HOST"
+              valueFrom:
+                secretKeyRef:
+                  name: "spectrum-orchestration"
+                  key: "DATABASE_HOST"
+            - name: "DATABASE_PORT"
+              valueFrom:
+                secretKeyRef:
+                  name: "spectrum-orchestration"
+                  key: "DATABASE_PORT"
+            - name: "API_BASE_URL"
+              value: "https://api.imbue.dev"
