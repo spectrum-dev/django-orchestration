@@ -94,14 +94,9 @@ class MetadataViewTest(TestCase):
                         "fieldVariableName": "outputsize",
                     },
                     {
-                        "fieldName": "Start Date",
-                        "fieldType": "input",
-                        "fieldVariableName": "start_date",
-                    },
-                    {
-                        "fieldName": "End Date",
-                        "fieldType": "input",
-                        "fieldVariableName": "end_date",
+                        "fieldName": "Date Range",
+                        "fieldType": "date_range",
+                        "fieldVariableNames": ["start_date", "end_date"],
                     },
                 ],
                 "validation": {
