@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: spectrum-orchestration
-          image: <CONTAINER_IMAGE_URL>
+          image: registry.digitalocean.com/spectrum/spectrum-orchestration:7ac06c6
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
@@ -31,22 +31,24 @@ spec:
             - name: "DATABASE_USER"
               valueFrom:
                 secretKeyRef:
-                  name: "spectrum-orchestration"
+                  name: "spectrum"
                   key: "DATABASE_USER"
             - name: "DATABASE_PASSWORD"
               valueFrom:
                 secretKeyRef:
-                  name: "spectrum-orchestration"
+                  name: "spectrum"
                   key: "DATABASE_PASSWORD"
             - name: "DATABASE_HOST"
               valueFrom:
                 secretKeyRef:
-                  name: "spectrum-orchestration"
+                  name: "spectrum"
                   key: "DATABASE_HOST"
             - name: "DATABASE_PORT"
               valueFrom:
                 secretKeyRef:
-                  name: "spectrum-orchestration"
+                  name: "spectrum"
                   key: "DATABASE_PORT"
             - name: "API_BASE_URL"
               value: "https://api.imbue.dev"
+      imagePullSecrets:
+        - name: registry-spectrum
