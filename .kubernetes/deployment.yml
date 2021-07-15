@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: spectrum-orchestration
-          image: registry.digitalocean.com/spectrum/spectrum-orchestration:7ac06c6
+          image: <CONTAINER_IMAGE_URL>
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
