@@ -2,6 +2,8 @@ name: Deploy Build to Kubernetes
 on: 
   push:
     branches: [ master ]
+  pull_request:
+    branches: [ master ]
 jobs:
   apply-update-to-kubernetes:
     name: Deploy Build to Kubernetes
