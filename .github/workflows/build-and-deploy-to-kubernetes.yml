@@ -1,8 +1,7 @@
 name: Deploy Build to Kubernetes
 on: 
   push:
-    branches:
-      - master
+    branches: [ master ]
 jobs:
   apply-update-to-kubernetes:
     name: Deploy Build to Kubernetes
@@ -12,7 +11,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Update SHA
-        run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/.kube/_meta
+        run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/.kubernetes/_meta
 
       - name: Build container image
         run: docker build -t registry.digitalocean.com/spectrum/spectrum-orchestration:$(echo $GITHUB_SHA | head -c7) .
@@ -29,7 +28,7 @@ jobs:
         run: docker push registry.digitalocean.com/spectrum/spectrum-orchestration:$(echo $GITHUB_SHA | head -c7)
       
       - name: Update deployment file
-        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<CONTAINER_IMAGE_URL>|registry.digitalocean.com/spectrum/spectrum-orchestration:'${TAG}'|' $GITHUB_WORKSPACE/.kube/deployment.yml
+        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<CONTAINER_IMAGE_URL>|registry.digitalocean.com/spectrum/spectrum-orchestration:'${TAG}'|' $GITHUB_WORKSPACE/.kubernetes/deployment.yml
 
       - name: Save DigitalOcean kubeconfig with short-lived credentials
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 k8s-spectrum

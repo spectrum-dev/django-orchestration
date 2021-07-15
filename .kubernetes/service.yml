@@ -4,7 +4,7 @@ metadata:
   labels:
     app: spectrum-orchestration
   name: spectrum-orchestration
-  namespace: staging
+  namespace: production
 spec:
   ports:
   - port: 8000 # External Port

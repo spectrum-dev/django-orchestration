@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: spectrum-orchestration
-  namespace: staging
+  namespace: production
   labels:
     app: spectrum-orchestration
 spec:
