@@ -49,6 +49,6 @@ spec:
                   name: "spectrum"
                   key: "DATABASE_PORT"
             - name: "API_BASE_URL"
-              value: "https://api.imbue.dev"
+              value: "http://spectrum-block-monolith:8000"
       imagePullSecrets:
         - name: registry-spectrum
