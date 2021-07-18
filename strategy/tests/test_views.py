@@ -1,5 +1,6 @@
 import json
 import uuid
+import datetime
 
 from unittest.mock import patch
 from django.test import TestCase
@@ -15,10 +16,11 @@ def mock_uuid():
     TEST_UUIDS_COUNT += 1
     return uuid.UUID(int=TEST_UUIDS_COUNT)
 
-
 def fixed_mock_uuid():
     return uuid.UUID(int=0)
 
+def mock_now():
+    return datetime.datetime(2015, 9, 3, 11, 15, 0)
 
 class StrategyIdViewTest(TestCase):
     @patch("uuid.uuid4", mock_uuid)
@@ -103,13 +105,14 @@ class CreateStrategyViewTest(TestCase):
 
 class GetAllStrategiesViewTest(TestCase):
     @patch("uuid.uuid4", mock_uuid)
+    @patch('django.utils.timezone.now', mock_now)
     def test_ok(self):
         auth = set_up_authentication()
 
-        user_strategy_1 = UserStrategyFactory(
+        UserStrategyFactory(
             user=auth["user"], strategy=uuid.uuid4(), strategy_name="Strategy 1"
         )
-        user_strategy_2 = UserStrategyFactory(
+        UserStrategyFactory(
             user=auth["user"], strategy=uuid.uuid4(), strategy_name="Strategy 2"
         )
 
@@ -125,12 +128,12 @@ class GetAllStrategiesViewTest(TestCase):
                     {
                         "strategy_id": "00000000-0000-0000-0000-000000000002",
                         "strategy_name": "Strategy 1",
-                        "created_at": user_strategy_1.created_at,
+                        "created_at": "2015-09-03T11:15:00Z"
                     },
                     {
                         "strategy_id": "00000000-0000-0000-0000-000000000003",
                         "strategy_name": "Strategy 2",
-                        "created_at": user_strategy_2.created_at,
+                        "created_at": "2015-09-03T11:15:00Z"
                     },
                 ]
             },
