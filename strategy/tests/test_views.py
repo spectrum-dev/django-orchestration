@@ -106,10 +106,10 @@ class GetAllStrategiesViewTest(TestCase):
     def test_ok(self):
         auth = set_up_authentication()
 
-        UserStrategyFactory(
+        user_strategy_1 = UserStrategyFactory(
             user=auth["user"], strategy=uuid.uuid4(), strategy_name="Strategy 1"
         )
-        UserStrategyFactory(
+        user_strategy_2 = UserStrategyFactory(
             user=auth["user"], strategy=uuid.uuid4(), strategy_name="Strategy 2"
         )
 
@@ -125,10 +125,12 @@ class GetAllStrategiesViewTest(TestCase):
                     {
                         "strategy_id": "00000000-0000-0000-0000-000000000002",
                         "strategy_name": "Strategy 1",
+                        "created_at": user_strategy_1.created_at,
                     },
                     {
                         "strategy_id": "00000000-0000-0000-0000-000000000003",
                         "strategy_name": "Strategy 2",
+                        "created_at": user_strategy_2.created_at,
                     },
                 ]
             },
