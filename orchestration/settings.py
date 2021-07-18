@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from os import environ
 from dotenv import load_dotenv
 
+from corsheaders.defaults import default_headers
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,6 +34,10 @@ DEBUG = True
 
 # CORS
 CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'sentry-trace',
+]
 
 ALLOWED_HOSTS = ["*"]
 

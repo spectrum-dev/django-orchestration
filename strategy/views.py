@@ -68,11 +68,12 @@ class GetAllStrategiesView(APIView):
             user_strategies = UserStrategy.objects.filter(user=user)
 
             response = []
-            for user_strategy in user_strategies:
+            for user_strategy in user_strategies:                
                 response.append(
                     {
                         "strategy_id": user_strategy.strategy,
                         "strategy_name": user_strategy.strategy_name,
+                        "created_at": user_strategy.created_at
                     }
                 )
 
