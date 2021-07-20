@@ -20,7 +20,7 @@ def fixed_mock_uuid():
     return uuid.UUID(int=0)
 
 def mock_now():
-    return datetime.datetime(2015, 9, 3, 11, 15, 0)
+    return "2012-11-01T04:16:13-04:00"
 
 class StrategyIdViewTest(TestCase):
     @patch("uuid.uuid4", mock_uuid)
@@ -205,12 +205,12 @@ class GetAllStrategiesViewTest(TestCase):
                     {
                         "strategy_id": "00000000-0000-0000-0000-000000000002",
                         "strategy_name": "Strategy 1",
-                        "created_at": "2015-09-03T11:15:00Z"
+                        "created_at": "2012-11-01T08:16:13Z"
                     },
                     {
                         "strategy_id": "00000000-0000-0000-0000-000000000003",
                         "strategy_name": "Strategy 2",
-                        "created_at": "2015-09-03T11:15:00Z"
+                        "created_at": "2012-11-01T08:16:13Z"
                     },
                 ]
             },
