@@ -69,6 +69,7 @@ class DeleteStrategyView(APIView):
         except ObjectDoesNotExist:
             return JsonResponse({"error": "Strategy ID does not exist"}, status=404)
         except Exception as e:
+            print ('Exception: ', e)
             return JsonResponse({"error": "Unhandled Error"}, status=400)
 
 class GetAllStrategiesView(APIView):

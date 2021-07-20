@@ -119,6 +119,32 @@ class DeleteStrategyViewTest(TestCase):
             response.json(), {"status": "true"}
         )
 
+    @patch("uuid.uuid4", fixed_mock_uuid)
+    def test_strategy_delete_with_commits(self):
+        auth = set_up_authentication()
+
+        user_strategy = UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4())
+
+        StrategyFactory(
+            strategy=user_strategy,
+            commit=uuid.uuid4(),
+            flow_metadata={},
+            input={},
+            output={},
+        )
+        
+        response = self.client.post(
+            f"/strategy/deleteStrategy/{uuid.uuid4()}",
+            {},
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertDictEqual(
+            response.json(), {"status": "true"}
+        )
+
     def test_strategy_id_dne(self):
         auth = set_up_authentication()
 
@@ -133,7 +159,7 @@ class DeleteStrategyViewTest(TestCase):
         self.assertDictEqual(
             response.json(), {"error": "Strategy ID does not exist"}
         )
-
+    
     def test_different_user_tries_to_delete_strategy(self):
         auth_1 = set_up_authentication()
         auth_2 = set_up_authentication()
