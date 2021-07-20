@@ -10,16 +10,20 @@ from strategy.factories import UserStrategyFactory, StrategyFactory
 
 TEST_UUIDS_COUNT = 0
 
+
 def mock_uuid():
     global TEST_UUIDS_COUNT
     TEST_UUIDS_COUNT += 1
     return uuid.UUID(int=TEST_UUIDS_COUNT)
 
+
 def fixed_mock_uuid():
     return uuid.UUID(int=0)
 
+
 def mock_now():
     return "2012-11-01T04:16:13-04:00"
+
 
 class StrategyIdViewTest(TestCase):
     @patch("uuid.uuid4", mock_uuid)
@@ -101,6 +105,7 @@ class CreateStrategyViewTest(TestCase):
             response.json(), {"error": "The strategy id already exists"}
         )
 
+
 class DeleteStrategyViewTest(TestCase):
     @patch("uuid.uuid4", fixed_mock_uuid)
     def test_ok(self):
@@ -116,9 +121,7 @@ class DeleteStrategyViewTest(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertDictEqual(
-            response.json(), {"status": "true"}
-        )
+        self.assertDictEqual(response.json(), {"status": "true"})
 
     @patch("uuid.uuid4", fixed_mock_uuid)
     def test_strategy_delete_with_commits(self):
@@ -133,7 +136,7 @@ class DeleteStrategyViewTest(TestCase):
             input={},
             output={},
         )
-        
+
         response = self.client.post(
             f"/strategy/deleteStrategy/{uuid.uuid4()}",
             {},
@@ -142,9 +145,7 @@ class DeleteStrategyViewTest(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertDictEqual(
-            response.json(), {"status": "true"}
-        )
+        self.assertDictEqual(response.json(), {"status": "true"})
 
     def test_strategy_id_dne(self):
         auth = set_up_authentication()
@@ -157,9 +158,7 @@ class DeleteStrategyViewTest(TestCase):
         )
 
         self.assertEqual(response.status_code, 404)
-        self.assertDictEqual(
-            response.json(), {"error": "Strategy ID does not exist"}
-        )
+        self.assertDictEqual(response.json(), {"error": "Strategy ID does not exist"})
 
     @patch("uuid.uuid4", fixed_mock_uuid)
     def test_different_user_tries_to_delete_strategy(self):
@@ -176,12 +175,12 @@ class DeleteStrategyViewTest(TestCase):
         )
 
         self.assertEqual(response.status_code, 404)
-        self.assertDictEqual(
-            response.json(), {"error": "Strategy ID does not exist"}
-        )
+        self.assertDictEqual(response.json(), {"error": "Strategy ID does not exist"})
+
+
 class GetAllStrategiesViewTest(TestCase):
     @patch("uuid.uuid4", mock_uuid)
-    @patch('django.utils.timezone.now', mock_now)
+    @patch("django.utils.timezone.now", mock_now)
     def test_ok(self):
         auth = set_up_authentication()
 
@@ -204,12 +203,12 @@ class GetAllStrategiesViewTest(TestCase):
                     {
                         "strategy_id": "00000000-0000-0000-0000-000000000002",
                         "strategy_name": "Strategy 1",
-                        "created_at": "2012-11-01T08:16:13Z"
+                        "created_at": "2012-11-01T08:16:13Z",
                     },
                     {
                         "strategy_id": "00000000-0000-0000-0000-000000000003",
                         "strategy_name": "Strategy 2",
-                        "created_at": "2012-11-01T08:16:13Z"
+                        "created_at": "2012-11-01T08:16:13Z",
                     },
                 ]
             },
