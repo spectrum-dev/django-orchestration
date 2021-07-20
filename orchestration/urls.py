@@ -47,7 +47,10 @@ urlpatterns = [
     path("orchestration/run", orchestrator.views.RunFlow.as_view()),
     path("strategy/strategyId", strategy.views.StrategyIdView.as_view()),
     path("strategy/createStrategy", strategy.views.CreateStrategyView.as_view()),
-    path("strategy/deleteStrategy/<strategy_id>", strategy.views.DeleteStrategyView.as_view()),
+    path(
+        "strategy/deleteStrategy/<strategy_id>",
+        strategy.views.DeleteStrategyView.as_view(),
+    ),
     path("strategy/getStrategies", strategy.views.GetAllStrategiesView.as_view()),
     path("strategy/<strategy_id>", strategy.views.StrategyView.as_view()),
     path("strategy/<strategy_id>/commitId", strategy.views.CommitIdView.as_view()),

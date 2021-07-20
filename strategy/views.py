@@ -57,6 +57,7 @@ class CreateStrategyView(APIView):
                 status=400,
             )
 
+
 class DeleteStrategyView(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]
@@ -69,8 +70,9 @@ class DeleteStrategyView(APIView):
         except ObjectDoesNotExist:
             return JsonResponse({"error": "Strategy ID does not exist"}, status=404)
         except Exception as e:
-            print ('Exception: ', e)
+            print("Exception: ", e)
             return JsonResponse({"error": "Unhandled Error"}, status=400)
+
 
 class GetAllStrategiesView(APIView):
     authentication_classes = [SpectrumAuthentication]
@@ -82,12 +84,12 @@ class GetAllStrategiesView(APIView):
             user_strategies = UserStrategy.objects.filter(user=user)
 
             response = []
-            for user_strategy in user_strategies:                
+            for user_strategy in user_strategies:
                 response.append(
                     {
                         "strategy_id": user_strategy.strategy,
                         "strategy_name": user_strategy.strategy_name,
-                        "created_at": user_strategy.created_at
+                        "created_at": user_strategy.created_at,
                     }
                 )
 

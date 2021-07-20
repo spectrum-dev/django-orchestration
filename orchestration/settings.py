@@ -36,7 +36,7 @@ DEBUG = True
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
-    'sentry-trace',
+    "sentry-trace",
 ]
 
 ALLOWED_HOSTS = ["*"]
