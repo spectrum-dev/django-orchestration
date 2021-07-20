@@ -10,7 +10,6 @@ from strategy.factories import UserStrategyFactory, StrategyFactory
 
 TEST_UUIDS_COUNT = 0
 
-
 def mock_uuid():
     global TEST_UUIDS_COUNT
     TEST_UUIDS_COUNT += 1
