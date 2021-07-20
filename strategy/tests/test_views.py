@@ -159,7 +159,8 @@ class DeleteStrategyViewTest(TestCase):
         self.assertDictEqual(
             response.json(), {"error": "Strategy ID does not exist"}
         )
-    
+
+    @patch("uuid.uuid4", fixed_mock_uuid)
     def test_different_user_tries_to_delete_strategy(self):
         auth_1 = set_up_authentication()
         auth_2 = set_up_authentication()
