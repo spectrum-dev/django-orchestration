@@ -42,7 +42,7 @@ class AllMetadataViewTest(TestCase):
                         "2": {
                             "blockName": "Saddle",
                             "blockMetadata": "/orchestration/SIGNAL_BLOCK/2/",
-                        }
+                        },
                     },
                     "STRATEGY_BLOCK": {
                         "1": {
