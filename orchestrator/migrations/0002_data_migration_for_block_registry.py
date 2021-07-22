@@ -105,6 +105,45 @@ def seed_blocks_into_registry(apps, schema_editor):
     ).save()
 
     BlockRegistry(
+        block_type="SIGNAL_BLOCK",
+        block_id=2,
+        block_name="Saddle",
+        inputs=[
+            {
+                "fieldData": {"base": "/saddleType", "method": "GET"},
+                "fieldName": "Saddle Type",
+                "fieldType": "dropdown",
+                "fieldVariableName": "saddle_type",
+            },
+            {
+                "fieldData": {"base": "/eventAction", "method": "GET"},
+                "fieldName": "Event Action",
+                "fieldType": "dropdown",
+                "fieldVariableName": "event_action",
+            },
+            {
+                "fieldName": "Consecutive Up",
+                "fieldVariableName": "consecutive_up",
+                "fieldType": "input",
+            },
+            {
+                "fieldName": "Consecutive Down",
+                "fieldVariableName": "consecutive_down",
+                "fieldType": "input",
+            },
+        ],
+        validations={
+            "input": {
+                "required": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 1}],
+                "allowed_blocks": [
+                    {"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"}
+                ],
+            },
+            "output": [{"blockType": "SIGNAL_BLOCK", "number": 2}],
+        },
+    ).save()
+
+    BlockRegistry(
         block_type="STRATEGY_BLOCK",
         block_id=1,
         block_name="Backtest",
