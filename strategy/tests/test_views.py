@@ -1,5 +1,6 @@
 import json
 import uuid
+import datetime
 
 from unittest.mock import patch
 from django.test import TestCase
@@ -18,6 +19,10 @@ def mock_uuid():
 
 def fixed_mock_uuid():
     return uuid.UUID(int=0)
+
+
+def mock_now():
+    return "2012-11-01T04:16:13-04:00"
 
 
 class StrategyIdViewTest(TestCase):
@@ -101,8 +106,81 @@ class CreateStrategyViewTest(TestCase):
         )
 
 
+class DeleteStrategyViewTest(TestCase):
+    @patch("uuid.uuid4", fixed_mock_uuid)
+    def test_ok(self):
+        auth = set_up_authentication()
+
+        UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4())
+
+        response = self.client.post(
+            f"/strategy/deleteStrategy/{uuid.uuid4()}",
+            {},
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertDictEqual(response.json(), {"status": "true"})
+
+    @patch("uuid.uuid4", fixed_mock_uuid)
+    def test_strategy_delete_with_commits(self):
+        auth = set_up_authentication()
+
+        user_strategy = UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4())
+
+        StrategyFactory(
+            strategy=user_strategy,
+            commit=uuid.uuid4(),
+            flow_metadata={},
+            input={},
+            output={},
+        )
+
+        response = self.client.post(
+            f"/strategy/deleteStrategy/{uuid.uuid4()}",
+            {},
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertDictEqual(response.json(), {"status": "true"})
+
+    def test_strategy_id_dne(self):
+        auth = set_up_authentication()
+
+        response = self.client.post(
+            f"/strategy/deleteStrategy/{uuid.uuid4()}",
+            {},
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertEqual(response.status_code, 404)
+        self.assertDictEqual(response.json(), {"error": "Strategy ID does not exist"})
+
+    @patch("uuid.uuid4", fixed_mock_uuid)
+    def test_different_user_tries_to_delete_strategy(self):
+        auth_1 = set_up_authentication()
+        auth_2 = set_up_authentication()
+
+        UserStrategyFactory(user=auth_1["user"], strategy=uuid.uuid4())
+
+        response = self.client.post(
+            f"/strategy/deleteStrategy/{uuid.uuid4()}",
+            {},
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth_2['token']}"},
+        )
+
+        self.assertEqual(response.status_code, 404)
+        self.assertDictEqual(response.json(), {"error": "Strategy ID does not exist"})
+
+
 class GetAllStrategiesViewTest(TestCase):
     @patch("uuid.uuid4", mock_uuid)
+    @patch("django.utils.timezone.now", mock_now)
     def test_ok(self):
         auth = set_up_authentication()
 
@@ -125,10 +203,12 @@ class GetAllStrategiesViewTest(TestCase):
                     {
                         "strategy_id": "00000000-0000-0000-0000-000000000002",
                         "strategy_name": "Strategy 1",
+                        "created_at": "2012-11-01T08:16:13Z",
                     },
                     {
                         "strategy_id": "00000000-0000-0000-0000-000000000003",
                         "strategy_name": "Strategy 2",
+                        "created_at": "2012-11-01T08:16:13Z",
                     },
                 ]
             },

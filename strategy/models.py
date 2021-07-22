@@ -8,7 +8,7 @@ class UserStrategy(models.Model):
         unique_together = ("user", "strategy")
 
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, default=10
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=10
     )
     strategy = models.UUIDField(default=uuid.uuid4)
     strategy_name = models.TextField()
@@ -21,7 +21,7 @@ class Strategy(models.Model):
         unique_together = ("strategy", "commit")
 
     strategy = models.ForeignKey(
-        UserStrategy, related_name="%(class)s_strategy", on_delete=models.PROTECT
+        UserStrategy, related_name="%(class)s_strategy", on_delete=models.CASCADE
     )
     commit = models.UUIDField(default=uuid.uuid4)
     flow_metadata = models.JSONField()
