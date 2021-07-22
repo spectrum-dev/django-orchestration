@@ -24,15 +24,14 @@ class AllMetadataView(APIView):
 
         response = {}
         for block_registry in all_blocks_from_registry:
-            response = {
-                **response,
-                block_registry.block_type: {
-                    block_registry.block_id: {
-                        "blockName": block_registry.block_name,
-                        "blockMetadata": f"/orchestration/${block_registry.block_type}/${block_registry.block_id}/",
-                    }
-                },
-            }
+            if block_registry.block_type not in response:
+                response[block_registry.block_type] = {}
+
+            if block_registry.block_id not in response[block_registry.block_type]:
+                response[block_registry.block_type][block_registry.block_id] = {
+                    "blockName": block_registry.block_name,
+                    "blockMetadata": f"/orchestration/{block_registry.block_type}/{block_registry.block_id}/",
+                }
 
         return JsonResponse({"response": response})
 
@@ -43,12 +42,6 @@ class MetadataView(APIView):
 
     def get(self, request, block_type, block_id):
         try:
-            # block_registry = (
-            #     BlockRegistry.objects.all()
-            #     .filter(block_type=block_type)
-            #     .filter(block_id=block_id)[0]
-            # )
-
             block_registry = BlockRegistry.objects.get(
                 block_type=block_type, block_id=block_id
             )
