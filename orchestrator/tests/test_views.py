@@ -25,25 +25,29 @@ class AllMetadataViewTest(TestCase):
                     "DATA_BLOCK": {
                         "1": {
                             "blockName": "Raw Data",
-                            "blockMetadata": "/orchestration/$DATA_BLOCK/$1/",
+                            "blockMetadata": "/orchestration/DATA_BLOCK/1/",
                         }
                     },
                     "COMPUTATIONAL_BLOCK": {
                         "1": {
                             "blockName": "Technical Analysis",
-                            "blockMetadata": "/orchestration/$COMPUTATIONAL_BLOCK/$1/",
+                            "blockMetadata": "/orchestration/COMPUTATIONAL_BLOCK/1/",
                         }
                     },
                     "SIGNAL_BLOCK": {
                         "1": {
                             "blockName": "Event",
-                            "blockMetadata": "/orchestration/$SIGNAL_BLOCK/$1/",
+                            "blockMetadata": "/orchestration/SIGNAL_BLOCK/1/",
+                        },
+                        "2": {
+                            "blockName": "Saddle",
+                            "blockMetadata": "/orchestration/SIGNAL_BLOCK/2/",
                         }
                     },
                     "STRATEGY_BLOCK": {
                         "1": {
                             "blockName": "Backtest",
-                            "blockMetadata": "/orchestration/$STRATEGY_BLOCK/$1/",
+                            "blockMetadata": "/orchestration/STRATEGY_BLOCK/1/",
                         }
                     },
                 }
