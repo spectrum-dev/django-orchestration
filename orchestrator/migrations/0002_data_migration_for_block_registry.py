@@ -187,6 +187,7 @@ def seed_blocks_into_registry(apps, schema_editor):
                 ],
                 "allowed_blocks": [
                     {"blockId": "1", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "2", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "1", "blockType": "DATA_BLOCK"},
                 ],
             },
