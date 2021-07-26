@@ -24,7 +24,7 @@ class AllMetadataViewTest(TestCase):
                 "response": {
                     "DATA_BLOCK": {
                         "1": {
-                            "blockName": "Raw Data",
+                            "blockName": "US Stock Data",
                             "blockMetadata": "/orchestration/DATA_BLOCK/1/",
                         },
                         "2": {
@@ -73,7 +73,7 @@ class MetadataViewTest(TestCase):
         self.assertDictEqual(
             response.json(),
             {
-                "blockName": "Raw Data",
+                "blockName": "US Stock Data",
                 "blockType": "DATA_BLOCK",
                 "blockId": 1,
                 "inputs": [
@@ -84,22 +84,10 @@ class MetadataViewTest(TestCase):
                         "fieldVariableName": "equity_name",
                     },
                     {
-                        "fieldData": {"base": "/dataType", "method": "GET"},
-                        "fieldName": "Data Type",
+                        "fieldData": {"base": "/candlestick", "method": "GET"},
+                        "fieldName": "Candlesticks",
                         "fieldType": "dropdown",
-                        "fieldVariableName": "data_type",
-                    },
-                    {
-                        "fieldData": {"base": "/interval", "method": "GET"},
-                        "fieldName": "Interval",
-                        "fieldType": "dropdown",
-                        "fieldVariableName": "interval",
-                    },
-                    {
-                        "fieldData": {"base": "/outputSize", "method": "GET"},
-                        "fieldName": "Output Size",
-                        "fieldType": "dropdown",
-                        "fieldVariableName": "outputsize",
+                        "fieldVariableName": "candlestick",
                     },
                     {
                         "fieldName": "Date Range",

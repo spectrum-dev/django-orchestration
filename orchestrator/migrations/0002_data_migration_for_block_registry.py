@@ -9,7 +9,7 @@ def seed_blocks_into_registry(apps, schema_editor):
     BlockRegistry(
         block_type="DATA_BLOCK",
         block_id=1,
-        block_name="Raw Data",
+        block_name="US Stock Data",
         inputs=[
             {
                 "fieldData": {
@@ -19,24 +19,12 @@ def seed_blocks_into_registry(apps, schema_editor):
                 "fieldName": "Equity Name",
                 "fieldType": "search",
                 "fieldVariableName": "equity_name",
-            },  # TODO: Change fieldType from dropdown to search
-            {
-                "fieldData": {"base": "/dataType", "method": "GET"},
-                "fieldName": "Data Type",
-                "fieldType": "dropdown",
-                "fieldVariableName": "data_type",
             },
             {
-                "fieldData": {"base": "/interval", "method": "GET"},
-                "fieldName": "Interval",
+                "fieldData": {"base": "/candlestick", "method": "GET"},
+                "fieldName": "Candlesticks",
                 "fieldType": "dropdown",
-                "fieldVariableName": "interval",
-            },
-            {
-                "fieldData": {"base": "/outputSize", "method": "GET"},
-                "fieldName": "Output Size",
-                "fieldType": "dropdown",
-                "fieldVariableName": "outputsize",
+                "fieldVariableName": "candlestick",
             },
             {
                 "fieldName": "Date Range",
