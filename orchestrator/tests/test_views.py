@@ -24,7 +24,7 @@ class AllMetadataViewTest(TestCase):
                 "response": {
                     "DATA_BLOCK": {
                         "1": {
-                            "blockName": "Raw Data",
+                            "blockName": "US Stock Data",
                             "blockMetadata": "/orchestration/DATA_BLOCK/1/",
                         },
                         "2": {
