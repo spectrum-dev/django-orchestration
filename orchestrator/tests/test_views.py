@@ -26,6 +26,10 @@ class AllMetadataViewTest(TestCase):
                         "1": {
                             "blockName": "Raw Data",
                             "blockMetadata": "/orchestration/DATA_BLOCK/1/",
+                        },
+                        "2": {
+                            "blockName": "Crypto Data",
+                            "blockMetadata": "/orchestration/DATA_BLOCK/2/",
                         }
                     },
                     "COMPUTATIONAL_BLOCK": {
