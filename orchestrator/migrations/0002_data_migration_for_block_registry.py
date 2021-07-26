@@ -51,6 +51,38 @@ def seed_blocks_into_registry(apps, schema_editor):
     ).save()
 
     BlockRegistry(
+        block_type="DATA_BLOCK",
+        block_id=2,
+        block_name="Crypto Data",
+        inputs=[
+            {
+                "fieldData": {
+                    "base": "/cryptoName?name=",
+                    "method": "GET",
+                },
+                "fieldName": "Crypto Name",
+                "fieldType": "search",
+                "fieldVariableName": "crypto_name",
+            },
+            {
+                "fieldData": {"base": "/candlestick", "method": "GET"},
+                "fieldName": "Candlesticks",
+                "fieldType": "dropdown",
+                "fieldVariableName": "candlestick",
+            },
+            {
+                "fieldName": "Date Range",
+                "fieldType": "date_range",
+                "fieldVariableNames": ["start_date", "end_date"],
+            },
+        ],
+        validations={
+            "input": {"required": [], "allowed_blocks": []},
+            "output": [{"blockType": "DATA_BLOCK", "number": 1}],
+        },
+    ).save()
+
+    BlockRegistry(
         block_type="COMPUTATIONAL_BLOCK",
         block_id=1,
         block_name="Technical Analysis",
@@ -69,7 +101,10 @@ def seed_blocks_into_registry(apps, schema_editor):
         validations={
             "input": {
                 "required": [{"blockType": "DATA_BLOCK", "number": 1}],
-                "allowed_blocks": [{"blockId": "1", "blockType": "DATA_BLOCK"}],
+                "allowed_blocks": [
+                    {"blockId": "1", "blockType": "DATA_BLOCK"},
+                    {"blockId": "2", "blockType": "DATA_BLOCK"},
+                ],
             },
             "output": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 1}],
         },
@@ -189,6 +224,7 @@ def seed_blocks_into_registry(apps, schema_editor):
                     {"blockId": "1", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "2", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "1", "blockType": "DATA_BLOCK"},
+                    {"blockId": "2", "blockType": "DATA_BLOCK"},
                 ],
             },
             "output": [{"blockType": "STRATEGY_BLOCK", "number": 1}],
