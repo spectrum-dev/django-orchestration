@@ -101,7 +101,10 @@ def seed_blocks_into_registry(apps, schema_editor):
         validations={
             "input": {
                 "required": [{"blockType": "DATA_BLOCK", "number": 1}],
-                "allowed_blocks": [{"blockId": "1", "blockType": "DATA_BLOCK"}, {"blockId": "2", "blockType": "DATA_BLOCK"}],
+                "allowed_blocks": [
+                    {"blockId": "1", "blockType": "DATA_BLOCK"},
+                    {"blockId": "2", "blockType": "DATA_BLOCK"},
+                ],
             },
             "output": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 1}],
         },
@@ -221,7 +224,7 @@ def seed_blocks_into_registry(apps, schema_editor):
                     {"blockId": "1", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "2", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "1", "blockType": "DATA_BLOCK"},
-                    {"blockId": "2", "blockType": "DATA_BLOCK"}
+                    {"blockId": "2", "blockType": "DATA_BLOCK"},
                 ],
             },
             "output": [{"blockType": "STRATEGY_BLOCK", "number": 1}],

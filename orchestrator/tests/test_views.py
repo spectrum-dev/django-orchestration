@@ -30,7 +30,7 @@ class AllMetadataViewTest(TestCase):
                         "2": {
                             "blockName": "Crypto Data",
                             "blockMetadata": "/orchestration/DATA_BLOCK/2/",
-                        }
+                        },
                     },
                     "COMPUTATIONAL_BLOCK": {
                         "1": {
