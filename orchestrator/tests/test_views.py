@@ -346,12 +346,18 @@ class ValidateFlowTest(TestCase):
             **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
         )
 
-        expected_response = {
-            "valid": False,
-            "edges": {"reactflow__edge-1output_id888-4input_id891": False},
-        }
-
-        self.assertDictEqual(response.json(), expected_response)
+        self.assertDictEqual(
+            response.json(),
+            {
+                "valid": False,
+                "edges": {
+                    "reactflow__edge-1output_id888-4input_id891": {
+                        "status": False,
+                        "allowed_connections": ["Technical Analysis"],
+                    }
+                },
+            },
+        )
 
     def test_ok(self):
         auth = set_up_authentication()
@@ -365,14 +371,29 @@ class ValidateFlowTest(TestCase):
         self.assertDictEqual(
             response.json(),
             {
-                "edges": {
-                    "reactflow__edge-1output_id888-2input_id891": True,
-                    "reactflow__edge-1output_id1136-3input_id1143": True,
-                    "reactflow__edge-2output_id1356-4input_id1363": True,
-                    "reactflow__edge-3output_id1576-4input_id1579": True,
-                    "reactflow__edge-4output_id1796-5input_id1799": True,
-                },
                 "valid": True,
+                "edges": {
+                    "reactflow__edge-1output_id888-2input_id891": {
+                        "status": True,
+                        "allowed_connections": [],
+                    },
+                    "reactflow__edge-1output_id1136-3input_id1143": {
+                        "status": True,
+                        "allowed_connections": [],
+                    },
+                    "reactflow__edge-2output_id1356-4input_id1363": {
+                        "status": True,
+                        "allowed_connections": [],
+                    },
+                    "reactflow__edge-3output_id1576-4input_id1579": {
+                        "status": True,
+                        "allowed_connections": [],
+                    },
+                    "reactflow__edge-4output_id1796-5input_id1799": {
+                        "status": True,
+                        "allowed_connections": [],
+                    },
+                },
             },
         )
 
@@ -390,9 +411,18 @@ class ValidateFlowTest(TestCase):
             {
                 "valid": False,
                 "edges": {
-                    "reactflow__edge-1output_id502-4input_id589": False,
-                    "reactflow__edge-4output_id986-2input_id1089": False,
-                    "reactflow__edge-4output_id1230-3input_id1417": False,
+                    "reactflow__edge-1output_id502-4input_id589": {
+                        "status": False,
+                        "allowed_connections": ["Technical Analysis"],
+                    },
+                    "reactflow__edge-4output_id986-2input_id1089": {
+                        "status": False,
+                        "allowed_connections": ["US Stock Data", "Crypto Data"],
+                    },
+                    "reactflow__edge-4output_id1230-3input_id1417": {
+                        "status": False,
+                        "allowed_connections": ["Technical Analysis"],
+                    },
                 },
             },
         )

@@ -359,19 +359,10 @@ class SpectrumFlow:
                     target_block["blockType"], target_block["blockId"]
                 )
 
-                # print ()
-                # print ('Edge: ', edge)
-                # print ()
-
                 is_edge_valid = False
                 for allowed_block in target_block_data.validations["input"][
                     "allowed_blocks"
                 ]:
-                    # print ()
-                    # print ('Source Block: ', source_block)
-                    # print ('Allowed Block: ', allowed_block)
-                    # print ()
-
                     is_edge_valid = is_edge_valid or (
                         (str(allowed_block["blockId"]) == str(source_block["blockId"]))
                         and (
@@ -380,11 +371,28 @@ class SpectrumFlow:
                         )
                     )
 
-                    # print ('Is Edge Valid: ', is_edge_valid)
+                target_block = self._get_block_data_from_registry(
+                    target_block["blockType"], target_block["blockId"]
+                )
 
-                self.edge_validation[edge["id"]] = is_edge_valid
+                allowed_connections = []
+                if not is_edge_valid:
+                    for allowed_block in target_block_data.validations["input"][
+                        "allowed_blocks"
+                    ]:
+                        block_data = self._get_block_data_from_registry(
+                            allowed_block["blockType"], allowed_block["blockId"]
+                        )
+                        allowed_connections.append(block_data.block_name)
+
+                self.edge_validation[edge["id"]] = {
+                    "status": is_edge_valid,
+                    "target_block": target_block.block_name,
+                    "allowed_connections": allowed_connections,
+                }
 
             return is_valid
+
         elif mode == "RUN":
             return output_cache
         else:
