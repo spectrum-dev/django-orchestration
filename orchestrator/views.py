@@ -11,8 +11,7 @@ from rest_framework.views import APIView
 from authentication.decorators import SpectrumAuthentication, SpectrumIsAuthenticated
 
 from orchestrator.models import BlockRegistry
-from orchestrator.services.flow.run import run
-from orchestrator.services.flow.spectrum_flow_v2 import SpectrumFlow
+from orchestrator.services.flow.spectrum_flow import SpectrumFlow
 
 
 class AllMetadataView(APIView):
