@@ -11,7 +11,7 @@ cryptography==3.4.7
 defusedxml==0.7.1
 Django==3.2.5
 django-admin==2.0.1
-django-allauth==0.44.0
+django-allauth==0.45.0
 django-cors-headers==3.7.0
 django-environ==0.4.5
 django-excel-base==1.0.4
