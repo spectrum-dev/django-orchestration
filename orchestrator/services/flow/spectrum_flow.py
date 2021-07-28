@@ -113,6 +113,7 @@ class SpectrumFlow:
         self.dependency_graph = graph.dependency_graph.adjacency_list
         self.batched_tasks = graph.batched_tasks
 
+        self.edge_validation = {}
         self.is_valid = self.run(mode="VALIDATE")
 
     def _get_block_by_id(self, block_id):
@@ -275,6 +276,7 @@ class SpectrumFlow:
                         if value["value"] == "":
                             is_valid = False
 
+                # Checks if the graph has an edge
                 if len(self.dependency_graph[task_to_be_run]) == 0:
                     is_valid = (
                         is_valid
@@ -337,10 +339,6 @@ class SpectrumFlow:
                     for required in block_registry_data.validations["input"][
                         "required"
                     ]:
-                        # print("Block Type:", required["blockType"])
-                        # print("Required Block Number: ", required["number"])
-                        # print(assembled_dependency_list_from_flow)
-
                         if required["blockType"] in assembled_dependency_list_from_flow:
                             is_valid = (
                                 is_valid
@@ -353,7 +351,48 @@ class SpectrumFlow:
                             is_valid = False
 
         if mode == "VALIDATE":
+            for edge in self.edges:
+                source_block = self._get_block_by_id(edge["source"])
+                target_block = self._get_block_by_id(edge["target"])
+
+                target_block_data = self._get_block_data_from_registry(
+                    target_block["blockType"], target_block["blockId"]
+                )
+
+                is_edge_valid = False
+                for allowed_block in target_block_data.validations["input"][
+                    "allowed_blocks"
+                ]:
+                    is_edge_valid = is_edge_valid or (
+                        (str(allowed_block["blockId"]) == str(source_block["blockId"]))
+                        and (
+                            str(allowed_block["blockType"])
+                            == str(source_block["blockType"])
+                        )
+                    )
+
+                target_block = self._get_block_data_from_registry(
+                    target_block["blockType"], target_block["blockId"]
+                )
+
+                allowed_connections = []
+                if not is_edge_valid:
+                    for allowed_block in target_block_data.validations["input"][
+                        "allowed_blocks"
+                    ]:
+                        block_data = self._get_block_data_from_registry(
+                            allowed_block["blockType"], allowed_block["blockId"]
+                        )
+                        allowed_connections.append(block_data.block_name)
+
+                self.edge_validation[edge["id"]] = {
+                    "status": is_edge_valid,
+                    "target_block": target_block.block_name,
+                    "allowed_connections": allowed_connections,
+                }
+
             return is_valid
+
         elif mode == "RUN":
             return output_cache
         else:

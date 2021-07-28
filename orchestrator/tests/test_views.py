@@ -303,6 +303,63 @@ class ProxyBlockActionViewTest(TestCase):
 
 
 class ValidateFlowTest(TestCase):
+    def test_single_edge_invalid(self):
+        request_payload = {
+            "nodeList": {
+                "1": {
+                    "blockType": "DATA_BLOCK",
+                    "blockId": 1,
+                    "equity_name": {"value": "AAPL", "options": []},
+                    "data_type": {
+                        "value": "intraday",
+                        "options": ["intraday", "daily_adjusted"],
+                    },
+                    "interval": {"value": "1min", "options": ["1min"]},
+                    "outputsize": {"value": "compact", "options": ["compact", "full"]},
+                    "start_date": {"value": "2021-06-21 19:58:00"},
+                    "end_date": {"value": "2021-06-21 20:00:00"},
+                },
+                "4": {
+                    "blockType": "SIGNAL_BLOCK",
+                    "blockId": 1,
+                    "event_type": {"value": "INTERSECT"},
+                    "event_action": {"value": "BUY"},
+                },
+            },
+            "edgeList": [
+                {
+                    "source": "1",
+                    "sourceHandle": "output_id888",
+                    "target": "4",
+                    "targetHandle": "input_id891",
+                    "type": "edge",
+                    "id": "reactflow__edge-1output_id888-4input_id891",
+                },
+            ],
+        }
+
+        auth = set_up_authentication()
+        response = self.client.post(
+            "/orchestration/validate",
+            json.dumps(request_payload),
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(),
+            {
+                "valid": False,
+                "edges": {
+                    "reactflow__edge-1output_id888-4input_id891": {
+                        "status": False,
+                        "target_block": "Event",
+                        "allowed_connections": ["Technical Analysis"],
+                    }
+                },
+            },
+        )
+
     def test_ok(self):
         auth = set_up_authentication()
         response = self.client.post(
@@ -312,7 +369,39 @@ class ValidateFlowTest(TestCase):
             **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
         )
 
-        self.assertDictEqual(response.json(), {"valid": True})
+        self.assertDictEqual(
+            response.json(),
+            {
+                "valid": True,
+                "edges": {
+                    "reactflow__edge-1output_id888-2input_id891": {
+                        "status": True,
+                        "target_block": "Technical Analysis",
+                        "allowed_connections": [],
+                    },
+                    "reactflow__edge-1output_id1136-3input_id1143": {
+                        "status": True,
+                        "target_block": "Technical Analysis",
+                        "allowed_connections": [],
+                    },
+                    "reactflow__edge-2output_id1356-4input_id1363": {
+                        "status": True,
+                        "target_block": "Event",
+                        "allowed_connections": [],
+                    },
+                    "reactflow__edge-3output_id1576-4input_id1579": {
+                        "status": True,
+                        "target_block": "Event",
+                        "allowed_connections": [],
+                    },
+                    "reactflow__edge-4output_id1796-5input_id1799": {
+                        "status": True,
+                        "target_block": "Backtest",
+                        "allowed_connections": [],
+                    },
+                },
+            },
+        )
 
     def test_invalid(self):
         auth = set_up_authentication()
@@ -323,7 +412,29 @@ class ValidateFlowTest(TestCase):
             **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
         )
 
-        self.assertDictEqual(response.json(), {"valid": False})
+        self.assertDictEqual(
+            response.json(),
+            {
+                "valid": False,
+                "edges": {
+                    "reactflow__edge-1output_id502-4input_id589": {
+                        "status": False,
+                        "target_block": "Event",
+                        "allowed_connections": ["Technical Analysis"],
+                    },
+                    "reactflow__edge-4output_id986-2input_id1089": {
+                        "status": False,
+                        "target_block": "Technical Analysis",
+                        "allowed_connections": ["US Stock Data", "Crypto Data"],
+                    },
+                    "reactflow__edge-4output_id1230-3input_id1417": {
+                        "status": False,
+                        "target_block": "Event",
+                        "allowed_connections": ["Technical Analysis"],
+                    },
+                },
+            },
+        )
 
 
 class RunFlowTest(TestCase):
