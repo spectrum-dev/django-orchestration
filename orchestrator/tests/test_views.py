@@ -325,9 +325,6 @@ class ValidateFlowTest(TestCase):
 
         self.assertDictEqual(response.json(), {"valid": False})
 
-class ValidateFlowTestUpdated(TestCase):
-    def test_simple_flow(self):
-        auth = setup_authentication()
 
 class RunFlowTest(TestCase):
     @responses.activate
