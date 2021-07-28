@@ -384,7 +384,7 @@ class SpectrumFlow:
                             allowed_block["blockType"], allowed_block["blockId"]
                         )
                         allowed_connections.append(block_data.block_name)
-                
+
                 self.edge_validation[edge["id"]] = {
                     "status": is_edge_valid,
                     "target_block": target_block.block_name,
