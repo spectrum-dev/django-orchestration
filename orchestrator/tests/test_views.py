@@ -353,6 +353,7 @@ class ValidateFlowTest(TestCase):
                 "edges": {
                     "reactflow__edge-1output_id888-4input_id891": {
                         "status": False,
+                        "target_block": "Event",
                         "allowed_connections": ["Technical Analysis"],
                     }
                 },
@@ -375,22 +376,27 @@ class ValidateFlowTest(TestCase):
                 "edges": {
                     "reactflow__edge-1output_id888-2input_id891": {
                         "status": True,
+                        "target_block": "Technical Analysis",
                         "allowed_connections": [],
                     },
                     "reactflow__edge-1output_id1136-3input_id1143": {
                         "status": True,
+                        "target_block": "Technical Analysis",
                         "allowed_connections": [],
                     },
                     "reactflow__edge-2output_id1356-4input_id1363": {
                         "status": True,
+                        "target_block": "Event",
                         "allowed_connections": [],
                     },
                     "reactflow__edge-3output_id1576-4input_id1579": {
                         "status": True,
+                        "target_block": "Event",
                         "allowed_connections": [],
                     },
                     "reactflow__edge-4output_id1796-5input_id1799": {
                         "status": True,
+                        "target_block": "Backtest",
                         "allowed_connections": [],
                     },
                 },
@@ -413,14 +419,17 @@ class ValidateFlowTest(TestCase):
                 "edges": {
                     "reactflow__edge-1output_id502-4input_id589": {
                         "status": False,
+                        "target_block": "Event",
                         "allowed_connections": ["Technical Analysis"],
                     },
                     "reactflow__edge-4output_id986-2input_id1089": {
                         "status": False,
+                        "target_block": "Technical Analysis",
                         "allowed_connections": ["US Stock Data", "Crypto Data"],
                     },
                     "reactflow__edge-4output_id1230-3input_id1417": {
                         "status": False,
+                        "target_block": "Event",
                         "allowed_connections": ["Technical Analysis"],
                     },
                 },
