@@ -9,7 +9,7 @@ def seed_blocks_into_registry(apps, schema_editor):
     BlockRegistry(
         block_type="DATA_BLOCK",
         block_id=1,
-        block_name="Raw Data",
+        block_name="US Stock Data",
         inputs=[
             {
                 "fieldData": {
@@ -19,24 +19,44 @@ def seed_blocks_into_registry(apps, schema_editor):
                 "fieldName": "Equity Name",
                 "fieldType": "search",
                 "fieldVariableName": "equity_name",
-            },  # TODO: Change fieldType from dropdown to search
-            {
-                "fieldData": {"base": "/dataType", "method": "GET"},
-                "fieldName": "Data Type",
-                "fieldType": "dropdown",
-                "fieldVariableName": "data_type",
             },
             {
-                "fieldData": {"base": "/interval", "method": "GET"},
-                "fieldName": "Interval",
+                "fieldData": {"base": "/candlestick", "method": "GET"},
+                "fieldName": "Candlesticks",
                 "fieldType": "dropdown",
-                "fieldVariableName": "interval",
+                "fieldVariableName": "candlestick",
             },
             {
-                "fieldData": {"base": "/outputSize", "method": "GET"},
-                "fieldName": "Output Size",
+                "fieldName": "Date Range",
+                "fieldType": "date_range",
+                "fieldVariableNames": ["start_date", "end_date"],
+            },
+        ],
+        validations={
+            "input": {"required": [], "allowed_blocks": []},
+            "output": [{"blockType": "DATA_BLOCK", "number": 1}],
+        },
+    ).save()
+
+    BlockRegistry(
+        block_type="DATA_BLOCK",
+        block_id=2,
+        block_name="Crypto Data",
+        inputs=[
+            {
+                "fieldData": {
+                    "base": "/cryptoName?name=",
+                    "method": "GET",
+                },
+                "fieldName": "Crypto Name",
+                "fieldType": "search",
+                "fieldVariableName": "crypto_name",
+            },
+            {
+                "fieldData": {"base": "/candlestick", "method": "GET"},
+                "fieldName": "Candlesticks",
                 "fieldType": "dropdown",
-                "fieldVariableName": "outputsize",
+                "fieldVariableName": "candlestick",
             },
             {
                 "fieldName": "Date Range",
@@ -69,7 +89,10 @@ def seed_blocks_into_registry(apps, schema_editor):
         validations={
             "input": {
                 "required": [{"blockType": "DATA_BLOCK", "number": 1}],
-                "allowed_blocks": [{"blockId": "1", "blockType": "DATA_BLOCK"}],
+                "allowed_blocks": [
+                    {"blockId": "1", "blockType": "DATA_BLOCK"},
+                    {"blockId": "2", "blockType": "DATA_BLOCK"},
+                ],
             },
             "output": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 1}],
         },
@@ -101,6 +124,45 @@ def seed_blocks_into_registry(apps, schema_editor):
                 ],
             },
             "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}],
+        },
+    ).save()
+
+    BlockRegistry(
+        block_type="SIGNAL_BLOCK",
+        block_id=2,
+        block_name="Saddle",
+        inputs=[
+            {
+                "fieldData": {"base": "/saddleType", "method": "GET"},
+                "fieldName": "Saddle Type",
+                "fieldType": "dropdown",
+                "fieldVariableName": "saddle_type",
+            },
+            {
+                "fieldData": {"base": "/eventAction", "method": "GET"},
+                "fieldName": "Event Action",
+                "fieldType": "dropdown",
+                "fieldVariableName": "event_action",
+            },
+            {
+                "fieldName": "Consecutive Up",
+                "fieldVariableName": "consecutive_up",
+                "fieldType": "input",
+            },
+            {
+                "fieldName": "Consecutive Down",
+                "fieldVariableName": "consecutive_down",
+                "fieldType": "input",
+            },
+        ],
+        validations={
+            "input": {
+                "required": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 1}],
+                "allowed_blocks": [
+                    {"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"}
+                ],
+            },
+            "output": [{"blockType": "SIGNAL_BLOCK", "number": 2}],
         },
     ).save()
 
@@ -148,7 +210,9 @@ def seed_blocks_into_registry(apps, schema_editor):
                 ],
                 "allowed_blocks": [
                     {"blockId": "1", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "2", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "1", "blockType": "DATA_BLOCK"},
+                    {"blockId": "2", "blockType": "DATA_BLOCK"},
                 ],
             },
             "output": [{"blockType": "STRATEGY_BLOCK", "number": 1}],

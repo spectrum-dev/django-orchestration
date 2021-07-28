@@ -1,39 +1,53 @@
 import json
-import logging
 import requests
 from os import environ
 from copy import deepcopy
 
 from orchestrator.models import BlockRegistry
-from orchestrator.services.flow.graph import Graph
 
 
-class SpectrumFlow:
-    """
-    Ingests a list of vertices and edges to create a representation of a "spectrum flow"
-    """
+class Graph:
+    def __init__(self):
+        self.adjacency_list = {}
 
+    def __repr__(self):
+        return repr(self.adjacency_list)
+
+    def insert(self, source_vertex, dest_vertex):
+        """
+        Inserts one or both vertices (depending on if either exists) and
+        connects one vertex to the other
+
+        Attributes:
+            source_vertex: Start / Originating Vertex
+            dest_vertex: Destination Vertex
+        """
+        if not (source_vertex in self.adjacency_list):
+            self.adjacency_list[source_vertex] = set()
+
+        self.adjacency_list[source_vertex].add(dest_vertex)
+
+
+class DependencyGraph:
     def __init__(self, vertices, edges):
         self.vertices = vertices
         self.edges = edges
 
-        self.graph = self.generate_adjacency_list()
+        self.graph = self.generate_graph()
         self.dependency_graph = self.generate_dependency_graph()
-        self.batched_tasks = self.get_batched_tasks()
+        self.batched_tasks = self.generate_batched_tasks()
 
-    def generate_adjacency_list(self):
+    def generate_graph(self):
         """
-        Creates an adjacency list when passed in a list of nodes and edges
+        Generates an adjacency list graph representation using the node and edge pairs
         """
         graph = Graph()
 
-        # Initializes the adjacency list with initial values
-        for vertex in self.vertices:
-            id = vertex["id"]
-            if not id in graph.adjacency_list:
-                graph.adjacency_list[id] = set()
+        # Initializes the Adjacency List of Blocks
+        for block_id, vertex in self.vertices.items():
+            if block_id not in graph.adjacency_list:
+                graph.adjacency_list[block_id] = set()
 
-        # Iterates through the edges and populates the values in the adjacency list
         for edge in self.edges:
             graph.insert(edge["source"], edge["target"])
 
@@ -41,18 +55,18 @@ class SpectrumFlow:
 
     def generate_dependency_graph(self):
         """
-        Creates a depedency graph by transposing the adjacency list
+        Transposes the adjacency list to create a graph of dependencies
         """
         dependency_graph = Graph()
 
         # Initializes the adjacency list with initial values
         for source_vertex, _ in self.graph.adjacency_list.items():
-            if not source_vertex in dependency_graph.adjacency_list:
+            if source_vertex not in dependency_graph.adjacency_list:
                 dependency_graph.adjacency_list[source_vertex] = set()
 
         # Reverses the direction of the node connections
         for source_vertex, dest_vertices in self.graph.adjacency_list.items():
-            if not source_vertex in dependency_graph.adjacency_list:
+            if source_vertex not in dependency_graph.adjacency_list:
                 dependency_graph.adjacency_list[source_vertex] = set()
 
             for dest_vertex in dest_vertices:
@@ -60,9 +74,9 @@ class SpectrumFlow:
 
         return dependency_graph
 
-    def get_batched_tasks(self):
+    def generate_batched_tasks(self):
         """
-        Traverses through the adjacency list to sequence through tasks
+        Creates a series of batches tasks that need to be executed sequentially
         """
         batches = []
 
@@ -87,109 +101,203 @@ class SpectrumFlow:
 
         return batches
 
-    def validate_strategy(self):
-        def get_block_by_id(id):
-            """
-            Retrieves a block from the list of vertices passed in initially
-            Attributes:
-            id: ID of Block in Flow
-            """
-            for vertex in self.vertices:
-                if vertex["id"] == id:
-                    return vertex
 
-        def dfs(
-            visited,
-            block_id_in_flow,
-            allowed_block_data,
-            target_block_data,
-            blocks_found,
-        ):
-            """
-            Performs a DFS recursively that iterates through the directed adjacency list.
-            It attempts to determine which blocks downstream in the sequence have their required data
+class SpectrumFlow:
+    def __init__(self, vertices, edges):
+        self.vertices = vertices
+        self.edges = edges
 
-            Attributes:
-            visited: Set of blocks that have already been traversed
-            block_id_in_flow: The current block ID being iterated on
-            allowed_block_data: List of permitted input blocks
-            target_block_data: States the block type and number of blocks being searched for
-            """
+        graph = DependencyGraph(vertices, edges)
 
-            block_data = get_block_by_id(block_id_in_flow)
+        self.graph = graph.graph.adjacency_list
+        self.dependency_graph = graph.dependency_graph.adjacency_list
+        self.batched_tasks = graph.batched_tasks
 
-            if (
-                block_data["data"]["metadata"]["blockType"]
-                == target_block_data["blockType"]
-            ):
-                for allowed_block in allowed_block_data:
-                    if str(block_data["data"]["metadata"]["blockType"]) == str(
-                        allowed_block["blockType"]
-                    ) and str(block_data["data"]["metadata"]["blockId"]) == str(
-                        allowed_block["blockId"]
-                    ):
-                        blocks_found.append(block_id_in_flow)
+        self.edge_validation = {}
+        self.is_valid = self.run(mode="VALIDATE")
 
-                        # Stopping Condition
-                        if len(blocks_found) == int(target_block_data["number"]):
-                            return
+    def _get_block_by_id(self, block_id):
+        """
+        Retrieves a block by its ID
 
-            if block_id_in_flow not in visited:
-                visited.add(block_id_in_flow)
-                for neighbor in self.dependency_graph.adjacency_list[block_id_in_flow]:
-                    dfs(
-                        visited,
-                        neighbor,
-                        allowed_block_data,
-                        target_block_data,
-                        blocks_found,
-                    )
+        block_id: ID of block in flow
+        """
+        try:
+            return self.vertices[block_id]
+        except KeyError:
+            raise Exception(f"The Block ID {block_id} could not be found")
 
-        def get_block_data_from_registry(block_data, block_id_in_flow):
-            """
-            Retrieves the Block Data from the registry given the block ID in the flow
-
-            Attributes:
-            block_data: Full JSON of Block Data from Front-End
-            block_id_in_flow: The Block ID generated by the front-end when assembling a flow
-            """
-            # Block Data from Block Registry
-            # TODO: Maybe this should be optimized since its querying the whole table
-            block_registry_data = (
+    @staticmethod
+    def _get_block_data_from_registry(block_type, block_id):
+        try:
+            return (
                 BlockRegistry.objects.all()
-                .filter(block_type=block_data["data"]["metadata"]["blockType"])
-                .filter(block_id=block_data["data"]["metadata"]["blockId"])[0]
+                .filter(block_type=block_type)
+                .filter(block_id=block_id)
+                .first()
             )
+        except Exception as e:
+            raise Exception(e)
 
-            return block_registry_data
+    def _dfs(
+        self,
+        visited,
+        block_id_in_flow,
+        allowed_block_data,
+        target_block_data,
+        blocks_found,
+    ):
+        """
+        Recursively iterates through directed adjancency list
 
-        is_valid = True
-        # Main Running Code
-        for task in self.batched_tasks:
-            # Goes through a set of tasks. Each FOR loop should make a request
-            # TODO: This part of the process can be asynchronous
-            for task_to_be_run in task:
-                # Gets the full sent data about the block
-                block_data = get_block_by_id(task_to_be_run)
-                block_registry_data = get_block_data_from_registry(
-                    block_data, task_to_be_run
+        Attempts to determine which blocks downstream in the sequence have required data
+
+        Attributes:
+            visited: Set of blocks that have been traversed
+            block_id_in_flow: Current block ID being unpacked
+            allowed_block_data: List of allowed input blocks
+            target_block_data: Block Type and Number of Blocks being searched for
+        """
+        block_data = self._get_block_by_id(block_id_in_flow)
+
+        if block_data["blockType"] == target_block_data["blockType"]:
+            for allowed_block in allowed_block_data:
+                if str(block_data["blockType"]) == str(
+                    allowed_block["blockType"]
+                ) and str(block_data["blockId"]) == str(allowed_block["blockId"]):
+                    blocks_found.append(block_id_in_flow)
+
+                    if len(blocks_found) == int(target_block_data["number"]):
+                        return
+
+        if block_id_in_flow not in visited:
+            visited.add(block_id_in_flow)
+
+            for neighbor in self.dependency_graph[block_id_in_flow]:
+                self._dfs(
+                    visited,
+                    neighbor,
+                    allowed_block_data,
+                    target_block_data,
+                    blocks_found,
                 )
 
-                if len(self.dependency_graph.adjacency_list[task_to_be_run]) == 0:
+    def _make_run_request(
+        self, block_id_in_flow, block_registry_data, input_payload, output_payload
+    ):
+        """
+        Hits the `/run` endpoint for each block to complete the request
+
+        Attributes
+        block_id_in_flow: Block ID generated by the frontend
+        block_registry_data: Block Data queried from the frontend
+        input_payload: Input Payload
+        output_payload: Output Payload
+        """
+
+        request_url = f"{environ['API_BASE_URL']}/{block_registry_data.block_type}/{block_registry_data.block_id}/run"
+
+        # Input Transformation
+        input_cleaned_payload = {}
+        for k, v in input_payload.items():
+            if type(v) is dict and "value" in v:
+                input_cleaned_payload[k] = v["value"]
+
+        request_payload = {"input": input_cleaned_payload, "output": output_payload}
+
+        r = requests.post(request_url, json=request_payload)
+
+        output = {}
+        if r.status_code == 200:
+            block_type_id_key = f"{block_registry_data.block_type}-{block_registry_data.block_id}-{block_id_in_flow}"
+
+            if block_type_id_key not in output.keys():
+                output[block_type_id_key] = {}
+
+            try:
+                response_json = r.json()
+                if "response" in response_json:
+                    output[block_type_id_key] = response_json["response"]
+                else:
+                    raise Exception("JSON Key 'response' could not be found")
+
+            except json.decoder.JSONDecodeError as e:
+                raise Exception("JSON Decode Error")
+            except Exception as e:
+                raise Exception("Unhandled Exception: ", e)
+        else:
+            print("Error: ", r.json())
+
+        return output
+
+    def run(self, mode="VALIDATE"):
+        """
+        Validates a flow to ensure that all nodes are connected correctly
+        """
+
+        output_cache = {}
+
+        def _get_data_from_cache(block_id_in_flow):
+            """
+            Retrieves data about block from cache
+
+            Attributes:
+            block_id: Block ID from Flow
+            """
+            block_data = self._get_block_by_id(block_id_in_flow)
+            block_registry_data = self._get_block_data_from_registry(
+                block_data["blockType"], block_data["blockId"]
+            )
+
+            cache_key = f"{block_registry_data.block_type}-{block_registry_data.block_id}-{block_id_in_flow}"
+
+            if cache_key in output_cache.keys():
+                return cache_key, output_cache[cache_key]
+            else:
+                raise Exception(
+                    f"Data does not exist in cache for {block_id_in_flow} with {cache_key}"
+                )
+
+        is_valid = True
+
+        if len(self.batched_tasks) == 0:
+            is_valid = False
+
+        for task in self.batched_tasks:
+            for task_to_be_run in task:
+                block_data = self._get_block_by_id(task_to_be_run)
+                block_registry_data = self._get_block_data_from_registry(
+                    block_data["blockType"], block_data["blockId"]
+                )
+
+                # Iterate through block data to gauge whether inputs exist
+                for key, value in block_data.items():
+                    if type(value) is dict and "value" in value.keys():
+                        if value["value"] == "":
+                            is_valid = False
+
+                # Checks if the graph has an edge
+                if len(self.dependency_graph[task_to_be_run]) == 0:
                     is_valid = (
                         is_valid
                         and len(block_registry_data.validations["input"]["required"])
                         == 0
                     )
+
+                    if mode == "RUN":
+                        response = self._make_run_request(
+                            task_to_be_run, block_registry_data, block_data, {}
+                        )
+
+                        # Adds to a cache to ensure that requests don't need to be re-run
+                        output_cache = {**output_cache, **response}
                 else:
                     blocks_found = []
                     for required_block in block_registry_data.validations["input"][
                         "required"
                     ]:
-                        # Visited Set
                         visited = set()
-
-                        dfs(
+                        self._dfs(
                             visited,
                             task_to_be_run,
                             block_registry_data.validations["input"]["allowed_blocks"],
@@ -197,240 +305,95 @@ class SpectrumFlow:
                             blocks_found,
                         )
 
+                    output_payload = {}
                     assembled_dependency_list_from_flow = {}
                     for item in set(blocks_found):
-                        item_block_data = get_block_by_id(item)
+                        item_block_data = self._get_block_by_id(item)
+
                         if (
-                            item_block_data["data"]["metadata"]["blockType"]
+                            item_block_data["blockType"]
                             not in assembled_dependency_list_from_flow
                         ):
                             assembled_dependency_list_from_flow[
-                                item_block_data["data"]["metadata"]["blockType"]
+                                item_block_data["blockType"]
                             ] = 0
                         assembled_dependency_list_from_flow[
-                            item_block_data["data"]["metadata"]["blockType"]
+                            item_block_data["blockType"]
                         ] += 1
+
+                        if mode == "RUN":
+                            cache_key, response = _get_data_from_cache(item)
+                            output_payload = {**output_payload, cache_key: response}
+
+                    if mode == "RUN":
+                        response = self._make_run_request(
+                            task_to_be_run,
+                            block_registry_data,
+                            block_data,
+                            output_payload,
+                        )
+
+                        # Adds to a cache to ensure that requests don't need to be re-run
+                        output_cache = {**output_cache, **response}
 
                     for required in block_registry_data.validations["input"][
                         "required"
                     ]:
-                        is_valid = is_valid and (
-                            assembled_dependency_list_from_flow[required["blockType"]]
-                            == required["number"]
+                        if required["blockType"] in assembled_dependency_list_from_flow:
+                            is_valid = (
+                                is_valid
+                                and assembled_dependency_list_from_flow[
+                                    required["blockType"]
+                                ]
+                                == required["number"]
+                            )
+                        else:
+                            is_valid = False
+
+        if mode == "VALIDATE":
+            for edge in self.edges:
+                source_block = self._get_block_by_id(edge["source"])
+                target_block = self._get_block_by_id(edge["target"])
+
+                target_block_data = self._get_block_data_from_registry(
+                    target_block["blockType"], target_block["blockId"]
+                )
+
+                is_edge_valid = False
+                for allowed_block in target_block_data.validations["input"][
+                    "allowed_blocks"
+                ]:
+                    is_edge_valid = is_edge_valid or (
+                        (str(allowed_block["blockId"]) == str(source_block["blockId"]))
+                        and (
+                            str(allowed_block["blockType"])
+                            == str(source_block["blockType"])
                         )
-        return is_valid
-
-    def run_batched_tasks_v3(self):
-        def get_block_by_id(id):
-            """
-            Retrieves a block from the list of vertices passed in initially
-            Attributes:
-            id: ID of Block in Flow
-            """
-            for vertex in self.vertices:
-                if vertex["id"] == id:
-                    return vertex
-
-        def dfs(
-            visited,
-            block_id_in_flow,
-            allowed_block_data,
-            target_block_data,
-            blocks_found,
-        ):
-            """
-            Performs a DFS recursively that iterates through the directed adjacency list.
-            It attempts to determine which blocks downstream in the sequence have their required data
-
-            Attributes:
-            visited: Set of blocks that have already been traversed
-            block_id_in_flow: The current block ID being iterated on
-            allowed_block_data: List of permitted input blocks
-            target_block_data: States the block type and number of blocks being searched for
-            """
-
-            block_data = get_block_by_id(block_id_in_flow)
-
-            if (
-                block_data["data"]["metadata"]["blockType"]
-                == target_block_data["blockType"]
-            ):
-                for allowed_block in allowed_block_data:
-                    if str(block_data["data"]["metadata"]["blockType"]) == str(
-                        allowed_block["blockType"]
-                    ) and str(block_data["data"]["metadata"]["blockId"]) == str(
-                        allowed_block["blockId"]
-                    ):
-                        blocks_found.append(block_id_in_flow)
-
-                        # Stopping Condition
-                        if len(blocks_found) == int(target_block_data["number"]):
-                            return
-
-            if block_id_in_flow not in visited:
-                visited.add(block_id_in_flow)
-                for neighbor in self.dependency_graph.adjacency_list[block_id_in_flow]:
-                    dfs(
-                        visited,
-                        neighbor,
-                        allowed_block_data,
-                        target_block_data,
-                        blocks_found,
                     )
 
-        def get_block_data_from_registry(block_data, block_id_in_flow):
-            """
-            Retrieves the Block Data from the registry given the block ID in the flow
-
-            Attributes:
-            block_data: Full JSON of Block Data from Front-End
-            block_id_in_flow: The Block ID generated by the front-end when assembling a flow
-            """
-            # Block Data from Block Registry
-            # TODO: Maybe this should be optimized since its querying the whole table
-            block_registry_data = (
-                BlockRegistry.objects.all()
-                .filter(block_type=block_data["data"]["metadata"]["blockType"])
-                .filter(block_id=block_data["data"]["metadata"]["blockId"])[0]
-            )
-
-            return block_registry_data
-
-        def make_run_request(
-            block_id_in_flow, block_registry_data, input_payload, output_payload
-        ):
-            """
-            Makes a request against remote resources to complete the request
-
-            Attributes:
-            block_id_in_flow: The Block ID generated by the front-end when assembling a flow
-            block_registry_data: Block Data queried from the front-end
-            input_payload: JSON Payload of Form Inputs
-            output_payload: JSON Payload of required information from previous steps
-            """
-            # Make a POST request to a run endpoint to run the block
-            request_url = f"{environ['API_BASE_URL']}/{block_registry_data.block_type}/{block_registry_data.block_id}/run"
-
-            request_payload = {
-                "input": input_payload,
-                "output": output_payload,
-            }
-
-            # TODO: Remove once done debugging
-            # with open(f"input-payload-{block_id_in_flow}.json", "w") as outfile:
-            #     json.dump(request_payload, outfile)
-
-            r = requests.post(request_url, json=request_payload)
-
-            output = {}
-            if r.status_code == 200:
-                # Updates the Block Outputs overall JSON
-                block_type_id_key = f"{block_registry_data.block_type}-{block_registry_data.block_id}-{block_id_in_flow}"  # TODO: Add the block_id_in_flow to the cache key in case 2 blocks of same type are used
-                print("Block Type ID Key: ", block_type_id_key)
-                if block_type_id_key not in list(output.keys()):
-                    output[block_type_id_key] = {}
-
-                try:
-                    response_json = r.json()
-                    # Standardized Return From Block with key "response"
-                    if "response" in response_json:
-                        output[block_type_id_key] = response_json["response"]
-                except json.decoder.JSONDecodeError as e:
-                    print("JSON Decode Error")
-                except Exception as e:
-                    print("Generic Exception: ", e)
-            else:
-                logging.error(
-                    f"A Response {r.status_code} when querying URL {request_url} with ..."
+                target_block = self._get_block_data_from_registry(
+                    target_block["blockType"], target_block["blockId"]
                 )
 
-            return output
-
-        output_cache = {}
-
-        def get_data_from_cache(block_id_in_flow):
-            """
-            Makes a request to the output cache to retrieve data
-
-            Attributes:
-            block_id_in_flow: The Block ID generated by the front-end when assembling a flow
-            """
-            block_data = get_block_by_id(block_id_in_flow)
-            block_registry_data = get_block_data_from_registry(
-                block_data, block_id_in_flow
-            )
-
-            cache_key = f"{block_registry_data.block_type}-{block_registry_data.block_id}-{block_id_in_flow}"
-
-            if cache_key in list(output_cache.keys()):
-                return cache_key, output_cache[cache_key]
-            else:
-                print("Cache Key: ", cache_key)
-                print("Output Cache: ", output_cache.keys())
-                raise f"Data does not exist in cache for {block_id_in_flow} with {cache_key}"
-
-        # Main Running Code
-        for task in self.batched_tasks:
-            # Goes through a set of tasks. Each FOR loop should make a request
-            # TODO: This part of the process can be asynchronous
-            for task_to_be_run in task:
-                # Gets the full sent data about the block
-                block_data = get_block_by_id(task_to_be_run)
-                block_registry_data = get_block_data_from_registry(
-                    block_data, task_to_be_run
-                )
-
-                # If the task has no dependencies, make the request immediately,
-                # otherwise perform a DFS search to extract all related dependencies
-                if len(self.dependency_graph.adjacency_list[task_to_be_run]) == 0:
-                    response = make_run_request(
-                        task_to_be_run,
-                        block_registry_data,
-                        block_data["data"]["input"],
-                        {},
-                    )
-
-                    # Adds to a cache to ensure that requests don't need to be re-run
-                    output_cache = {**output_cache, **response}
-                else:
-                    # TODO: Implement DFS code to get the list of related objects
-
-                    # The following variables are used in the DFS
-
-                    # Contains list of Block ID's from the flow that are dependencies
-                    # for running the block associated with the `task_to_be_run`
-                    blocks_found = []
-                    for required_block in block_registry_data.validations["input"][
-                        "required"
+                allowed_connections = []
+                if not is_edge_valid:
+                    for allowed_block in target_block_data.validations["input"][
+                        "allowed_blocks"
                     ]:
-                        # Visited Set
-                        visited = set()
-
-                        dfs(
-                            visited,
-                            task_to_be_run,
-                            block_registry_data.validations["input"]["allowed_blocks"],
-                            required_block,
-                            blocks_found,
+                        block_data = self._get_block_data_from_registry(
+                            allowed_block["blockType"], allowed_block["blockId"]
                         )
+                        allowed_connections.append(block_data.block_name)
 
-                    print(f"Task {task_to_be_run} - {blocks_found}")
+                self.edge_validation[edge["id"]] = {
+                    "status": is_edge_valid,
+                    "target_block": target_block.block_name,
+                    "allowed_connections": allowed_connections,
+                }
 
-                    # Assembles all dependency data into the output_payload variable
-                    output_payload = {}
-                    for block_id in blocks_found:
-                        cache_key, response = get_data_from_cache(block_id)
+            return is_valid
 
-                        output_payload = {**output_payload, cache_key: response}
-
-                    response = make_run_request(
-                        task_to_be_run,
-                        block_registry_data,
-                        block_data["data"]["input"],
-                        output_payload,
-                    )
-
-                    # Adds to a cache to ensure that requests don't need to be re-run
-                    output_cache = {**output_cache, **response}
-
-        return output_cache
+        elif mode == "RUN":
+            return output_cache
+        else:
+            return None

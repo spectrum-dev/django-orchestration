@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from orchestrator.services.flow.spectrum_flow_v2 import DependencyGraph
+from orchestrator.services.flow.spectrum_flow import DependencyGraph
 from orchestrator.tests.data.test_data_validation import SINGLE_FULL_FLOW_VALID
 
 
