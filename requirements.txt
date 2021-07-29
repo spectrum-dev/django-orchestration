@@ -23,7 +23,7 @@ factory-boy==3.2.0
 Faker==8.10.3
 gunicorn==20.1.0
 idna==2.10
-isort==5.9.2
+isort==5.9.3
 lazy-object-proxy==1.6.0
 mccabe==0.6.1
 mypy-extensions==0.4.3
