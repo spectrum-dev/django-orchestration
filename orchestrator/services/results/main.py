@@ -3,7 +3,7 @@ import empyrical
 
 
 def main(payload):
-    port_vals_df = _convert_port_vals_to_df(payload["response"]["portVals"])
+    port_vals_df = _convert_port_vals_to_df(payload["portVals"])
     # Calculates per data point returns
     port_vals_returns = port_vals_df["value"].pct_change()
 
@@ -46,23 +46,61 @@ def main(payload):
     # beta = empyrical.beta(port_vals_returns, factor_returns, risk_free=0.0)
 
     return {
-        "response": {
-            "port_vals": payload["response"]["portVals"],
-            "port_vals_returns": _convert_df_to_json(port_vals_returns),
-            "trades": payload["response"]["trades"],
-            "cum_returns": _convert_df_to_json(cum_returns),
-            "max_drawdowns": max_drawdowns,
-            "annual_return": annual_return,
-            "annual_volatility": annual_volatility,
-            "calmar_ratio": calmar_ratio,
-            "omega_ratio": omega_ratio,
-            "sharpe_ratio": sharpe_ratio,
-            "sortino_ratio": sortino_ratio,
-            "downside_risk": downside_risk,
-            "stability_of_timeseries": stability_of_timeseries,
-            "tail_ratio": tail_ratio,
-            "cagr": cagr,
-        }
+        "cards": [
+            {"label": "Max Drawdowns", "value": max_drawdowns},
+            {
+                "label": "Annual Return",
+                "value": annual_return,
+            },
+            {
+                "label": "Annual Volatility",
+                "value": annual_volatility,
+            },
+            {
+                "label": "Calmar Ratio",
+                "value": calmar_ratio,
+            },
+            {
+                "label": "Omega Ratio",
+                "value": omega_ratio,
+            },
+            {
+                "label": "Sharpe Ratio",
+                "value": sharpe_ratio,
+            },
+            {
+                "label": "Sortino Ratio",
+                "value": sortino_ratio,
+            },
+            {
+                "label": "Downside Risk",
+                "value": downside_risk,
+            },
+            {
+                "label": "Stability of Time Series",
+                "value": stability_of_timeseries,
+            },
+            {
+                "label": "Tail Ratio",
+                "value": tail_ratio,
+            },
+            {
+                "label": "CAGR",
+                "value": cagr,
+            },
+        ],
+        "graphs": [
+            {"title": "Portfolio Values", "data": payload["portVals"]},
+            {
+                "title": "Portfolio Values Returns",
+                "data": _convert_df_to_json(port_vals_returns),
+            },
+            {
+                "title": "Cumulative Returns",
+                "data": _convert_df_to_json(cum_returns),
+            },
+        ],
+        "tables": [{"title": "Trades", "data": payload["trades"]}],
     }
 
 
@@ -79,27 +117,3 @@ def _convert_df_to_json(series):
     response = df.to_dict(orient="records")
 
     return response
-
-
-# TODO: Remove Later
-def main_debug():
-    data = [["2015-12-1", 0.0], ["2015-12-2", 0.5], ["2015-12-3", -0.2]]
-
-    stock_rets = pd.DataFrame(data, columns=["date", "close"])
-    stock_rets["new_date"] = pd.to_datetime(stock_rets["date"], format="%Y-%m-%d")
-
-    stock_rets = stock_rets.set_index("new_date")
-    stock_rets = stock_rets.drop(["date"], axis=1)
-
-    print(stock_rets["close"])
-
-    # TODO: Figure out how to get returns array
-    stock_rets_np = np.array([0.01, 0.02, 0.03, -0.4, -0.06, -0.02])
-
-    # response = empyrical.cum_returns(stock_rets['close'], starting_value=0)
-    response = empyrical.max_drawdown(stock_rets_np)
-    # response = empyrical.sharpe_ratio(stock_rets['close'])
-    # response = empyrical.annual_return(stock_rets['close'])
-    print(response)
-
-    return None
