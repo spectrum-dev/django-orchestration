@@ -655,16 +655,56 @@ class RunFlowTest(TestCase):
                     "results": {
                         "cards": [
                             {"label": "Max Drawdowns", "value": -0.10048499999999919},
-                            {"label": "Annual Return", "value": 4.1215225112270943e21},
-                            {"label": "Annual Volatility", "value": 12.471276006476394},
-                            {"label": "Calmar Ratio", "value": 4.101629607630122e22},
-                            {"label": "Omega Ratio", "value": 10.056670858746843},
-                            {"label": "Sharpe Ratio", "value": 9.194528764886602},
-                            {"label": "Sortino Ratio", "value": 101.66087825463126},
-                            {"label": "Downside Risk", "value": 1.127941327529929},
-                            {"label": "Stability of Time Series", "value": 1.0},
-                            {"label": "Tail Ratio", "value": 21.253466501575726},
-                            {"label": "CAGR", "value": 4.1215225112270943e21},
+                            {
+                                "label": "Annual Return",
+                                "value": 4.1215225112270943e21,
+                                "type": "PERCENTAGE",
+                            },
+                            {
+                                "label": "Annual Volatility",
+                                "value": 12.471276006476394,
+                                "type": "PERCENTAGE",
+                            },
+                            {
+                                "label": "Calmar Ratio",
+                                "value": 4.101629607630122e22,
+                                "type": "FIXED",
+                            },
+                            {
+                                "label": "Omega Ratio",
+                                "value": 10.056670858746843,
+                                "type": "FIXED",
+                            },
+                            {
+                                "label": "Sharpe Ratio",
+                                "value": 9.194528764886602,
+                                "type": "FIXED",
+                            },
+                            {
+                                "label": "Sortino Ratio",
+                                "value": 101.66087825463126,
+                                "type": "FIXED",
+                            },
+                            {
+                                "label": "Downside Risk",
+                                "value": 1.127941327529929,
+                                "type": "FIXED",
+                            },
+                            {
+                                "label": "Stability of Time Series",
+                                "value": 1.0,
+                                "type": "FIXED",
+                            },
+                            {
+                                "label": "Tail Ratio",
+                                "value": 21.253466501575726,
+                                "type": "FIXED",
+                            },
+                            {
+                                "label": "CAGR",
+                                "value": 4.1215225112270943e21,
+                                "type": "FIXED",
+                            },
                         ],
                         "graphs": [
                             {
