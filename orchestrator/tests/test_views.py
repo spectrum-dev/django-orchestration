@@ -614,14 +614,14 @@ class RunFlowTest(TestCase):
                             "volume": "14.00",
                         },
                     ],
-                    "COMPUTATIONAL_BLOCK-1-2": [
+                    "COMPUTATIONAL_BLOCK-1-3": [
                         {"timestamp": "01/01/2020", "data": None},
                         {"timestamp": "01/02/2020", "data": 10.5},
                         {"timestamp": "01/03/2020", "data": 12.0},
                         {"timestamp": "01/04/2020", "data": 12.5},
                         {"timestamp": "01/05/2020", "data": 13.0},
                     ],
-                    "COMPUTATIONAL_BLOCK-1-3": [
+                    "COMPUTATIONAL_BLOCK-1-2": [
                         {"timestamp": "01/01/2020", "data": None},
                         {"timestamp": "01/02/2020", "data": 10.5},
                         {"timestamp": "01/03/2020", "data": 12.0},
@@ -649,6 +649,122 @@ class RunFlowTest(TestCase):
                                 "take_profit": "",
                                 "shares": 9090,
                                 "cash_value": 100989.9,
+                            }
+                        ],
+                    },
+                    "results": {
+                        "cards": [
+                            {"label": "Max Drawdowns", "value": -0.10048499999999919},
+                            {
+                                "label": "Annual Return",
+                                "value": 4.1215225112270943e21,
+                                "type": "PERCENTAGE",
+                            },
+                            {
+                                "label": "Annual Volatility",
+                                "value": 12.471276006476394,
+                                "type": "PERCENTAGE",
+                            },
+                            {
+                                "label": "Calmar Ratio",
+                                "value": 4.101629607630122e22,
+                                "type": "FIXED",
+                            },
+                            {
+                                "label": "Omega Ratio",
+                                "value": 10.056670858746843,
+                                "type": "FIXED",
+                            },
+                            {
+                                "label": "Sharpe Ratio",
+                                "value": 9.194528764886602,
+                                "type": "FIXED",
+                            },
+                            {
+                                "label": "Sortino Ratio",
+                                "value": 101.66087825463126,
+                                "type": "FIXED",
+                            },
+                            {
+                                "label": "Downside Risk",
+                                "value": 1.127941327529929,
+                                "type": "FIXED",
+                            },
+                            {
+                                "label": "Stability of Time Series",
+                                "value": 1.0,
+                                "type": "FIXED",
+                            },
+                            {
+                                "label": "Tail Ratio",
+                                "value": 21.253466501575726,
+                                "type": "FIXED",
+                            },
+                            {
+                                "label": "CAGR",
+                                "value": 4.1215225112270943e21,
+                                "type": "FIXED",
+                            },
+                        ],
+                        "graphs": [
+                            {
+                                "title": "Portfolio Values",
+                                "data": [
+                                    {"value": 10000.0, "timestamp": "01/01/2020"},
+                                    {
+                                        "value": 8995.150000000009,
+                                        "timestamp": "01/02/2020",
+                                    },
+                                    {
+                                        "value": 18085.15000000001,
+                                        "timestamp": "01/03/2020",
+                                    },
+                                ],
+                            },
+                            {
+                                "title": "Portfolio Values Returns",
+                                "data": [
+                                    {
+                                        "value": -0.10048499999999916,
+                                        "timestamp": "01/02/2020",
+                                    },
+                                    {
+                                        "value": 1.010544571241168,
+                                        "timestamp": "01/03/2020",
+                                    },
+                                ],
+                            },
+                            {
+                                "title": "Cumulative Returns",
+                                "data": [
+                                    {"value": 0.0, "timestamp": "01/01/2020"},
+                                    {
+                                        "value": -0.10048499999999916,
+                                        "timestamp": "01/02/2020",
+                                    },
+                                    {
+                                        "value": 0.808515000000001,
+                                        "timestamp": "01/03/2020",
+                                    },
+                                ],
+                            },
+                        ],
+                        "tables": [
+                            {
+                                "title": "Trades",
+                                "data": [
+                                    {
+                                        "date": "01/02/2020",
+                                        "symbol": "close",
+                                        "order": "BUY",
+                                        "monetary_amount": 100000.0,
+                                        "trade_id": "",
+                                        "stop_loss": "",
+                                        "take_profit": "",
+                                        "shares": 9090,
+                                        "cash_value": 100989.9,
+                                    }
+                                ],
                             }
                         ],
                     },

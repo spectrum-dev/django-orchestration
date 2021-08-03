@@ -4,6 +4,7 @@ from os import environ
 from copy import deepcopy
 
 from orchestrator.models import BlockRegistry
+from orchestrator.services.results.main import main
 
 
 class Graph:
@@ -394,6 +395,12 @@ class SpectrumFlow:
             return is_valid
 
         elif mode == "RUN":
+            backtest_block = [
+                string for string in output_cache.keys() if "STRATEGY_BLOCK" in string
+            ]
+
+            if len(backtest_block) > 0:
+                output_cache["results"] = main(output_cache[backtest_block[0]])
             return output_cache
         else:
             return None
