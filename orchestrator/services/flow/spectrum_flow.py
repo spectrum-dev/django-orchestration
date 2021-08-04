@@ -115,7 +115,7 @@ class SpectrumFlow:
         self.batched_tasks = graph.batched_tasks
 
         self.edge_validation = {}
-        self.is_valid = self.run(mode="VALIDATE")
+        (self.is_valid, self.is_valid_description) = self.run(mode="VALIDATE")
 
     def _get_block_by_id(self, block_id):
         """
@@ -352,6 +352,7 @@ class SpectrumFlow:
                             is_valid = False
 
         if mode == "VALIDATE":
+            # Edge Validation Logic
             for edge in self.edges:
                 source_block = self._get_block_by_id(edge["source"])
                 target_block = self._get_block_by_id(edge["target"])
@@ -392,15 +393,34 @@ class SpectrumFlow:
                     "allowed_connections": allowed_connections,
                 }
 
-            return is_valid
+            # If any edges are invalid, returns False
+            all_valid = map(
+                lambda edge: True if edge["status"] else False, self.edge_validation
+            )
+            if not all_valid:
+                return (False, "Edge connections are invalid")
+
+            # Validates single backtest block per strategy
+            backtest_block = [
+                value["blockType"]
+                for _, value in self.vertices.items()
+                if "STRATEGY_BLOCK" in value["blockType"]
+            ]
+
+            if len(backtest_block) > 1:
+                return (False, "You may only have one backtest block per strategy")
+
+            return (is_valid, "")
 
         elif mode == "RUN":
             backtest_block = [
                 string for string in output_cache.keys() if "STRATEGY_BLOCK" in string
             ]
 
-            if len(backtest_block) > 0:
+            # Creates the result matrix associated with the backtest
+            if len(backtest_block) == 1:
                 output_cache["results"] = main(output_cache[backtest_block[0]])
+
             return output_cache
         else:
             return None

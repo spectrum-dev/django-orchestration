@@ -7,6 +7,7 @@ from authentication.factories import set_up_authentication
 from orchestrator.tests.data.test_data_validation import (
     SINGLE_FULL_FLOW_INVALID,
     SINGLE_FULL_FLOW_VALID,
+    FULL_FLOW_WITH_TWO_BACKTEST_BLOCKS,
 )
 
 
@@ -433,6 +434,65 @@ class ValidateFlowTest(TestCase):
                         "allowed_connections": ["Technical Analysis"],
                     },
                 },
+            },
+        )
+
+    def test_single_flow_has_two_backtest_blocks_returns_invalid(self):
+        auth = set_up_authentication()
+        response = self.client.post(
+            "/orchestration/validate",
+            json.dumps(FULL_FLOW_WITH_TWO_BACKTEST_BLOCKS),
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(),
+            {
+                "valid": False,
+                "edges": {
+                    "reactflow__edge-1output_id888-2input_id891": {
+                        "status": True,
+                        "target_block": "Technical Analysis",
+                        "allowed_connections": [],
+                    },
+                    "reactflow__edge-1output_id1136-3input_id1143": {
+                        "status": True,
+                        "target_block": "Technical Analysis",
+                        "allowed_connections": [],
+                    },
+                    "reactflow__edge-2output_id1356-4input_id1363": {
+                        "status": True,
+                        "target_block": "Event",
+                        "allowed_connections": [],
+                    },
+                    "reactflow__edge-3output_id1576-4input_id1579": {
+                        "status": True,
+                        "target_block": "Event",
+                        "allowed_connections": [],
+                    },
+                    "reactflow__edge-2output_id1356-5input_id1367": {
+                        "status": True,
+                        "target_block": "Event",
+                        "allowed_connections": [],
+                    },
+                    "reactflow__edge-3output_id1576-5input_id1367": {
+                        "status": True,
+                        "target_block": "Event",
+                        "allowed_connections": [],
+                    },
+                    "reactflow__edge-4output_id1796-6input_id1799": {
+                        "status": True,
+                        "target_block": "Backtest",
+                        "allowed_connections": [],
+                    },
+                    "reactflow__edge-5output_id1367-7input_id1810": {
+                        "status": True,
+                        "target_block": "Backtest",
+                        "allowed_connections": [],
+                    },
+                },
+                "error": "You may only have one backtest block per strategy",
             },
         )
 
