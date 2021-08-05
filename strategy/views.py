@@ -26,6 +26,20 @@ class StrategyIdView(APIView):
             return JsonResponse({"error": "Strategy does not exist"}, status=404)
 
 
+class StrategyDetailView(APIView):
+    authentication_classes = [SpectrumAuthentication]
+    permission_classes = [SpectrumIsAuthenticated]
+
+    def get(self, request, strategy_id):
+        try:
+            strategy = UserStrategy.objects.get(strategy=strategy_id)
+            return JsonResponse(
+                {"strategy_id": strategy_id, "strategy_name": strategy.strategy_name}
+            )
+        except ObjectDoesNotExist:
+            return JsonResponse({"error": "Strategy does not exist"}, status=404)
+
+
 class CreateStrategyView(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]

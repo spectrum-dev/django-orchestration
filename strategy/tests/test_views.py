@@ -66,6 +66,46 @@ class StrategyIdViewTest(TestCase):
         self.assertDictEqual(response.json(), {"error": "Strategy does not exist"})
 
 
+class StrategyDetailViewTest(TestCase):
+    @patch("uuid.uuid4", fixed_mock_uuid)
+    def test_ok(self):
+        auth = set_up_authentication()
+
+        strategy_name = "Strategy One"
+        strategy_id = uuid.uuid4()
+        UserStrategyFactory(
+            user=auth["user"], strategy=strategy_id, strategy_name=strategy_name
+        )
+
+        response = self.client.get(
+            f"/strategy/{strategy_id}/detail",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(),
+            {
+                "strategy_id": "00000000-0000-0000-0000-000000000000",
+                "strategy_name": strategy_name,
+            },
+        )
+
+    @patch("uuid.uuid4", fixed_mock_uuid)
+    def test_strategy_id_dne(self):
+        auth = set_up_authentication()
+
+        strategy_id = uuid.uuid4()
+
+        response = self.client.get(
+            f"/strategy/{strategy_id}/detail",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        assert response.status_code == 404
+
+        self.assertDictEqual(response.json(), {"error": "Strategy does not exist"})
+
+
 class CreateStrategyViewTest(TestCase):
     @patch("uuid.uuid4", fixed_mock_uuid)
     def test_ok(self):
