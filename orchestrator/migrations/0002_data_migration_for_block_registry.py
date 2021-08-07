@@ -172,7 +172,7 @@ def seed_blocks_into_registry(apps, schema_editor):
         block_name="Crossover",
         inputs=[
             {
-                "fieldData": {"base": "/eventType", "method": "GET"},
+                "fieldData": {"base": "/crossoverType", "method": "GET"},
                 "fieldName": "Event Type",
                 "fieldType": "dropdown",
                 "fieldVariableName": "event_type",
