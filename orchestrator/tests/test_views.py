@@ -50,8 +50,8 @@ class AllMetadataViewTest(TestCase):
                         },
                         "4": {
                             "blockName": "Crossover",
-                            "blockMetadata": "/orchestration/SIGNAL_BLOCK/4/"
-                        }
+                            "blockMetadata": "/orchestration/SIGNAL_BLOCK/4/",
+                        },
                     },
                     "STRATEGY_BLOCK": {
                         "1": {
