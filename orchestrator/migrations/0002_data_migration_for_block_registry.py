@@ -168,6 +168,24 @@ def seed_blocks_into_registry(apps, schema_editor):
 
     BlockRegistry(
         block_type="SIGNAL_BLOCK",
+        block_id=3,
+        block_name="And",
+        inputs=[],
+        validations={
+            "input": {
+                "required": [{"blockType": "SIGNAL_BLOCK", "number": 2}],
+                "allowed_blocks": [
+                    {"blockId": "1", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "2", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "4", "blockType": "SIGNAL_BLOCK"},
+                ],
+            },
+            "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}],
+        },
+    ).save()
+
+    BlockRegistry(
+        block_type="SIGNAL_BLOCK",
         block_id=4,
         block_name="Crossover",
         inputs=[
@@ -247,6 +265,7 @@ def seed_blocks_into_registry(apps, schema_editor):
                 "allowed_blocks": [
                     {"blockId": "1", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "2", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "3", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "4", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "1", "blockType": "DATA_BLOCK"},
                     {"blockId": "2", "blockType": "DATA_BLOCK"},
