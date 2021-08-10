@@ -3,6 +3,8 @@ import requests
 from os import environ
 from copy import deepcopy
 
+from requests.api import request
+
 from orchestrator.models import BlockRegistry
 from orchestrator.services.results.main import main
 
@@ -346,7 +348,7 @@ class SpectrumFlow:
                                 and assembled_dependency_list_from_flow[
                                     required["blockType"]
                                 ]
-                                == required["number"]
+                                >= required["number"]
                             )
                         else:
                             is_valid = False
