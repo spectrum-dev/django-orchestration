@@ -3,8 +3,6 @@ import requests
 from os import environ
 from copy import deepcopy
 
-from requests.api import request
-
 from orchestrator.models import BlockRegistry
 from orchestrator.services.results.main import main
 
