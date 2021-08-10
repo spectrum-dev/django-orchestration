@@ -221,6 +221,24 @@ def seed_blocks_into_registry(apps, schema_editor):
     ).save()
 
     BlockRegistry(
+        block_type="SIGNAL_BLOCK",
+        block_id=5,
+        block_name="Or",
+        inputs=[],
+        validations={
+            "input": {
+                "required": [{"blockType": "SIGNAL_BLOCK", "number": 2}],
+                "allowed_blocks": [
+                    {"blockId": "1", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "2", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "4", "blockType": "SIGNAL_BLOCK"},
+                ],
+            },
+            "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}],
+        },
+    ).save()
+
+    BlockRegistry(
         block_type="STRATEGY_BLOCK",
         block_id=1,
         block_name="Backtest",
