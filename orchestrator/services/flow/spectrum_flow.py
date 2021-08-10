@@ -346,7 +346,7 @@ class SpectrumFlow:
                                 and assembled_dependency_list_from_flow[
                                     required["blockType"]
                                 ]
-                                == required["number"]
+                                >= required["number"]
                             )
                         else:
                             is_valid = False
