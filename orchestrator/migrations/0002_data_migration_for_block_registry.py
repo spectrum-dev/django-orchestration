@@ -73,7 +73,7 @@ def seed_blocks_into_registry(apps, schema_editor):
     BlockRegistry(
         block_type="COMPUTATIONAL_BLOCK",
         block_id=1,
-        block_name="Technical Analysis",
+        block_name="Technical Indicators",
         inputs=[
             {
                 "fieldData": {
