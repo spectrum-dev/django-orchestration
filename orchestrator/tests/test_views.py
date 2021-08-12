@@ -60,6 +60,10 @@ class AllMetadataViewTest(TestCase):
                             "blockName": "Or",
                             "blockMetadata": "/orchestration/SIGNAL_BLOCK/5/",
                         },
+                        "6": {
+                            "blockName": "Candle Close",
+                            "blockMetadata": "/orchestration/SIGNAL_BLOCK/6/",
+                        },
                     },
                     "STRATEGY_BLOCK": {
                         "1": {
