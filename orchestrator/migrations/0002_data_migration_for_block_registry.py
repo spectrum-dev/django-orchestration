@@ -172,6 +172,7 @@ def seed_blocks_into_registry(apps, schema_editor):
                     {"blockId": "1", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "2", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "4", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "6", "blockType": "SIGNAL_BLOCK"},
                 ],
             },
             "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}],
@@ -226,6 +227,37 @@ def seed_blocks_into_registry(apps, schema_editor):
                     {"blockId": "1", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "2", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "4", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "6", "blockType": "SIGNAL_BLOCK"},
+                ],
+            },
+            "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}],
+        },
+    ).save()
+
+    BlockRegistry(
+        block_type="SIGNAL_BLOCK",
+        block_id=6,
+        block_name="Candle Close",
+        inputs=[
+            {
+                "fieldData": {"base": "/candleCloseType", "method": "GET"},
+                "fieldName": "Candle Close Type",
+                "fieldType": "dropdown",
+                "fieldVariableName": "event_type",
+            },
+            {
+                "fieldData": {"base": "/eventAction", "method": "GET"},
+                "fieldName": "Event Action",
+                "fieldType": "dropdown",
+                "fieldVariableName": "event_action",
+            },
+        ],
+        validations={
+            "input": {
+                "required": [{"blockType": "DATA_BLOCK", "number": 1}],
+                "allowed_blocks": [
+                    {"blockId": "1", "blockType": "DATA_BLOCK"},
+                    {"blockId": "2", "blockType": "DATA_BLOCK"},
                 ],
             },
             "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}],
@@ -280,6 +312,7 @@ def seed_blocks_into_registry(apps, schema_editor):
                     {"blockId": "3", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "4", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "5", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "6", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "1", "blockType": "DATA_BLOCK"},
                     {"blockId": "2", "blockType": "DATA_BLOCK"},
                 ],
