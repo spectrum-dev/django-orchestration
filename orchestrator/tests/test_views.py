@@ -41,7 +41,7 @@ class AllMetadataViewTest(TestCase):
                     },
                     "SIGNAL_BLOCK": {
                         "1": {
-                            "blockName": "Event",
+                            "blockName": "Intersect",
                             "blockMetadata": "/orchestration/SIGNAL_BLOCK/1/",
                         },
                         "2": {
@@ -366,7 +366,7 @@ class ValidateFlowTest(TestCase):
                 "edges": {
                     "reactflow__edge-1output_id888-4input_id891": {
                         "status": False,
-                        "target_block": "Event",
+                        "target_block": "Intersect",
                         "allowed_connections": ["Technical Indicators"],
                     }
                 },
@@ -399,12 +399,12 @@ class ValidateFlowTest(TestCase):
                     },
                     "reactflow__edge-2output_id1356-4input_id1363": {
                         "status": True,
-                        "target_block": "Event",
+                        "target_block": "Intersect",
                         "allowed_connections": [],
                     },
                     "reactflow__edge-3output_id1576-4input_id1579": {
                         "status": True,
-                        "target_block": "Event",
+                        "target_block": "Intersect",
                         "allowed_connections": [],
                     },
                     "reactflow__edge-4output_id1796-5input_id1799": {
@@ -432,7 +432,7 @@ class ValidateFlowTest(TestCase):
                 "edges": {
                     "reactflow__edge-1output_id502-4input_id589": {
                         "status": False,
-                        "target_block": "Event",
+                        "target_block": "Intersect",
                         "allowed_connections": ["Technical Indicators"],
                     },
                     "reactflow__edge-4output_id986-2input_id1089": {
@@ -442,7 +442,7 @@ class ValidateFlowTest(TestCase):
                     },
                     "reactflow__edge-4output_id1230-3input_id1417": {
                         "status": False,
-                        "target_block": "Event",
+                        "target_block": "Intersect",
                         "allowed_connections": ["Technical Indicators"],
                     },
                 },
@@ -475,22 +475,22 @@ class ValidateFlowTest(TestCase):
                     },
                     "reactflow__edge-2output_id1356-4input_id1363": {
                         "status": True,
-                        "target_block": "Event",
+                        "target_block": "Intersect",
                         "allowed_connections": [],
                     },
                     "reactflow__edge-3output_id1576-4input_id1579": {
                         "status": True,
-                        "target_block": "Event",
+                        "target_block": "Intersect",
                         "allowed_connections": [],
                     },
                     "reactflow__edge-2output_id1356-5input_id1367": {
                         "status": True,
-                        "target_block": "Event",
+                        "target_block": "Intersect",
                         "allowed_connections": [],
                     },
                     "reactflow__edge-3output_id1576-5input_id1367": {
                         "status": True,
-                        "target_block": "Event",
+                        "target_block": "Intersect",
                         "allowed_connections": [],
                     },
                     "reactflow__edge-4output_id1796-6input_id1799": {
