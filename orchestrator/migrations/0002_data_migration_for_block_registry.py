@@ -101,14 +101,8 @@ def seed_blocks_into_registry(apps, schema_editor):
     BlockRegistry(
         block_type="SIGNAL_BLOCK",
         block_id=1,
-        block_name="Event",
+        block_name="Intersect",
         inputs=[
-            {
-                "fieldData": {"base": "/eventType", "method": "GET"},
-                "fieldName": "Event Type",
-                "fieldType": "dropdown",
-                "fieldVariableName": "event_type",
-            },
             {
                 "fieldData": {"base": "/eventAction", "method": "GET"},
                 "fieldName": "Event Action",
