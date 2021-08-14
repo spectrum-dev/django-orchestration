@@ -12,6 +12,7 @@ from authentication.decorators import SpectrumAuthentication, SpectrumIsAuthenti
 
 from orchestrator.models import BlockRegistry
 from orchestrator.services.flow.spectrum_flow import SpectrumFlow
+from orchestrator.services.overlays.main import main
 
 
 class AllMetadataView(APIView):
@@ -118,5 +119,17 @@ class RunFlow(APIView):
         flow = SpectrumFlow(request_body["nodeList"], request_body["edgeList"])
 
         response = flow.run(mode="RUN")
+
+        return JsonResponse({"response": response})
+
+
+class RunOverlay(APIView):
+    authentication_classes = [SpectrumAuthentication]
+    permission_classes = [SpectrumIsAuthenticated]
+
+    def post(self, request):
+        request_body = json.loads(request.body)
+
+        response = main(request_body)
 
         return JsonResponse({"response": response})
