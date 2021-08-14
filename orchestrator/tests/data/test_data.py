@@ -217,7 +217,7 @@ FULL_TECHNICAL_ANALYSIS_FLOW_SINGLE_FLOW = {
             "position": {"x": 1640, "y": 120},
             "data": {
                 "metadata": {
-                    "header": "Backtest",
+                    "header": "Simple Backtest",
                     "inputHandles": [
                         {
                             "fieldName": "",
