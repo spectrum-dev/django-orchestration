@@ -847,3 +847,173 @@ class RunFlowTest(TestCase):
                 }
             },
         )
+
+
+class RunOverlays(TestCase):
+    def test_two_streams_complete_overlap(self):
+        auth = set_up_authentication()
+
+        payload = {
+            "base": [
+                {
+                    "open": 126.01,
+                    "high": 126.01,
+                    "low": 126.0,
+                    "close": 126.01,
+                    "volume": 2835.0,
+                    "timestamp": "2021-06-04T20:00:00.000000000",
+                },
+                {
+                    "open": 126.01,
+                    "high": 126.01,
+                    "low": 125.99,
+                    "close": 126.01,
+                    "volume": 788.0,
+                    "timestamp": "2021-06-04T19:59:00.000000000",
+                },
+                {
+                    "open": 126.0,
+                    "high": 126.01,
+                    "low": 126.0,
+                    "close": 126.01,
+                    "volume": 3693.0,
+                    "timestamp": "2021-06-04T19:58:00.000000000",
+                },
+            ],
+            "2": [
+                {
+                    "timestamp": "2021-06-04T20:00:00.000000000",
+                    "value": 10.00,
+                },
+                {
+                    "timestamp": "2021-06-04T19:59:00.000000000",
+                    "value": 11.00,
+                },
+                {
+                    "timestamp": "2021-06-04T19:58:00.000000000",
+                    "value": 10.00,
+                },
+            ],
+        }
+
+        response = self.client.post(
+            "/orchestration/overlay",
+            json.dumps(payload),
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(),
+            {
+                "response": [
+                    {
+                        "open": 126.01,
+                        "high": 126.01,
+                        "low": 126.0,
+                        "close": 126.01,
+                        "volume": 2835.0,
+                        "2": 10.0,
+                        "timestamp": "2021-06-04T20:00:00.000000000",
+                    },
+                    {
+                        "open": 126.01,
+                        "high": 126.01,
+                        "low": 125.99,
+                        "close": 126.01,
+                        "volume": 788.0,
+                        "2": 11.0,
+                        "timestamp": "2021-06-04T19:59:00.000000000",
+                    },
+                    {
+                        "open": 126.0,
+                        "high": 126.01,
+                        "low": 126.0,
+                        "close": 126.01,
+                        "volume": 3693.0,
+                        "2": 10.0,
+                        "timestamp": "2021-06-04T19:58:00.000000000",
+                    },
+                ]
+            },
+        )
+
+    def test_two_streams_partial_overlap(self):
+        auth = set_up_authentication()
+
+        payload = {
+            "base": [
+                {
+                    "open": 126.01,
+                    "high": 126.01,
+                    "low": 126.0,
+                    "close": 126.01,
+                    "volume": 2835.0,
+                    "timestamp": "2021-06-04T20:00:00.000000000",
+                },
+                {
+                    "open": 126.01,
+                    "high": 126.01,
+                    "low": 125.99,
+                    "close": 126.01,
+                    "volume": 788.0,
+                    "timestamp": "2021-06-04T19:59:00.000000000",
+                },
+                {
+                    "open": 126.0,
+                    "high": 126.01,
+                    "low": 126.0,
+                    "close": 126.01,
+                    "volume": 3693.0,
+                    "timestamp": "2021-06-04T19:58:00.000000000",
+                },
+            ],
+            "2": [
+                {
+                    "timestamp": "2021-06-04T20:00:00.000000000",
+                    "value": 10.00,
+                },
+            ],
+        }
+
+        response = self.client.post(
+            "/orchestration/overlay",
+            json.dumps(payload),
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(),
+            {
+                "response": [
+                    {
+                        "open": 126.01,
+                        "high": 126.01,
+                        "low": 126.0,
+                        "close": 126.01,
+                        "volume": 2835.0,
+                        "2": 10.0,
+                        "timestamp": "2021-06-04T20:00:00.000000000",
+                    },
+                    {
+                        "open": 126.01,
+                        "high": 126.01,
+                        "low": 125.99,
+                        "close": 126.01,
+                        "volume": 788.0,
+                        "2": None,
+                        "timestamp": "2021-06-04T19:59:00.000000000",
+                    },
+                    {
+                        "open": 126.0,
+                        "high": 126.01,
+                        "low": 126.0,
+                        "close": 126.01,
+                        "volume": 3693.0,
+                        "2": None,
+                        "timestamp": "2021-06-04T19:58:00.000000000",
+                    },
+                ]
+            },
+        )
