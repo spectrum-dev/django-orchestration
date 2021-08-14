@@ -12,6 +12,7 @@ def main(payload):
             df = df.rename(
                 columns={
                     "value": key,
+                    "data": key,
                 },
             )
 
