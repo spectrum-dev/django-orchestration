@@ -67,7 +67,7 @@ class AllMetadataViewTest(TestCase):
                     },
                     "STRATEGY_BLOCK": {
                         "1": {
-                            "blockName": "Backtest",
+                            "blockName": "Simple Backtest",
                             "blockMetadata": "/orchestration/STRATEGY_BLOCK/1/",
                         }
                     },
@@ -413,7 +413,7 @@ class ValidateFlowTest(TestCase):
                     },
                     "reactflow__edge-4output_id1796-5input_id1799": {
                         "status": True,
-                        "target_block": "Backtest",
+                        "target_block": "Simple Backtest",
                         "allowed_connections": [],
                     },
                 },
@@ -499,12 +499,12 @@ class ValidateFlowTest(TestCase):
                     },
                     "reactflow__edge-4output_id1796-6input_id1799": {
                         "status": True,
-                        "target_block": "Backtest",
+                        "target_block": "Simple Backtest",
                         "allowed_connections": [],
                     },
                     "reactflow__edge-5output_id1367-7input_id1810": {
                         "status": True,
-                        "target_block": "Backtest",
+                        "target_block": "Simple Backtest",
                         "allowed_connections": [],
                     },
                 },

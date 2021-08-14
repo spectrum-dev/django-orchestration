@@ -267,35 +267,20 @@ def seed_blocks_into_registry(apps, schema_editor):
     BlockRegistry(
         block_type="STRATEGY_BLOCK",
         block_id=1,
-        block_name="Backtest",
+        block_name="Simple Backtest",
         inputs=[
             {
-                "fieldName": "Commission",
+                "fieldName": "Commission ($)",
                 "fieldVariableName": "commission",
                 "fieldType": "input",
             },
             {
-                "fieldName": "Impact",
-                "fieldVariableName": "impact",
-                "fieldType": "input",
-            },
-            {
-                "fieldName": "Start Value",
+                "fieldName": "Start Value ($)",
                 "fieldVariableName": "start_value",
                 "fieldType": "input",
             },
             {
-                "fieldName": "Stop Loss",
-                "fieldVariableName": "stop_loss",
-                "fieldType": "input",
-            },
-            {
-                "fieldName": "Take Profit",
-                "fieldVariableName": "take_profit",
-                "fieldType": "input",
-            },
-            {
-                "fieldName": "Trade Amount",
+                "fieldName": "Trade Amount Value ($)",
                 "fieldVariableName": "trade_amount_value",
                 "fieldType": "input",
             },
