@@ -31,6 +31,32 @@ class SpectrumEventFlow:
         except KeyError:
             raise Exception(f"The block id '{block_id}' could not be found")
     
+    def perform_dfs(self, visited, block_id_in_flow, allowed_block_data, target_block_data, blocks_found):
+        block_data = self.get_block_in_flow_by_id(block_id_in_flow)
+
+        if block_data["blockType"] == target_block_data["blockType"]:
+            for allowed_block in allowed_block_data:
+                if (block_data["blockType"] == allowed_block["blockType"]
+                    and str(block_data["blockId"]) == str(allowed_block["blockId"])):
+                    
+                    blocks_found.append(block_id_in_flow)
+                    
+                    # TODO: This is where a "more than" block flow will happen
+                    if len(blocks_found) == int(target_block_data["number"]):
+                        return
+        
+        if block_id_in_flow not in visited:
+            visited.add(block_id_in_flow)
+
+            for neighbor in self.dependency_graph[block_id_in_flow]:
+                self._dfs(
+                    visited,
+                    neighbor,
+                    allowed_block_data,
+                    target_block_data,
+                    blocks_found,
+                )
+    
     def validate(self):
         """
             Performs validation on the existing flow to ensure
@@ -164,8 +190,35 @@ class SpectrumEventFlow:
                         # Will search for dependencies data
                         required_blocks_found = []
                         for required_block in block_registry_data.validations["input"]["required"]:
-                            pass
+                            visited = set()
+                            self.perform_dfs(visited, block, block_registry_data.validations["input"]["allowed_blocks"], required_block, required_blocks_found)
 
+                        assembled_dependency_list = {}
+                        for required_block in set(required_blocks_found):
+                            required_block_data = self.get_block_in_flow_by_id(required_block)
+
+                            if required_block_data["blockType"] not in assembled_dependency_list:
+                                assembled_dependency_list[required_block_data["blockType"]] = 0
+                            assembled_dependency_list[required_block_data["blockType"]] += 1
+                        
+                        for required_block in block_registry_data.validations["input"]["required"]:
+                            if not required_block["blockType"] in assembled_dependency_list:
+                                return {
+                                    "isValid": False,
+                                    "code": "VALIDATE-005",
+                                    "description": f"""
+                                        Required block {required_block["blockType"]} is not in the assembled dependency list
+                                    """
+                                }
+
+                            if not assembled_dependency_list[required_block["blockType"]] >= required_block["number"]:
+                                return {
+                                    "isValid": False,
+                                    "code": "VALIDATE-006",
+                                    "description": f"""
+                                        The number of blocks of {required_block["blockType"]} is less than the number ({required_block["number"]}) required
+                                    """
+                                }
 
                     except BlockRegistry.DoesNotExist:
                         return {
@@ -176,10 +229,13 @@ class SpectrumEventFlow:
                                 could not be found in the database
                             """
                         }
-
-        # TODO: Once the above three are done, we can assume (for now) that a flow is valid.
-        #       Iterate through the blocks again and determine 
-        pass
+                
+        return {
+            "isValid": True,
+            "code": "OK",
+            "description": ""
+        }
+    
     def run(self):
         """
             Takes a queue of operations that need to be run and a
