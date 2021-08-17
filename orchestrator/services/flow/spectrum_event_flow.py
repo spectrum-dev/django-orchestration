@@ -151,7 +151,11 @@ class SpectrumEventFlow:
                 }
 
             except BlockRegistry.DoesNotExist:
-                pass
+                return {
+                    "isValid": False,
+                    "code": "VALIDATE-008",
+                    "description": f"The block with parameters block type {target_block['blockType']} and block ID {target_block['blockId']} could not be found in the database",
+                }
 
         all_valid = all(
             [value["status"] for key, value in self.edge_validation.items()]
