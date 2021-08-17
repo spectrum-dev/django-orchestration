@@ -8,7 +8,7 @@ def main(payload):
         df = pd.DataFrame(value)
         df = df.set_index("timestamp")
 
-        if not (key is "base"):
+        if key != "base":
             df = df.rename(
                 columns={
                     "value": key,

@@ -49,7 +49,7 @@ class SpectrumEventFlow:
             visited.add(block_id_in_flow)
 
             for neighbor in self.dependency_graph[block_id_in_flow]:
-                self._dfs(
+                self.perform_dfs(
                     visited,
                     neighbor,
                     allowed_block_data,
@@ -102,7 +102,7 @@ class SpectrumEventFlow:
 
                 target_block_registry_data = BlockRegistry.objects.get(
                     block_type=target_block["blockType"],
-                    block_id=target_block["blockId",]
+                    block_id=target_block["blockId"]
                 )
                 
                 # Ensures that the edge is valid
@@ -134,18 +134,13 @@ class SpectrumEventFlow:
             except BlockRegistry.DoesNotExist:
                 pass
 
-        all_valid = map(
-            lambda edge: True if edge["status"] else False, self.edge_validation
-        )
+        all_valid = all([value['status'] for key, value in self.edge_validation.items()])
 
         if not all_valid:
             return {
                 "isValid": False,
                 "code": "VALIDATE-002",
-                "description": f"""
-                    Input into target block with block type {source_block["blockType"]}
-                    and block id {source_block["blockId"]}
-                """
+                "description": f"Input into target block with block type {source_block['blockType']} and block id {source_block['blockId']}",
             }
 
         # Block Form Input Validation -> checks if every block has all the inputs it needs
@@ -161,30 +156,29 @@ class SpectrumEventFlow:
                             return {
                                 "isValid": False,
                                 "code": "VALIDATE-003",
-                                "description": f"The value for key {key} in block {block} is invalid / empty"
+                                "description": f"The value for key {key} in block id {block} is invalid / empty"
                             }
 
-        # TODO: Block Edge Input Validation -> Checks if block "has access" to the data it needs to run correctly
-        #       Important thing here is to
+        # Block Edge Input Validation -> Checks if block "has access" to the data it needs to run correctly
         for task in self.batched_tasks:
             for block in task:
                 block_data = self.get_block_in_flow_by_id(block)
                 for key, value in block_data.items():
                     try:
-                        block_type = block_data["block_type"]
-                        block_id = block_data["block_id"]
+                        block_type = block_data["blockType"]
+                        block_id = block_data["blockId"]
 
                         block_registry_data = BlockRegistry.objects.get(
                             block_type=block_type,
                             block_id=block_id,
                         )
 
-                        # For a block with no dependencies but has multiple required attributes 
-                        if len(self.dependency_graph[block]) == 0 and block_registry_data.validation["input"]["required"] != 0:
+                        # For a block with no dependencies but has multiple required attributes
+                        if len(self.dependency_graph[block]) == 0 and len(block_registry_data.validations["input"]["required"]) != 0:
                             return {
                                 "isValid": False,
-                                "code": "VALIDATE-003",
-                                "description": f""
+                                "code": "VALIDATE-004",
+                                "description": f"The block of type {block_type} and id {block_id}. The required number of inputs is {len(block_registry_data.validations['input']['required'])} but there were 0.",
                             }
                         
                         # Will search for dependencies data
@@ -206,33 +200,26 @@ class SpectrumEventFlow:
                                 return {
                                     "isValid": False,
                                     "code": "VALIDATE-005",
-                                    "description": f"""
-                                        Required block {required_block["blockType"]} is not in the assembled dependency list
-                                    """
+                                    "description": f"Required block {required_block['blockType']} is not in the assembled dependency list"
                                 }
 
                             if not assembled_dependency_list[required_block["blockType"]] >= required_block["number"]:
                                 return {
                                     "isValid": False,
                                     "code": "VALIDATE-006",
-                                    "description": f"""
-                                        The number of blocks of {required_block["blockType"]} is less than the number ({required_block["number"]}) required
-                                    """
+                                    "description": f"The number of blocks of {required_block['blockType']} is less than the number ({required_block['number']}) required"
                                 }
 
                     except BlockRegistry.DoesNotExist:
                         return {
                             "isValid": False,
-                            "code": "VALIDATE-004",
-                            "description": f"""
-                                The block with parameters block type {block_type} and block ID {block_id}
-                                could not be found in the database
-                            """
+                            "code": "VALIDATE-007",
+                            "description": f"The block with parameters block type {block_type} and block ID {block_id} could not be found in the database"
                         }
-                
+
         return {
             "isValid": True,
-            "code": "OK",
+            "code": "VALIDATE-OK",
             "description": ""
         }
     

@@ -43,7 +43,7 @@ class DependencyGraph:
         Generates an adjacency list graph representation using the node and edge pairs
         """
         graph = Graph()
-
+        
         # Initializes the Adjacency List of Blocks
         for block_id, vertex in self.vertices.items():
             if block_id not in graph.adjacency_list:
