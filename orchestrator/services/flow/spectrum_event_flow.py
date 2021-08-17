@@ -286,7 +286,7 @@ class SpectrumEventFlow:
                         }
 
         return {"isValid": True, "code": "VALIDATE-OK", "description": ""}
-    
+
     def run(self):
         """
         Takes a queue of operations that need to be run and a
