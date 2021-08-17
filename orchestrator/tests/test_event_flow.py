@@ -127,5 +127,3 @@ class SpectrumEventFlowValidateTest(TestCase):
             spectrum_event_flow.input_payloads,
             MOVING_AVERAGE_CROSSOVER_RETURNS_RESPONSE,
         )
-
-        assert False
