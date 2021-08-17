@@ -9,7 +9,9 @@ from orchestrator.tests.data.test_event_flow_data import (
     TWO_NODE_INVALID_CONNECTION_RETURNS_002,
     SINGLE_NODE_DATA_FLOW_RETURNS_003,
     TWO_NODE_NOT_CONNECTED_RETURNS_004,
-    
+    MULTIPLE_BLOCKS_NOT_IN_ASSEMBLED_DEPEDENCY_LIST_RETURNS_005,
+    INVALID_BLOCK_RETURNS_007,
+    MOVING_AVERAGE_CROSSOVER_RETURNS_OK,
 )
 
 class SpectrumEventFlowValidateTest(TestCase):
@@ -85,4 +87,45 @@ class SpectrumEventFlowValidateTest(TestCase):
             }
         )
 
+    # TODO: Determine a case where this is valid
+    def test_multiple_blocks_not_in_assembled_dependency_list_returns_005(self):
+        spectrum_event_flow = SpectrumEventFlow(
+            MULTIPLE_BLOCKS_NOT_IN_ASSEMBLED_DEPEDENCY_LIST_RETURNS_005["nodeList"],
+            MULTIPLE_BLOCKS_NOT_IN_ASSEMBLED_DEPEDENCY_LIST_RETURNS_005["edgeList"]
+        )
+
+        pass
+
+    # TODO: Determine a case where this is valid
+    def test_todo_returns_006(self):
+        pass
     
+    def test_invalid_block_returns_007(self):
+        spectrum_event_flow = SpectrumEventFlow(
+            INVALID_BLOCK_RETURNS_007["nodeList"],
+            INVALID_BLOCK_RETURNS_007["edgeList"]
+        )
+
+        self.assertDictEqual(
+            spectrum_event_flow.validate(),
+            {
+                "isValid": False,
+                "code": "VALIDATE-007",
+                "description": "The block with parameters block type INVALID_BLOCK and block ID 1 could not be found in the database"
+            }
+        )
+
+    def test_moving_average_crossover_returns_ok(self):
+        spectrum_event_flow = SpectrumEventFlow(
+            MOVING_AVERAGE_CROSSOVER_RETURNS_OK["nodeList"],
+            MOVING_AVERAGE_CROSSOVER_RETURNS_OK["edgeList"]
+        )
+
+        self.assertDictEqual(
+            spectrum_event_flow.validate(),
+            {
+                "isValid": True,
+                "code": "VALIDATE-OK",
+                "description": ""
+            }
+        )
