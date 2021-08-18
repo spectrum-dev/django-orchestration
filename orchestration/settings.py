@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "rest_auth",
+    # django celery
+    "django_celery_results",
     # for social login
     "allauth",
     "allauth.account",
@@ -160,3 +162,13 @@ SITE_ID = 1
 
 ROOT_URLCONF = "orchestration.urls"
 WSGI_APPLICATION = "orchestration.wsgi.application"
+
+# Celery
+
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
+CELERY_BROKER_URL = environ["RABBIT_MQ_URL"]
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
