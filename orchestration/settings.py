@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "rest_auth",
+    # django celery
+    "django_celery_results",
     # for social login
     "allauth",
     "allauth.account",
@@ -160,3 +162,14 @@ SITE_ID = 1
 
 ROOT_URLCONF = "orchestration.urls"
 WSGI_APPLICATION = "orchestration.wsgi.application"
+
+# Celery
+
+# Make this a shared result backend
+CELERY_RESULT_BACKEND = f'db+postgresql://{environ["DATABASE_USER"]}:{environ["DATABASE_PASSWORD"]}@{environ["DATABASE_HOST"]}:{environ["DATABASE_PORT"]}/{environ["CELERY_BACKEND_DATABASE_NAME"]}'
+CELERY_CACHE_BACKEND = "django-cache"
+CELERY_BROKER_URL = environ["RABBIT_MQ_URL"]
+
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
