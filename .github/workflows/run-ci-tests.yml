@@ -53,6 +53,8 @@ jobs:
         DATABASE_HOST: "127.0.0.1"
         DATABASE_PORT: ${{ matrix.db_port }}
         API_BASE_URL: "http://block-monolith:8000"
+        CELERY_BACKEND_DATABASE_NAME: "celery-backend"
+        RABBIT_MQ_URL: "amqp://guest:guest@rabbitmq:5672"
       run: |
         python manage.py test
     

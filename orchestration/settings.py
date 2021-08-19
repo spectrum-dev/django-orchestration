@@ -167,9 +167,9 @@ WSGI_APPLICATION = "orchestration.wsgi.application"
 
 # Make this a shared result backend
 CELERY_RESULT_BACKEND = f'db+postgresql://{environ["DATABASE_USER"]}:{environ["DATABASE_PASSWORD"]}@{environ["DATABASE_HOST"]}:{environ["DATABASE_PORT"]}/{environ["CELERY_BACKEND_DATABASE_NAME"]}'
-CELERY_CACHE_BACKEND = 'django-cache'
+CELERY_CACHE_BACKEND = "django-cache"
 CELERY_BROKER_URL = environ["RABBIT_MQ_URL"]
 
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
