@@ -125,14 +125,3 @@ class SpectrumEventFlowValidateTest(TestCase):
             spectrum_event_flow.input_payloads,
             MOVING_AVERAGE_CROSSOVER_RETURNS_RESPONSE,
         )
-
-class SpectrumEventFlowRunTest(TestCase):
-    def test_debug(self):
-        spectrum_event_flow = SpectrumEventFlow(
-            MOVING_AVERAGE_CROSSOVER_RETURNS_OK["nodeList"],
-            MOVING_AVERAGE_CROSSOVER_RETURNS_OK["edgeList"],
-        )
-
-        print (spectrum_event_flow.run())
-
-        assert False
