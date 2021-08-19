@@ -17,6 +17,9 @@ class SpectrumEventFlow:
         self.dependency_graph = graph.dependency_graph.adjacency_list
         self.batched_tasks = graph.batched_tasks
 
+        # Valid
+        self.valid = self.validate()
+
     def get_block_in_flow_by_id(self, block_id):
         """
         Retrieves a block in a flow by its ID
