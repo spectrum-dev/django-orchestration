@@ -1,6 +1,6 @@
 import time
 
-from celery import shared_task
+import celery
 
 from orchestration.celery import app
 
@@ -333,3 +333,8 @@ class SpectrumEventFlow:
                     # publish_message(payload)
                 
                 # With a list of queued items, wait for the response and then save this into the outputs 
+
+def debug_send():
+    return celery.current_app.send_task('blocks.celery.block_processing', args=({'test': 'test'},))
+    # signature = app.signature('blocks.celery')
+    # signature.delay({'test': 'test'})
