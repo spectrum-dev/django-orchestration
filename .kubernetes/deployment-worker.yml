@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: spectrum-orchestration
+  name: spectrum-orchestration-worker
   namespace: production
   labels:
-    app: spectrum-orchestration
+    app: spectrum-orchestration-worker
 spec:
   replicas: 1 # By default 1 pod only
   selector:
     matchLabels:
-      app: spectrum-orchestration
+      app: spectrum-orchestration-worker
   template:
     metadata:
       labels:
-        app: spectrum-orchestration
+        app: spectrum-orchestration-worker
     spec:
       containers:
-        - name: spectrum-orchestration
+        - name: spectrum-orchestration-worker
           image: <CONTAINER_IMAGE_URL>
           imagePullPolicy: Always
-          command: ["sh", "docker-entrypoint.sh"] 
+          command: ['celery', '-A', 'orchestration', 'worker', '-l', 'INFO']
           ports:
             - containerPort: 8000
               name: http
