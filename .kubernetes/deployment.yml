@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: spectrum-orchestration
-          image: registry.digitalocean.com/spectrum/spectrum-orchestration:5eea3f9
+          image: <CONTAINER_IMAGE_URL>
           imagePullPolicy: Always
           command: ["sh", "docker-entrypoint.sh"] 
           ports:
