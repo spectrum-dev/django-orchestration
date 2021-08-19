@@ -1,9 +1,3 @@
-import time
-
-import celery
-
-from orchestration.celery import app
-
 from orchestrator.models import BlockRegistry
 from orchestrator.services.flow.spectrum_flow import DependencyGraph
 
