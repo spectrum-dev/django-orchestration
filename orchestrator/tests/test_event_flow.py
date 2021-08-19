@@ -1,6 +1,4 @@
 from django.test import TestCase
-from orchestrator.services.flow import spectrum_event_flow
-
 from orchestrator.services.flow.spectrum_event_flow import SpectrumEventFlow
 
 # Test Data
@@ -21,7 +19,7 @@ class SpectrumEventFlowValidateTest(TestCase):
         spectrum_event_flow = SpectrumEventFlow({}, [])
 
         self.assertDictEqual(
-            spectrum_event_flow.validate(),
+            spectrum_event_flow.valid,
             {
                 "isValid": False,
                 "code": "VALIDATE-001",
@@ -36,7 +34,7 @@ class SpectrumEventFlowValidateTest(TestCase):
         )
 
         self.assertDictEqual(
-            spectrum_event_flow.validate(),
+            spectrum_event_flow.valid,
             {
                 "isValid": False,
                 "code": "VALIDATE-003",
@@ -51,7 +49,7 @@ class SpectrumEventFlowValidateTest(TestCase):
         )
 
         self.assertDictEqual(
-            spectrum_event_flow.validate(),
+            spectrum_event_flow.valid,
             {"isValid": True, "code": "VALIDATE-OK", "description": ""},
         )
 
@@ -62,7 +60,7 @@ class SpectrumEventFlowValidateTest(TestCase):
         )
 
         self.assertDictEqual(
-            spectrum_event_flow.validate(),
+            spectrum_event_flow.valid,
             {
                 "isValid": False,
                 "code": "VALIDATE-002",
@@ -77,7 +75,7 @@ class SpectrumEventFlowValidateTest(TestCase):
         )
 
         self.assertDictEqual(
-            spectrum_event_flow.validate(),
+            spectrum_event_flow.valid,
             {
                 "isValid": False,
                 "code": "VALIDATE-004",
@@ -104,7 +102,7 @@ class SpectrumEventFlowValidateTest(TestCase):
         )
 
         self.assertDictEqual(
-            spectrum_event_flow.validate(),
+            spectrum_event_flow.valid,
             {
                 "isValid": False,
                 "code": "VALIDATE-007",
@@ -119,7 +117,7 @@ class SpectrumEventFlowValidateTest(TestCase):
         )
 
         self.assertDictEqual(
-            spectrum_event_flow.validate(),
+            spectrum_event_flow.valid,
             {"isValid": True, "code": "VALIDATE-OK", "description": ""},
         )
 
@@ -127,3 +125,14 @@ class SpectrumEventFlowValidateTest(TestCase):
             spectrum_event_flow.input_payloads,
             MOVING_AVERAGE_CROSSOVER_RETURNS_RESPONSE,
         )
+
+class SpectrumEventFlowRunTest(TestCase):
+    def test_debug(self):
+        spectrum_event_flow = SpectrumEventFlow(
+            MOVING_AVERAGE_CROSSOVER_RETURNS_OK["nodeList"],
+            MOVING_AVERAGE_CROSSOVER_RETURNS_OK["edgeList"],
+        )
+
+        print (spectrum_event_flow.run())
+
+        assert False

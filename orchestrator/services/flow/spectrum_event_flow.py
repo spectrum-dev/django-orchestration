@@ -1,6 +1,11 @@
+import time
+
+from celery import shared_task
+
+from orchestration.celery import app
+
 from orchestrator.models import BlockRegistry
 from orchestrator.services.flow.spectrum_flow import DependencyGraph
-
 
 class SpectrumEventFlow:
     def __init__(self, vertices, edges):
@@ -16,6 +21,9 @@ class SpectrumEventFlow:
         self.graph = graph.graph.adjacency_list
         self.dependency_graph = graph.dependency_graph.adjacency_list
         self.batched_tasks = graph.batched_tasks
+
+        # Valid
+        self.valid = self.validate()
 
     def get_block_in_flow_by_id(self, block_id):
         """
@@ -296,4 +304,32 @@ class SpectrumEventFlow:
         Outputs:
             - An output cache
         """
-        pass
+        # @task(name="send_task_to_be_processed")
+        # def send_task_to_be_processed(payload):
+        #     return payload
+
+        @shared_task
+        def publish_message(message):
+            with app.producer_pool.acquire(block=True) as producer:
+                producer.publish(
+                    message,
+                    exchange='myexchange',
+                    routing_key='mykey',
+                )
+        
+        # Handles case where not valid
+        if not self.valid["isValid"]:
+            return
+        
+        signature = app.signature('block.processing', queue='test_queue')
+        for tasks in self.batched_tasks:
+            queued_items = []
+            for block in tasks:
+                payload = self.input_payloads[block]
+                payload["outputs"]["ref"] = list(payload["outputs"]["ref"])
+                if (len(payload["outputs"]["ref"]) > 0):
+                    # result = send_task('block.processing', [payload])
+                    result = signature.delay(payload)
+                    # publish_message(payload)
+                
+                # With a list of queued items, wait for the response and then save this into the outputs 

@@ -27,6 +27,7 @@ Faker==8.11.0
 gunicorn==20.1.0
 idna==2.10
 isort==5.9.3
+kombu==5.1.0
 lazy-object-proxy==1.6.0
 mccabe==0.6.1
 mypy-extensions==0.4.3
