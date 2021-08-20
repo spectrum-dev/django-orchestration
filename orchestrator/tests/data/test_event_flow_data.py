@@ -202,11 +202,9 @@ MOVING_AVERAGE_CROSSOVER_RETURNS_RESPONSE = {
     "1": {
         "inputs": {
             "equity_name": "AAPL",
-            "data_type": "intraday",
-            "interval": "1min",
-            "outputsize": "compact",
-            "start_date": "2021-06-21 19:58:00",
-            "end_date": "2021-06-21 20:00:00",
+            "candlestick": "1month",
+            "start_date": "2021-05-28 00:00:00",
+            "end_date": "2021-07-30 00:00:00",
         },
         "outputs": {"ref": set()},
         "blockType": "DATA_BLOCK",
@@ -215,7 +213,7 @@ MOVING_AVERAGE_CROSSOVER_RETURNS_RESPONSE = {
     "3": {
         "inputs": {
             "indicator_name": "MA",
-            "lookback_period": "5",
+            "lookback_period": "1",
             "lookback_unit": "DATA_POINT",
         },
         "outputs": {"ref": {"1"}},
@@ -233,7 +231,7 @@ MOVING_AVERAGE_CROSSOVER_RETURNS_RESPONSE = {
         "blockId": 1,
     },
     "4": {
-        "inputs": {"event_type": "INTERSECT", "event_action": "BUY"},
+        "inputs": {"event_action": "BUY"},
         "outputs": {"ref": {"3", "2"}},
         "blockType": "SIGNAL_BLOCK",
         "blockId": 1,
