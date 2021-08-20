@@ -1,3 +1,5 @@
+from celery import current_app
+
 from orchestrator.models import BlockRegistry
 from orchestrator.services.flow.spectrum_flow import DependencyGraph
 
@@ -299,4 +301,14 @@ class SpectrumEventFlow:
         Outputs:
             - An output cache
         """
+
+        def send_helper():
+            # TODO: Implement payload object
+            current_app.send_task(
+                "blocks.celery.debug_receive_local",
+                queue="blocks",
+                routing_key="block_task",
+            )
+            pass
+
         pass

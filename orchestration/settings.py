@@ -177,12 +177,12 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 
 CELERY_QUEUES = (
-    Queue('default', Exchange('default'), routing_key='default'),
-    Queue('blocks', Exchange('blocks'), routing_key='block_task'),
+    Queue("default", Exchange("default"), routing_key="default"),
+    Queue("blocks", Exchange("blocks"), routing_key="block_task"),
 )
 CELERY_ROUTES = {
-    'blocks.celery.debug_receive_local': {
-        'queue': 'blocks',
-        'routing_key': 'block_task',
+    "blocks.celery.debug_receive_local": {
+        "queue": "blocks",
+        "routing_key": "block_task",
     }
 }
