@@ -126,6 +126,7 @@ class SpectrumEventFlowValidateTest(TestCase):
             MOVING_AVERAGE_CROSSOVER_RETURNS_RESPONSE,
         )
 
+
 # class SpectrumEventFlowRunTest(TestCase):
 #     def test_moving_average_crossover_returns_ok(self):
 #         spectrum_event_flow = SpectrumEventFlow(
