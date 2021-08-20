@@ -17,6 +17,8 @@ from corsheaders.defaults import default_headers
 
 from pathlib import Path
 
+from kombu import Queue, Exchange
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -173,3 +175,14 @@ CELERY_BROKER_URL = environ["RABBIT_MQ_URL"]
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
+
+CELERY_QUEUES = (
+    Queue("default", Exchange("default"), routing_key="default"),
+    Queue("blocks", Exchange("blocks"), routing_key="block_task"),
+)
+CELERY_ROUTES = {
+    "blocks.celery.debug_receive_local": {
+        "queue": "blocks",
+        "routing_key": "block_task",
+    }
+}
