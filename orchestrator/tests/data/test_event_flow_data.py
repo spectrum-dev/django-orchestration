@@ -119,14 +119,9 @@ MOVING_AVERAGE_CROSSOVER_RETURNS_OK = {
             "blockType": "DATA_BLOCK",
             "blockId": 1,
             "equity_name": {"value": "AAPL", "options": []},
-            "data_type": {
-                "value": "intraday",
-                "options": ["intraday", "daily_adjusted"],
-            },
-            "interval": {"value": "1min", "options": ["1min"]},
-            "outputsize": {"value": "compact", "options": ["compact", "full"]},
-            "start_date": {"value": "2021-06-21 19:58:00"},
-            "end_date": {"value": "2021-06-21 20:00:00"},
+            "candlestick": {"value": "1month", "options": ["1min", "1month"]},
+            "start_date": {"value": "2021-05-28 00:00:00"},
+            "end_date": {"value": "2021-07-30 00:00:00"},
         },
         "2": {
             "blockType": "COMPUTATIONAL_BLOCK",
@@ -139,13 +134,12 @@ MOVING_AVERAGE_CROSSOVER_RETURNS_OK = {
             "blockType": "COMPUTATIONAL_BLOCK",
             "blockId": 1,
             "indicator_name": {"value": "MA"},
-            "lookback_period": {"value": "5"},
+            "lookback_period": {"value": "1"},
             "lookback_unit": {"value": "DATA_POINT"},
         },
         "4": {
             "blockType": "SIGNAL_BLOCK",
             "blockId": 1,
-            "event_type": {"value": "INTERSECT"},
             "event_action": {"value": "BUY"},
         },
         "5": {

@@ -3,7 +3,6 @@ from celery import current_app
 from orchestrator.models import BlockRegistry
 from orchestrator.services.flow.spectrum_flow import DependencyGraph
 
-
 class SpectrumEventFlow:
     def __init__(self, vertices, edges):
         self.vertices = vertices
@@ -302,13 +301,49 @@ class SpectrumEventFlow:
             - An output cache
         """
 
-        def send_helper():
-            # TODO: Implement payload object
-            current_app.send_task(
-                "blocks.celery.debug_receive_local",
+        def send_helper(block_id_in_flow, payload):
+            """
+                Helper function that invokes the low-level celery
+                function 'send_task' and sends a request payload
+            """
+            output_key = f"{payload['blockType']}-{payload['blockId']}-{block_id_in_flow}"
+            task = current_app.send_task(
+                "blocks.celery.event_ingestor",
+                args=(payload,),
                 queue="blocks",
                 routing_key="block_task",
             )
-            pass
 
-        pass
+            return (output_key, task)
+        
+        for tasks in self.batched_tasks:
+            queued_items = []
+            for block in tasks:
+                payload = self.input_payloads[block]
+                payload["outputs"]["ref"] = list(payload["outputs"]["ref"])
+
+                # Implement logic to pull data from the self.outputs
+                if (len(payload["outputs"]["ref"]) > 0):
+                    for ref in payload["outputs"]["ref"]:
+                        # Searches for corresponding output key and adds that data to the payload based on the ref
+                        for key in self.outputs.keys():
+                            if key.split('-')[2] == ref:
+                                payload["outputs"][key] = self.outputs[key]
+                    
+                    del payload["outputs"]["ref"]
+
+
+                response = send_helper(block, payload)
+                queued_items.append(response)
+            
+            for queued_item in queued_items:
+                output_key, pending_value = queued_item
+                response = pending_value.get()
+
+                # Some responses come with a "response" key, which we will extract out
+                if "response" in response:
+                    self.outputs[output_key] = response['response']
+                else:
+                    self.outputs[output_key] = response
+            
+        return True
