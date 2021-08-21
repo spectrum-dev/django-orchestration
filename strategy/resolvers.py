@@ -1,4 +1,5 @@
 from ariadne import convert_kwargs_to_snake_case
+from celery.result import AsyncResult
 
 from strategy.tasks import run_strategy
 from strategy.models import UserStrategy, Strategy
@@ -33,11 +34,18 @@ def list_strategies(_, info):
     ]
 
 
+@convert_kwargs_to_snake_case
+def get_task_status(*_, task_id):
+    task = AsyncResult(task_id)
+    return {"status": task.status}
+
+
 # Mutations
 @convert_kwargs_to_snake_case
-def run_strategy(*_, user, strategy_id, commit_id, metadata, node_list, edge_list):
-    try:
-        run_strategy.delay(user, strategy_id, commit_id, metadata, node_list, edge_list)
-        return {"status": True}
-    except:
-        return {"status": False}
+def dispatch_run_strategy(
+    _, info, strategy_id, commit_id, metadata, node_list, edge_list
+):
+    task = run_strategy.delay(
+        info.context["user"].id, strategy_id, commit_id, metadata, node_list, edge_list
+    )
+    return {"status": True, "task_id": task.task_id}

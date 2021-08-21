@@ -21,9 +21,11 @@ query = QueryType()
 query.set_field("ping", authentication.resolvers.get_ping)
 query.set_field("userStrategies", strategy.resolvers.list_user_strategies)
 query.set_field("strategies", strategy.resolvers.list_strategies)
+query.set_field("taskStatus", strategy.resolvers.get_task_status)
 
 # Mutation Implementations
 mutation = MutationType()
+mutation.set_field("dispatchRunStrategy", strategy.resolvers.dispatch_run_strategy)
 
 # Directives
 directives = {
