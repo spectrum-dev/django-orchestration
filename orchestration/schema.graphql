@@ -1,0 +1,7 @@
+type Query {
+    userStrategies: [UserStrategy!]!
+}
+
+type Mutation {
+    test: String!
+}

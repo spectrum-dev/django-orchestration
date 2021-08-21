@@ -20,7 +20,7 @@ from django.views.generic.base import View
 
 from ariadne_django.views import GraphQLView
 
-from orchestration.schema import schema
+from orchestration.graphql_config import schema
 
 import strategy.views
 import orchestrator.views
