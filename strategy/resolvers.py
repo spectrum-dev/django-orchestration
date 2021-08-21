@@ -11,10 +11,12 @@ def list_user_strategies(_, info):
             "strategy_id": user_strategy.strategy,
             "strategy_name": user_strategy.strategy_name,
             "created_at": user_strategy.created_at,
-            "updated_at": user_strategy.updated_at
-        } for user_strategy in UserStrategy.objects.filter(user=info.context["user"])
+            "updated_at": user_strategy.updated_at,
+        }
+        for user_strategy in UserStrategy.objects.filter(user=info.context["user"])
     ]
-    
+
+
 @convert_kwargs_to_snake_case
 def list_strategies(_, info):
     return [
@@ -25,15 +27,17 @@ def list_strategies(_, info):
             "input": strategy.input,
             "output": strategy.output,
             "created_at": strategy.created_at,
-            "updated_at": strategy.updated_at
-        } for strategy in Strategy.objects.filter(strategy__user=info.context["user"])
+            "updated_at": strategy.updated_at,
+        }
+        for strategy in Strategy.objects.filter(strategy__user=info.context["user"])
     ]
+
 
 # Mutations
 @convert_kwargs_to_snake_case
 def run_strategy(*_, user, strategy_id, commit_id, metadata, node_list, edge_list):
     try:
         run_strategy.delay(user, strategy_id, commit_id, metadata, node_list, edge_list)
-        return { 'status': True }
+        return {"status": True}
     except:
-        return { 'status': False }
+        return {"status": False}

@@ -1,6 +1,7 @@
 directive @isAuthenticated on FIELD_DEFINITION
 
 type Query {
+    ping: String! @isAuthenticated
     userStrategies: [UserStrategy!]! @isAuthenticated
     strategies: [Strategy!]! @isAuthenticated
 }

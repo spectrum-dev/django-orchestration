@@ -28,7 +28,11 @@ import orchestrator.views
 import authentication.views
 
 urlpatterns = [
-    path('graphql/', GraphQLView.as_view(schema=schema, context_value=get_user_context), name='graphql'),
+    path(
+        "graphql/",
+        GraphQLView.as_view(schema=schema, context_value=get_user_context),
+        name="graphql",
+    ),
     path("orchestration/admin/", admin.site.urls),
     path(
         "rest-auth/google/",
