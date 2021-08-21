@@ -18,11 +18,21 @@ from django.urls import path
 from django.conf.urls import include, url
 from django.views.generic.base import View
 
+from ariadne_django.views import GraphQLView
+
+from orchestration.graphql_config import schema
+from authentication.graphql import get_user_context
+
 import strategy.views
 import orchestrator.views
 import authentication.views
 
 urlpatterns = [
+    path(
+        "graphql/",
+        GraphQLView.as_view(schema=schema, context_value=get_user_context),
+        name="graphql",
+    ),
     path("orchestration/admin/", admin.site.urls),
     path(
         "rest-auth/google/",
