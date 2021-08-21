@@ -2,8 +2,7 @@ scalar DateTime
 scalar JSON
 
 type UserStrategy {
-    user: String!
-    strategy: ID!
+    strategyId: ID!
     strategyName: String!
     createdAt: DateTime!
     updatedAt: DateTime!
@@ -11,7 +10,7 @@ type UserStrategy {
 
 type Strategy {
     strategy: UserStrategy!
-    commit: ID!
+    commitId: ID!
     flowMetadata: JSON!
     input: JSON!
     output: JSON!

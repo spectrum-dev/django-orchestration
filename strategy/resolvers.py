@@ -8,7 +8,7 @@ from strategy.models import UserStrategy, Strategy
 def list_user_strategies(_, info):
     return [
         {
-            "strategy": user_strategy.strategy,
+            "strategy_id": user_strategy.strategy,
             "strategy_name": user_strategy.strategy_name,
             "created_at": user_strategy.created_at,
             "updated_at": user_strategy.updated_at
@@ -20,7 +20,7 @@ def list_strategies(_, info):
     return [
         {
             "strategy": strategy.strategy,
-            "commit": strategy.commit,
+            "commit_id": strategy.commit,
             "flow_metadata": strategy.flow_metadata,
             "input": strategy.input,
             "output": strategy.output,
