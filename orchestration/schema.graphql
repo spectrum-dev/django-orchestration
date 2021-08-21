@@ -1,4 +1,5 @@
 directive @isAuthenticated on FIELD_DEFINITION
+
 scalar DateTime
 scalar JSON
 

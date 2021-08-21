@@ -33,13 +33,19 @@ def list_strategies(_, info):
         for strategy in Strategy.objects.filter(strategy__user=info.context["user"])
     ]
 
+
 @convert_kwargs_to_snake_case
 def get_task_status(*_, task_id):
     task = AsyncResult(task_id)
     return {"status": task.status}
 
+
 # Mutations
 @convert_kwargs_to_snake_case
-def dispatch_run_strategy(_, info, strategy_id, commit_id, metadata, node_list, edge_list):
-    task = run_strategy.delay(info.context["user"].id, strategy_id, commit_id, metadata, node_list, edge_list)
+def dispatch_run_strategy(
+    _, info, strategy_id, commit_id, metadata, node_list, edge_list
+):
+    task = run_strategy.delay(
+        info.context["user"].id, strategy_id, commit_id, metadata, node_list, edge_list
+    )
     return {"status": True, "task_id": task.task_id}
