@@ -1,6 +1,8 @@
+directive @isAuthenticated on FIELD_DEFINITION
+
 type Query {
-    userStrategies: [UserStrategy!]!
-    strategies: [Strategy!]!
+    userStrategies: [UserStrategy!]! @isAuthenticated
+    strategies: [Strategy!]! @isAuthenticated
 }
 
 type Mutation {

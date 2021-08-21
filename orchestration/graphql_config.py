@@ -1,5 +1,7 @@
 from ariadne import QueryType, make_executable_schema, load_schema_from_path, snake_case_fallback_resolvers, MutationType
 
+from orchestration.graphql_context import IsAuthenticatedDirective
+
 import strategy.resolvers
 
 type_defs = [
@@ -15,4 +17,9 @@ query.set_field("strategies", strategy.resolvers.list_strategies)
 # Mutation Implementations
 mutation = MutationType()
 
-schema = make_executable_schema(type_defs, query, mutation, snake_case_fallback_resolvers)
+# Directives
+directives = {
+    "isAuthenticated": IsAuthenticatedDirective,
+}
+
+schema = make_executable_schema(type_defs, query, mutation, snake_case_fallback_resolvers, directives=directives)
