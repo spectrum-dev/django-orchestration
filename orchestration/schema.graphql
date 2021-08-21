@@ -1,11 +1,14 @@
 directive @isAuthenticated on FIELD_DEFINITION
+scalar DateTime
+scalar JSON
 
 type Query {
     ping: String! @isAuthenticated
     userStrategies: [UserStrategy!]! @isAuthenticated
     strategies: [Strategy!]! @isAuthenticated
+    taskStatus(taskId: ID!): TaskStatus! @isAuthenticated
 }
 
 type Mutation {
-    test: String!
+    dispatchRunStrategy(strategyId: ID!, commitId: ID!, metadata: JSON!, nodeList: JSON!, edgeList: [JSON!]): DispatchRunStrategy! @isAuthenticated
 }
