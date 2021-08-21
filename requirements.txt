@@ -1,6 +1,6 @@
 appdirs==1.4.4
 asgiref==3.4.1
-astroid==2.6.6
+astroid==2.7.2
 black==21.5b2
 celery==5.1.2
 certifi==2021.5.30
@@ -36,7 +36,7 @@ pathspec==0.9.0
 psycopg2-binary==2.9.1
 pycparser==2.20
 PyJWT==2.1.0
-pylint==2.9.6
+pylint==2.10.1
 pylint-django==2.4.4
 pylint-plugin-utils==0.6
 python-dateutil==2.8.2
