@@ -5,7 +5,7 @@ from strategy.models import UserStrategy, Strategy
 def list_user_strategies(*_):
     return [
         {
-            "strategy_id": user_strategy.strategy,
+            "strategy": user_strategy.strategy,
             "strategy_name": user_strategy.strategy_name,
             "created_at": user_strategy.created_at,
             "updated_at": user_strategy.updated_at
