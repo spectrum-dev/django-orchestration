@@ -68,6 +68,8 @@ INSTALLED_APPS = [
     "rest_auth.registration",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
+    # GraphQL
+    "ariadne_django",
     "corsheaders",
 ]
 
