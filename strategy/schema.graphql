@@ -1,0 +1,19 @@
+scalar DateTime
+scalar JSON
+
+type UserStrategy {
+    strategyId: ID!
+    strategyName: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+type Strategy {
+    strategy: UserStrategy!
+    commitId: ID!
+    flowMetadata: JSON!
+    input: JSON!
+    output: JSON!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
