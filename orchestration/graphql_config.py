@@ -10,6 +10,7 @@ type_defs = [
 # Query Implementations
 query = QueryType()
 query.set_field("userStrategies", strategy.resolvers.list_user_strategies)
+query.set_field("strategies", strategy.resolvers.list_strategies)
 
 # Mutation Implementations
 mutation = MutationType()

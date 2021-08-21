@@ -12,3 +12,15 @@ def list_user_strategies(*_):
         } for user_strategy in UserStrategy.objects.all()
     ]
     
+def list_strategies(*_):
+    return [
+        {
+            "strategy": strategy.strategy,
+            "commit": strategy.commit,
+            "flow_metadata": strategy.flow_metadata,
+            "input": strategy.input,
+            "output": strategy.output,
+            "created_at": strategy.created_at,
+            "updated_at": strategy.updated_at
+        } for strategy in Strategy.objects.all()
+    ]

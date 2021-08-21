@@ -1,5 +1,6 @@
 type Query {
     userStrategies: [UserStrategy!]!
+    strategies: [Strategy!]!
 }
 
 type Mutation {
