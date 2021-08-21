@@ -5,18 +5,18 @@ from strategy.models import UserStrategy, Strategy
 
 # Queries
 @convert_kwargs_to_snake_case
-def list_user_strategies(*_):
+def list_user_strategies(_, info):
     return [
         {
             "strategy": user_strategy.strategy,
             "strategy_name": user_strategy.strategy_name,
             "created_at": user_strategy.created_at,
             "updated_at": user_strategy.updated_at
-        } for user_strategy in UserStrategy.objects.all()
+        } for user_strategy in UserStrategy.objects.filter(user=info.context["user"])
     ]
     
 @convert_kwargs_to_snake_case
-def list_strategies(*_):
+def list_strategies(_, info):
     return [
         {
             "strategy": strategy.strategy,
@@ -26,7 +26,7 @@ def list_strategies(*_):
             "output": strategy.output,
             "created_at": strategy.created_at,
             "updated_at": strategy.updated_at
-        } for strategy in Strategy.objects.all()
+        } for strategy in Strategy.objects.filter(strategy__user=info.context["user"])
     ]
 
 # Mutations
