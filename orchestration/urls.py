@@ -21,7 +21,7 @@ from django.views.generic.base import View
 from ariadne_django.views import GraphQLView
 
 from orchestration.graphql_config import schema
-from orchestration.graphql_context import get_user_context
+from authentication.graphql import get_user_context
 
 import strategy.views
 import orchestrator.views

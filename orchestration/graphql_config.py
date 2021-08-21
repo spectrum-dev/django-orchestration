@@ -1,6 +1,6 @@
 from ariadne import QueryType, make_executable_schema, load_schema_from_path, snake_case_fallback_resolvers, MutationType
 
-from orchestration.graphql_context import IsAuthenticatedDirective
+from authentication.graphql import IsAuthenticatedDirective
 
 import strategy.resolvers
 
