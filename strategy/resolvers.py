@@ -1,6 +1,9 @@
 from ariadne import convert_kwargs_to_snake_case
+
+from strategy.tasks import run_strategy
 from strategy.models import UserStrategy, Strategy
 
+# Queries
 @convert_kwargs_to_snake_case
 def list_user_strategies(*_):
     return [
@@ -12,6 +15,7 @@ def list_user_strategies(*_):
         } for user_strategy in UserStrategy.objects.all()
     ]
     
+@convert_kwargs_to_snake_case
 def list_strategies(*_):
     return [
         {
@@ -24,3 +28,12 @@ def list_strategies(*_):
             "updated_at": strategy.updated_at
         } for strategy in Strategy.objects.all()
     ]
+
+# Mutations
+@convert_kwargs_to_snake_case
+def run_strategy(*_, user, strategy_id, commit_id, metadata, node_list, edge_list):
+    try:
+        run_strategy.delay(user, strategy_id, commit_id, metadata, node_list, edge_list)
+        return { 'status': True }
+    except:
+        return { 'status': False }
