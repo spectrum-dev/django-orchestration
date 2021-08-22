@@ -41,11 +41,16 @@ def get_task_status(*_, task_id):
 
 
 # Mutations
-@convert_kwargs_to_snake_case
 def dispatch_run_strategy(
-    _, info, strategy_id, commit_id, metadata, node_list, edge_list
+    _, info, strategyId, commitId, metadata, inputs, nodeList, edgeList
 ):
     task = run_strategy.delay(
-        info.context["user"].id, strategy_id, commit_id, metadata, node_list, edge_list
+        info.context["user"].id,
+        strategyId,
+        commitId,
+        metadata,
+        inputs,
+        nodeList,
+        edgeList,
     )
     return {"status": True, "task_id": task.task_id}

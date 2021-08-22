@@ -11,5 +11,5 @@ type Query {
 }
 
 type Mutation {
-    dispatchRunStrategy(strategyId: ID!, commitId: ID!, metadata: JSON!, nodeList: JSON!, edgeList: [JSON!]): DispatchRunStrategy! @isAuthenticated
+    dispatchRunStrategy(strategyId: ID!, commitId: ID!, metadata: JSON!, inputs: JSON!, nodeList: JSON!, edgeList: [JSON!]): DispatchRunStrategy! @isAuthenticated
 }
