@@ -10,7 +10,9 @@ from orchestrator.exceptions import (
 
 
 @app.task
-def run_strategy(user_id, strategy_id, commit_id, metadata, inputs, node_list, edge_list):
+def run_strategy(
+    user_id, strategy_id, commit_id, metadata, inputs, node_list, edge_list
+):
     try:
         flow = SpectrumEventFlow(node_list, edge_list)
         if not flow.valid["isValid"]:

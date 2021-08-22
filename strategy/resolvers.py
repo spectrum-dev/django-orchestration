@@ -45,6 +45,12 @@ def dispatch_run_strategy(
     _, info, strategyId, commitId, metadata, inputs, nodeList, edgeList
 ):
     task = run_strategy.delay(
-        info.context["user"].id, strategyId, commitId, metadata, inputs, nodeList, edgeList
+        info.context["user"].id,
+        strategyId,
+        commitId,
+        metadata,
+        inputs,
+        nodeList,
+        edgeList,
     )
     return {"status": True, "task_id": task.task_id}
