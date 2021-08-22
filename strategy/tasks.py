@@ -10,7 +10,7 @@ from orchestrator.exceptions import (
 
 
 @app.task
-def run_strategy(user, strategy_id, commit_id, metadata, node_list, edge_list):
+def run_strategy(user_id, strategy_id, commit_id, metadata, node_list, edge_list):
     try:
         flow = SpectrumEventFlow(node_list, edge_list)
         if not flow.valid["isValid"]:
@@ -19,7 +19,7 @@ def run_strategy(user, strategy_id, commit_id, metadata, node_list, edge_list):
         # Runs Flow
         flow.run()
 
-        user_strategy = UserStrategy.objects.get(strategy=strategy_id, user=user)
+        user_strategy = UserStrategy.objects.get(strategy=strategy_id, user_id=user_id)
 
         Strategy.objects.update_or_create(
             strategy=user_strategy,
