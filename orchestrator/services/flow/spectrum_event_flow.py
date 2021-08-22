@@ -1,4 +1,5 @@
 from celery import current_app
+from celery.result import allow_join_result
 
 from orchestrator.models import BlockRegistry
 from orchestrator.services.flow.spectrum_flow import DependencyGraph
@@ -340,12 +341,14 @@ class SpectrumEventFlow:
 
             for queued_item in queued_items:
                 output_key, pending_value = queued_item
-                response = pending_value.get()
 
-                # Some responses come with a "response" key, which we will extract out
-                if "response" in response:
-                    self.outputs[output_key] = response["response"]
-                else:
-                    self.outputs[output_key] = response
+                with allow_join_result():
+                    response = pending_value.get()
+
+                    # Some responses come with a "response" key, which we will extract out
+                    if "response" in response:
+                        self.outputs[output_key] = response["response"]
+                    else:
+                        self.outputs[output_key] = response
 
         return True
