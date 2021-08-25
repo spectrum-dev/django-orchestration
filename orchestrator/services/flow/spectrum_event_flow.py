@@ -2,6 +2,8 @@ from celery import current_app
 from celery.result import allow_join_result
 
 from orchestrator.models import BlockRegistry
+from orchestrator.exceptions import MultipleBacktestBlocksException
+from orchestrator.services.results.main import main
 from orchestrator.services.flow.spectrum_flow import DependencyGraph
 
 
@@ -350,5 +352,15 @@ class SpectrumEventFlow:
                         self.outputs[output_key] = response["response"]
                     else:
                         self.outputs[output_key] = response
+
+        # Checks whether a single backtest block exists, and if so run the results dashboard
+        backtest_block = [
+            string for string in self.outputs.keys() if "STRATEGY_BLOCK" in string
+        ]
+
+        if len(backtest_block) == 1:
+            self.outputs["results"] = main(self.outputs[backtest_block[0]])
+        elif len(backtest_block) > 1:
+            raise MultipleBacktestBlocksException
 
         return True
