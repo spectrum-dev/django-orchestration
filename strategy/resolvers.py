@@ -34,22 +34,23 @@ def list_strategies(_, info):
     ]
 
 
-@convert_kwargs_to_snake_case
-def get_task_status(*_, task_id):
-    task = AsyncResult(task_id)
-    return {"status": task.status}
+def get_task_result(*_, taskId):
+    task = AsyncResult(taskId)
+    if not task.status == "SUCCESS":
+        return {
+            "status": task.status,
+            "output": None,
+        }
+
+    return {
+        "status": task.status,
+        "output": task.get(),
+    }
 
 
 # Mutations
-def dispatch_run_strategy(
-    _, info, strategyId, commitId, metadata, inputs, nodeList, edgeList
-):
+def dispatch_run_strategy(*_, nodeList, edgeList):
     task = run_strategy.delay(
-        info.context["user"].id,
-        strategyId,
-        commitId,
-        metadata,
-        inputs,
         nodeList,
         edgeList,
     )

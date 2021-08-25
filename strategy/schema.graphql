@@ -28,6 +28,7 @@ enum Status {
     SUCCESS
 }
 
-type TaskStatus {
-    status: Status
+type TaskResult {
+    status: Status!
+    output: JSON
 }
