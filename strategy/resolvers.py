@@ -33,6 +33,7 @@ def list_strategies(_, info):
         for strategy in Strategy.objects.filter(strategy__user=info.context["user"])
     ]
 
+
 def get_task_result(*_, taskId):
     task = AsyncResult(taskId)
     if not task.status == "SUCCESS":
@@ -46,10 +47,11 @@ def get_task_result(*_, taskId):
         "output": task.get(),
     }
 
+
 # Mutations
 def dispatch_run_strategy(*_, nodeList, edgeList):
     task = run_strategy.delay(
         nodeList,
         edgeList,
     )
-    return { "status": True, "task_id": task.task_id }
+    return {"status": True, "task_id": task.task_id}
