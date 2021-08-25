@@ -7,9 +7,9 @@ type Query {
     ping: String! @isAuthenticated
     userStrategies: [UserStrategy!]! @isAuthenticated
     strategies: [Strategy!]! @isAuthenticated
-    taskStatus(taskId: ID!): TaskStatus! @isAuthenticated
+    taskResult(taskId: ID!): TaskResult! @isAuthenticated
 }
 
 type Mutation {
-    dispatchRunStrategy(strategyId: ID!, commitId: ID!, metadata: JSON!, inputs: JSON!, nodeList: JSON!, edgeList: [JSON!]): DispatchRunStrategy! @isAuthenticated
+    dispatchRunStrategy(nodeList: JSON!, edgeList: [JSON!]): DispatchRunStrategy! @isAuthenticated
 }
