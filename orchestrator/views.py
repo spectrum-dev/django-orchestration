@@ -52,6 +52,7 @@ class MetadataView(APIView):
                 "blockId": block_registry.block_id,
                 "inputs": block_registry.inputs,
                 "validation": block_registry.validations,
+                "outputInterface": block_registry.output_interface,
             }
 
             return JsonResponse(metadata)

@@ -27,6 +27,7 @@ class Migration(migrations.Migration):
                 ("block_name", models.CharField(max_length=128)),
                 ("inputs", models.JSONField()),
                 ("validations", models.JSONField()),
+                ("output_interface", models.JSONField()),
             ],
             options={
                 "unique_together": {("block_type", "block_id")},
