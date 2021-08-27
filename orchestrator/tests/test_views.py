@@ -116,6 +116,9 @@ class MetadataViewTest(TestCase):
                     "input": {"required": [], "allowed_blocks": []},
                     "output": [{"number": 1, "blockType": "DATA_BLOCK"}],
                 },
+                "outputInterface": {
+                    "interface": ["open", "high", "low", "close", "volume"]
+                },
             },
         )
 

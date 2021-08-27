@@ -36,9 +36,7 @@ def seed_blocks_into_registry(apps, schema_editor):
             "input": {"required": [], "allowed_blocks": []},
             "output": [{"blockType": "DATA_BLOCK", "number": 1}],
         },
-        output_interface={
-            "interface": ["open", "high", "low", "close", "volume"]
-        }
+        output_interface={"interface": ["open", "high", "low", "close", "volume"]},
     ).save()
 
     BlockRegistry(
@@ -71,9 +69,7 @@ def seed_blocks_into_registry(apps, schema_editor):
             "input": {"required": [], "allowed_blocks": []},
             "output": [{"blockType": "DATA_BLOCK", "number": 1}],
         },
-        output_interface={
-            "interface": ["open", "high", "low", "close", "volume"]
-        }
+        output_interface={"interface": ["open", "high", "low", "close", "volume"]},
     ).save()
 
     BlockRegistry(
@@ -102,9 +98,7 @@ def seed_blocks_into_registry(apps, schema_editor):
             },
             "output": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 1}],
         },
-        output_interface={
-            "interface": ["open", "high", "low", "close", "volume"]
-        }
+        output_interface={"interface": ["open", "high", "low", "close", "volume"]},
     ).save()
 
     BlockRegistry(
@@ -128,9 +122,7 @@ def seed_blocks_into_registry(apps, schema_editor):
             },
             "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}],
         },
-        output_interface={
-            "interface": ["timestamp", "order"]
-        }
+        output_interface={"interface": ["timestamp", "order"]},
     ).save()
 
     BlockRegistry(
@@ -170,9 +162,7 @@ def seed_blocks_into_registry(apps, schema_editor):
             },
             "output": [{"blockType": "SIGNAL_BLOCK", "number": 2}],
         },
-        output_interface={
-            "interface": ["timestamp", "order"]
-        }
+        output_interface={"interface": ["timestamp", "order"]},
     ).save()
 
     BlockRegistry(
@@ -192,9 +182,7 @@ def seed_blocks_into_registry(apps, schema_editor):
             },
             "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}],
         },
-        output_interface={
-            "interface": ["timestamp", "order"]
-        }
+        output_interface={"interface": ["timestamp", "order"]},
     ).save()
 
     BlockRegistry(
@@ -231,9 +219,7 @@ def seed_blocks_into_registry(apps, schema_editor):
             },
             "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}],
         },
-        output_interface={
-            "interface": ["timestamp", "order"]
-        }
+        output_interface={"interface": ["timestamp", "order"]},
     ).save()
 
     BlockRegistry(
@@ -253,9 +239,7 @@ def seed_blocks_into_registry(apps, schema_editor):
             },
             "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}],
         },
-        output_interface={
-            "interface": ["timestamp", "order"]
-        }
+        output_interface={"interface": ["timestamp", "order"]},
     ).save()
 
     BlockRegistry(
@@ -286,9 +270,7 @@ def seed_blocks_into_registry(apps, schema_editor):
             },
             "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}],
         },
-        output_interface={
-            "interface": ["timestamp", "order"]
-        }
+        output_interface={"interface": ["timestamp", "order"]},
     ).save()
 
     BlockRegistry(
@@ -331,9 +313,7 @@ def seed_blocks_into_registry(apps, schema_editor):
             },
             "output": [{"blockType": "STRATEGY_BLOCK", "number": 1}],
         },
-        output_interface={
-            "interface": ["trades", "portVals"]
-        }
+        output_interface={"interface": ["trades", "portVals"]},
     ).save()
 
 
