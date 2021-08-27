@@ -1,19 +1,8 @@
+from orchestrator.interface import get_input_dependency_graph as get_input_dependency_graph_interface
+
+
 # Queries
-def get_output_interface_from_block_mapping(*_, nodeList, edgeList):
-    """
-    Resolve a mapping mapping from nodes and edges for output_interface data
+def get_input_dependency_graph(*_, nodeList, edgeList):
+    response = get_input_dependency_graph_interface(nodeList, edgeList)
+    return response
 
-    Arguments
-    ---
-    nodeList: Dict of nodes
-    edgeList: List of edge mappings
-
-    Example
-    ---
-    {
-        [target_block_id]: [output_interface_value]
-    }
-    """
-    flow = SpectrumEventFlow(nodeList, edgeList)
-
-    pass

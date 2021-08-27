@@ -7,7 +7,7 @@ from orchestrator.tests.data.test_event_flow_data import (
 
 
 class ResultsTest(TestCase):
-    def test_debug(self):
+    def test_valid_flow(self):
         response = get_input_dependency_graph(
             MOVING_AVERAGE_CROSSOVER_RETURNS_OK["nodeList"],
             MOVING_AVERAGE_CROSSOVER_RETURNS_OK["edgeList"],
