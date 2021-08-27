@@ -10,6 +10,7 @@ from authentication.graphql import IsAuthenticatedDirective
 
 import strategy.resolvers
 import authentication.resolvers
+import orchestrator.resolvers
 
 type_defs = [
     load_schema_from_path("orchestration/schema.graphql"),
@@ -22,6 +23,9 @@ query.set_field("ping", authentication.resolvers.get_ping)
 query.set_field("userStrategies", strategy.resolvers.list_user_strategies)
 query.set_field("strategies", strategy.resolvers.list_strategies)
 query.set_field("taskResult", strategy.resolvers.get_task_result)
+query.set_field(
+    "inputDependencyGraph", orchestrator.resolvers.get_input_dependency_graph
+)
 
 # Mutation Implementations
 mutation = MutationType()

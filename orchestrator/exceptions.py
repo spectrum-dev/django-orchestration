@@ -1,3 +1,9 @@
+class BlockDoesNotExist(Exception):
+    """
+    Block does not exist in registry
+    """
+
+
 class StrategyNotValidException(Exception):
     """
     Strategy is invalid
