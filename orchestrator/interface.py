@@ -6,7 +6,7 @@ from orchestrator.services.flow.spectrum_event_flow import SpectrumEventFlow
 def get_input_dependency_graph(node_list, edge_list):
     """
     Forms a dependency graph and maps every block to the inputs it has access to
-    
+
     Inputs
     ---
     node_list: Dict[block_id_in_flow(string), block_data(json)]
