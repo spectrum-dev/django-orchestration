@@ -10,3 +10,4 @@ class BlockRegistry(models.Model):
     block_name = models.CharField(max_length=128)
     inputs = models.JSONField()
     validations = models.JSONField()
+    output_interface = models.JSONField()
