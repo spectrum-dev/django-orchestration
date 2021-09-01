@@ -17,9 +17,33 @@ class ResultsTest(TestCase):
             response,
             {
                 "1": [],
-                "2": ["open", "high", "low", "close", "volume"],
-                "3": ["open", "high", "low", "close", "volume"],
-                "4": ["open", "high", "low", "close", "volume"],
-                "5": ["timestamp", "order"],
+                "2": {
+                    "1": {
+                        "name": "US Stock Data",
+                        "outputInterface": ["open", "high", "low", "close", "volume"],
+                    }
+                },
+                "3": {
+                    "1": {
+                        "name": "US Stock Data",
+                        "outputInterface": ["open", "high", "low", "close", "volume"],
+                    }
+                },
+                "4": {
+                    "3": {
+                        "name": "Technical Indicators",
+                        "outputInterface": ["open", "high", "low", "close", "volume"],
+                    },
+                    "2": {
+                        "name": "Technical Indicators",
+                        "outputInterface": ["open", "high", "low", "close", "volume"],
+                    },
+                },
+                "5": {
+                    "4": {
+                        "name": "Intersect",
+                        "outputInterface": ["timestamp", "order"],
+                    }
+                },
             },
         )

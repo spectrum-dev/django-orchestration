@@ -31,9 +31,14 @@ def get_input_dependency_graph(node_list, edge_list):
                 block_metadata = BlockRegistry.objects.get(
                     block_id=block["blockId"], block_type=block["blockType"]
                 )
-                input_dependency_graph[key] = block_metadata.output_interface[
-                    "interface"
-                ]
+
+                if key not in input_dependency_graph:
+                    input_dependency_graph[key] = {}
+
+                input_dependency_graph[key][dependency_block_id] = {
+                    "name": block_metadata.block_name,
+                    "outputInterface": block_metadata.output_interface["interface"],
+                }
             except BlockRegistry.DoesNotExist:
                 raise BlockDoesNotExist
 
