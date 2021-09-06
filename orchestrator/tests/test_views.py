@@ -19,6 +19,7 @@ class AllMetadataViewTest(TestCase):
             **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
         )
 
+        print(response.json())
         self.assertDictEqual(
             response.json(),
             {
@@ -63,6 +64,10 @@ class AllMetadataViewTest(TestCase):
                         "6": {
                             "blockName": "Candle Close",
                             "blockMetadata": "/orchestration/SIGNAL_BLOCK/6/",
+                        },
+                        "7": {
+                            "blockName": "Comparison",
+                            "blockMetadata": "/orchestration/SIGNAL_BLOCK/7/",
                         },
                     },
                     "STRATEGY_BLOCK": {
