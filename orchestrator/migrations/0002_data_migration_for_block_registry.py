@@ -98,7 +98,7 @@ def seed_blocks_into_registry(apps, schema_editor):
             },
             "output": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 1}],
         },
-        output_interface={"interface": ["open", "high", "low", "close", "volume"]},
+        output_interface={"interface": ["data"]},
     ).save()
 
     BlockRegistry(
@@ -264,6 +264,50 @@ def seed_blocks_into_registry(apps, schema_editor):
             "input": {
                 "required": [{"blockType": "DATA_BLOCK", "number": 1}],
                 "allowed_blocks": [
+                    {"blockId": "1", "blockType": "DATA_BLOCK"},
+                    {"blockId": "2", "blockType": "DATA_BLOCK"},
+                ],
+            },
+            "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}],
+        },
+        output_interface={"interface": ["timestamp", "order"]},
+    ).save()
+
+    BlockRegistry(
+        block_type="SIGNAL_BLOCK",
+        block_id=7,
+        block_name="Comparison",
+        inputs=[
+            {
+                "fieldName": "Block One Incoming Data",
+                "fieldVariableName": "incoming_data_one",
+                "fieldType": "inputs_from_connection",
+                "fieldDefaultValue": "close",
+            },
+            {
+                "fieldData": {"base": "/comparisonType", "method": "GET"},
+                "fieldName": "Comparison Type",
+                "fieldType": "dropdown",
+                "fieldVariableName": "comparison_type",
+            },
+            {
+                "fieldName": "Block Two Incoming Data",
+                "fieldVariableName": "incoming_data_two",
+                "fieldType": "inputs_from_connection",
+                "fieldDefaultValue": "close",
+            },
+            {
+                "fieldData": {"base": "/eventAction", "method": "GET"},
+                "fieldName": "Event Action",
+                "fieldType": "dropdown",
+                "fieldVariableName": "event_action",
+            },
+        ],
+        validations={
+            "input": {
+                "required": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 2}],
+                "allowed_blocks": [
+                    {"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"},
                     {"blockId": "1", "blockType": "DATA_BLOCK"},
                     {"blockId": "2", "blockType": "DATA_BLOCK"},
                 ],
