@@ -13,6 +13,8 @@ class ResultsTest(TestCase):
             MOVING_AVERAGE_CROSSOVER_RETURNS_OK["edgeList"],
         )
 
+        print(response)
+
         self.assertDictEqual(
             response,
             {
@@ -30,14 +32,8 @@ class ResultsTest(TestCase):
                     }
                 },
                 "4": {
-                    "3": {
-                        "name": "Technical Indicators",
-                        "outputInterface": ["open", "high", "low", "close", "volume"],
-                    },
-                    "2": {
-                        "name": "Technical Indicators",
-                        "outputInterface": ["open", "high", "low", "close", "volume"],
-                    },
+                    "3": {"name": "Technical Indicators", "outputInterface": ["data"]},
+                    "2": {"name": "Technical Indicators", "outputInterface": ["data"]},
                 },
                 "5": {
                     "4": {

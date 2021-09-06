@@ -195,12 +195,13 @@ class SpectrumEventFlow:
                                 "description": f"The value for key {key} in block id {block} is invalid / empty",
                             }
 
-                        if ('inputFromConnectionValue' in value):
-                            self.input_payloads[block]["inputs"][key] = f'{value["inputFromConnectionValue"]}-{value["value"]}'
+                        if "inputFromConnectionValue" in value:
+                            self.input_payloads[block]["inputs"][
+                                key
+                            ] = f'{value["inputFromConnectionValue"]}-{value["value"]}'
                         else:
                             # Populates the inputs record with the required keys
                             self.input_payloads[block]["inputs"][key] = value["value"]
-                        
 
         # Block Edge Input Validation -> Checks if block "has access" to the data it needs to run correctly
         for task in self.batched_tasks:
@@ -318,7 +319,7 @@ class SpectrumEventFlow:
                 f"{payload['blockType']}-{payload['blockId']}-{block_id_in_flow}"
             )
 
-            print ('Payload: ', payload)
+            print("Payload: ", payload)
             task = current_app.send_task(
                 "blocks.celery.event_ingestor",
                 args=(payload,),
