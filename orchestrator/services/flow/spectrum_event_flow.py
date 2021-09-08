@@ -290,11 +290,21 @@ class SpectrumEventFlow:
                                 }
                             
                             # Case where there is only meant to be one incoming value, and if there is a direct connection between two blocks, to only use that data
-                            if (required_block["number"] == 1):
-                                dependency_data = list(self.dependency_graph[block])
-                                if (any(dependency_block in assembled_dependency_list[required_block["blockType"]] for dependency_block in dependency_data)):
-                                    assembled_dependency_list[required_block["blockType"]] = dependency_data
+                            if (len(assembled_dependency_list[required_block["blockType"]]) > required_block["number"]):
+                                # Retrieves a list of adjacent blocks that could be of varying types
+                                adjacent_blocks = list(self.dependency_graph[block])
+                                # Subset of adjacent_blocks filtered by the block type
+                                adjacent_blocks_of_matching_type = []
+                                # Checks if adjacent block is in the list of required blocks
+                                for adjacent_block in adjacent_blocks:
+                                    if adjacent_block in assembled_dependency_list[required_block["blockType"]]:
+                                        adjacent_blocks_of_matching_type.append(adjacent_block)
+                                
+                                # If the adjancent blocks fulfil the required amount, it sets the data pulled to those adjacent blocks
+                                if (len(adjacent_blocks_of_matching_type) == required_block["number"]):
+                                    assembled_dependency_list[required_block["blockType"]] = adjacent_blocks_of_matching_type
 
+                            # Adds the block of this block type to the input_payloads output ref
                             for required_block in assembled_dependency_list[required_block["blockType"]]:
                                 self.input_payloads[block]["outputs"]["ref"].add(required_block)
 
