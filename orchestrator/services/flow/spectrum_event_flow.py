@@ -259,10 +259,12 @@ class SpectrumEventFlow:
                             ):
                                 assembled_dependency_list[
                                     required_block_data["blockType"]
-                                ] = 0
+                                ] = []
                             assembled_dependency_list[
                                 required_block_data["blockType"]
-                            ] += 1
+                            ].append(required_block)
+
+                        print ('Assembled Dependency List: ', assembled_dependency_list)
 
                         for required_block in block_registry_data.validations["input"][
                             "required"
@@ -278,7 +280,7 @@ class SpectrumEventFlow:
                                 }
 
                             if (
-                                assembled_dependency_list[required_block["blockType"]]
+                                len(assembled_dependency_list[required_block["blockType"]])
                                 < required_block["number"]
                             ):
                                 return {
@@ -286,11 +288,16 @@ class SpectrumEventFlow:
                                     "code": "VALIDATE-006",
                                     "description": f"The number of blocks of {required_block['blockType']} is less than the number ({required_block['number']}) required",
                                 }
+                            
+                            # Case where there is only meant to be one incoming value, and if there is a direct connection between two blocks, to only use that data
+                            if (required_block["number"] == 1):
+                                dependency_data = list(self.dependency_graph[block])
+                                if (any(dependency_block in assembled_dependency_list[required_block["blockType"]] for dependency_block in dependency_data)):
+                                    assembled_dependency_list[required_block["blockType"]] = dependency_data
 
-                        for required_block in required_blocks_found:
-                            self.input_payloads[block]["outputs"]["ref"].add(
-                                required_block
-                            )
+                            for required_block in assembled_dependency_list[required_block["blockType"]]:
+                                self.input_payloads[block]["outputs"]["ref"].add(required_block)
+
                     except BlockRegistry.DoesNotExist:
                         return {
                             "isValid": False,
@@ -335,6 +342,9 @@ class SpectrumEventFlow:
                 payload = self.input_payloads[block]
                 payload["outputs"]["ref"] = list(payload["outputs"]["ref"])
 
+                print ('Payload Output Refs:', payload["outputs"]["ref"])
+                print ()
+
                 # Implement logic to pull data from the self.outputs
                 if len(payload["outputs"]["ref"]) > 0:
                     for ref in payload["outputs"]["ref"]:
@@ -344,6 +354,10 @@ class SpectrumEventFlow:
                                 payload["outputs"][key] = self.outputs[key]
 
                     del payload["outputs"]["ref"]
+
+                # Debug
+                print (f'Request Payload for block {block} is {payload}')
+                print ()
 
                 response = send_helper(block, payload)
                 queued_items.append(response)
