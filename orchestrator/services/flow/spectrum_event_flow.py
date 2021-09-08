@@ -264,8 +264,6 @@ class SpectrumEventFlow:
                                 required_block_data["blockType"]
                             ].append(required_block)
 
-                        print ('Assembled Dependency List: ', assembled_dependency_list)
-
                         for required_block in block_registry_data.validations["input"][
                             "required"
                         ]:
@@ -336,7 +334,6 @@ class SpectrumEventFlow:
                 f"{payload['blockType']}-{payload['blockId']}-{block_id_in_flow}"
             )
 
-            print("Payload: ", payload)
             task = current_app.send_task(
                 "blocks.celery.event_ingestor",
                 args=(payload,),
@@ -352,9 +349,6 @@ class SpectrumEventFlow:
                 payload = self.input_payloads[block]
                 payload["outputs"]["ref"] = list(payload["outputs"]["ref"])
 
-                print ('Payload Output Refs:', payload["outputs"]["ref"])
-                print ()
-
                 # Implement logic to pull data from the self.outputs
                 if len(payload["outputs"]["ref"]) > 0:
                     for ref in payload["outputs"]["ref"]:
@@ -364,10 +358,6 @@ class SpectrumEventFlow:
                                 payload["outputs"][key] = self.outputs[key]
 
                     del payload["outputs"]["ref"]
-
-                # Debug
-                print (f'Request Payload for block {block} is {payload}')
-                print ()
 
                 response = send_helper(block, payload)
                 queued_items.append(response)
