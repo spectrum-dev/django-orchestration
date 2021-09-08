@@ -13,8 +13,6 @@ class ResultsTest(TestCase):
             MOVING_AVERAGE_CROSSOVER_RETURNS_OK["edgeList"],
         )
 
-        print(response)
-
         self.assertDictEqual(
             response,
             {

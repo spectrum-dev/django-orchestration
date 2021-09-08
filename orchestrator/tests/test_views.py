@@ -19,7 +19,6 @@ class AllMetadataViewTest(TestCase):
             **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
         )
 
-        print(response.json())
         self.assertDictEqual(
             response.json(),
             {
