@@ -55,6 +55,6 @@ SQLAlchemy==1.4.23
 sqlparse==0.4.2
 text-unidecode==1.3
 toml==0.10.2
-urllib3==1.26.6
+urllib3==1.26.7
 wrapt==1.12.1
 xlwt==1.3.0
