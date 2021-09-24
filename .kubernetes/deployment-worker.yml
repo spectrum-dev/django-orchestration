@@ -64,7 +64,7 @@ spec:
             - name: "SENTRY_DSN"
               valueFrom:
                 secretKeyRef:
-                  name: "spectrum"
+                  name: "spectrum-orchestration"
                   key: "SENTRY_DSN"
       imagePullSecrets:
         - name: registry-spectrum
