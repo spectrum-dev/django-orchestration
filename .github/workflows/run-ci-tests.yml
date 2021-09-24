@@ -55,7 +55,7 @@ jobs:
         API_BASE_URL: "http://block-monolith:8000"
         CELERY_BACKEND_DATABASE_NAME: "celery-backend"
         RABBIT_MQ_URL: "amqp://guest:guest@rabbitmq:5672"
-        SENTRY_DSN: "https://random.ingest.sentry.io/5958645"
+        SENTRY_DSN: ""
       run: |
         python manage.py test
     
