@@ -61,10 +61,16 @@ spec:
                   key: "CELERY_BACKEND_DATABASE_NAME"
             - name: "API_BASE_URL"
               value: "http://spectrum-block-monolith:8000"
+            - name: "DJANGO_DEBUG"
+              valueFrom:
+                secretKeyRef:
+                  name: "spectrum-orchestration"
+                  key: "DJANGO_DEBUG"
             - name: "SENTRY_DSN"
               valueFrom:
                 secretKeyRef:
                   name: "spectrum-orchestration"
                   key: "SENTRY_DSN"
+
       imagePullSecrets:
         - name: registry-spectrum
