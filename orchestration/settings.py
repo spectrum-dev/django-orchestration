@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import logging
 import sentry_sdk
 
 from os import environ
@@ -28,21 +29,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Environment Variable Setup
 load_dotenv()
 
-# Sentry
-# https://3fcf8089a728488e841ec6335b04851e@o707779.ingest.sentry.io/5958645
-sentry_sdk.init(
-    dsn=environ["SENTRY_DSN"],
-    integrations=[DjangoIntegration()],
-    environment="production",
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
-    traces_sample_rate=1.0,
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True,
-)
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -50,7 +36,26 @@ sentry_sdk.init(
 SECRET_KEY = "django-insecure-#lb@63a1u&0-j5v+h+q7w+11&--45ab4_(pz388b$2y8ln6s!7"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(environ["DJANGO_DEBUG"]))
+
+
+# Sentry
+if not DEBUG:
+    sentry_sdk.init(
+        dsn=environ["SENTRY_DSN"],
+        integrations=[DjangoIntegration()],
+        environment="production",
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production.
+        traces_sample_rate=1.0,
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True,
+    )
+
+    logging.info("Sentry SDK Activated")
+
 
 # CORS
 CORS_ORIGIN_ALLOW_ALL = True
