@@ -32,11 +32,11 @@ class StrategyIdViewTest(TestCase):
         response = self.client.get(
             "/strategy/strategyId", **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"}
         )
-
+        
         self.assertEqual(response.status_code, 200)
         # TODO: Testing behaviour here is a little flaky
         self.assertDictEqual(
-            response.json(), {"strategy_id": "00000000-0000-0000-0000-000000000050"}
+            response.json(), {"strategy_id": "00000000-0000-0000-0000-000000000004"}
         )
 
     @patch("uuid.uuid4", fixed_mock_uuid)
@@ -238,20 +238,7 @@ class GetAllStrategiesViewTest(TestCase):
 
         self.assertDictEqual(
             response.json(),
-            {
-                "strategies": [
-                    {
-                        "strategy_id": "00000000-0000-0000-0000-000000000025",
-                        "strategy_name": "Strategy 1",
-                        "created_at": "2012-11-01T08:16:13Z",
-                    },
-                    {
-                        "strategy_id": "00000000-0000-0000-0000-000000000028",
-                        "strategy_name": "Strategy 2",
-                        "created_at": "2012-11-01T08:16:13Z",
-                    },
-                ]
-            },
+            {'strategies': [{'strategy_id': '00000000-0000-0000-0000-000000000002', 'strategy_name': 'Strategy 1', 'created_at': '2012-11-01T08:16:13Z'}, {'strategy_id': '00000000-0000-0000-0000-000000000003', 'strategy_name': 'Strategy 2', 'created_at': '2012-11-01T08:16:13Z'}]},
         )
 
     def test_no_strategies(self):
@@ -347,7 +334,7 @@ class CommitIdViewTest(TestCase):
             response.json(),
             {
                 "strategyId": "5f4a0050-6766-40e1-946c-ddbd5533a3d1",
-                "commitId": "00000000-0000-0000-0000-00000000001a",
+                "commitId": "00000000-0000-0000-0000-000000000001",
             },
         )
 
