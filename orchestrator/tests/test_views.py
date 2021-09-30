@@ -37,6 +37,10 @@ class AllMetadataViewTest(TestCase):
                         "1": {
                             "blockName": "Technical Indicators",
                             "blockMetadata": "/orchestration/COMPUTATIONAL_BLOCK/1/",
+                        },
+                        "2": {
+                            "blockName": "Math Operation",
+                            "blockMetadata": "/orchestration/COMPUTATIONAL_BLOCK/2/",
                         }
                     },
                     "SIGNAL_BLOCK": {
