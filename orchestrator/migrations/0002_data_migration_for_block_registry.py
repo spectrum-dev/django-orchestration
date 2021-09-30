@@ -102,6 +102,45 @@ def seed_blocks_into_registry(apps, schema_editor):
     ).save()
 
     BlockRegistry(
+        block_type="COMPUTATIONAL_BLOCK",
+        block_id=2,
+        block_name="Math Operation",
+        inputs=[
+            {
+                "fieldName": "Incoming Data",
+                "fieldVariableName": "data_field",
+                "fieldType": "inputs_from_connection",
+                "fieldDefaultValue": "close",
+            },
+            {
+                "fieldData": {
+                    "base": "/operationType",
+                    "method": "GET",
+                    "onChange": "indicatorField?indicatorName=",
+                },
+                "fieldName": "Operation Type",
+                "fieldType": "dropdown",
+                "fieldVariableName": "operation_type",
+            },
+            {
+                "fieldName": "Operation Value",
+                "fieldVariableName": "operation_value",
+                "fieldType": "input",
+            },
+        ],
+        validations={
+            "input": {
+                "required": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 1}],
+                "allowed_blocks": [
+                    {"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"},
+                ],
+            },
+            "output": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 1}],
+        },
+        output_interface={"interface": ["data"]},
+    ).save()
+
+    BlockRegistry(
         block_type="SIGNAL_BLOCK",
         block_id=1,
         block_name="Intersect",
