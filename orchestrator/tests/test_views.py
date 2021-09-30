@@ -41,7 +41,7 @@ class AllMetadataViewTest(TestCase):
                         "2": {
                             "blockName": "Math Operation",
                             "blockMetadata": "/orchestration/COMPUTATIONAL_BLOCK/2/",
-                        }
+                        },
                     },
                     "SIGNAL_BLOCK": {
                         "1": {
