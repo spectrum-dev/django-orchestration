@@ -195,7 +195,10 @@ class SpectrumEventFlow:
                                 "description": f"The value for key {key} in block id {block} is invalid / empty",
                             }
 
-                        if "inputFromConnectionValue" in value:
+                        if (
+                            "inputFromConnectionValue" in value
+                            and value["inputFromConnectionValue"] != ""
+                        ):
                             self.input_payloads[block]["inputs"][
                                 key
                             ] = f'{value["inputFromConnectionValue"]}-{value["value"]}'
