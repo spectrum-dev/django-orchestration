@@ -113,11 +113,7 @@ def seed_blocks_into_registry(apps, schema_editor):
                 "fieldDefaultValue": "close",
             },
             {
-                "fieldData": {
-                    "base": "/operationType",
-                    "method": "GET",
-                    "onChange": "indicatorField?indicatorName=",
-                },
+                "fieldData": { "base": "/operationType", "method": "GET" },
                 "fieldName": "Operation Type",
                 "fieldType": "dropdown",
                 "fieldVariableName": "operation_type",
