@@ -152,7 +152,8 @@ def seed_blocks_into_registry(apps, schema_editor):
             "input": {
                 "required": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 2}],
                 "allowed_blocks": [
-                    {"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"}
+                    {"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"},
+                    {"blockId": "2", "blockType": "COMPUTATIONAL_BLOCK"},
                 ],
             },
             "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}],
@@ -192,7 +193,8 @@ def seed_blocks_into_registry(apps, schema_editor):
             "input": {
                 "required": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 1}],
                 "allowed_blocks": [
-                    {"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"}
+                    {"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"},
+                    {"blockId": "2", "blockType": "COMPUTATIONAL_BLOCK"},
                 ],
             },
             "output": [{"blockType": "SIGNAL_BLOCK", "number": 2}],
@@ -249,6 +251,7 @@ def seed_blocks_into_registry(apps, schema_editor):
                 "required": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 1}],
                 "allowed_blocks": [
                     {"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"},
+                    {"blockId": "2", "blockType": "COMPUTATIONAL_BLOCK"},
                     {"blockId": "1", "blockType": "DATA_BLOCK"},
                     {"blockId": "2", "blockType": "DATA_BLOCK"},
                 ],
@@ -345,6 +348,7 @@ def seed_blocks_into_registry(apps, schema_editor):
                 "required": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 2}],
                 "allowed_blocks": [
                     {"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"},
+                    {"blockId": "2", "blockType": "COMPUTATIONAL_BLOCK"},
                     {"blockId": "1", "blockType": "DATA_BLOCK"},
                     {"blockId": "2", "blockType": "DATA_BLOCK"},
                 ],

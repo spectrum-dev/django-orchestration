@@ -382,7 +382,10 @@ class ValidateFlowTest(TestCase):
                     "reactflow__edge-1output_id888-4input_id891": {
                         "status": False,
                         "target_block": "Intersect",
-                        "allowed_connections": ["Technical Indicators"],
+                        "allowed_connections": [
+                            "Technical Indicators",
+                            "Math Operation",
+                        ],
                     }
                 },
             },
@@ -448,7 +451,10 @@ class ValidateFlowTest(TestCase):
                     "reactflow__edge-1output_id502-4input_id589": {
                         "status": False,
                         "target_block": "Intersect",
-                        "allowed_connections": ["Technical Indicators"],
+                        "allowed_connections": [
+                            "Technical Indicators",
+                            "Math Operation",
+                        ],
                     },
                     "reactflow__edge-4output_id986-2input_id1089": {
                         "status": False,
@@ -458,7 +464,10 @@ class ValidateFlowTest(TestCase):
                     "reactflow__edge-4output_id1230-3input_id1417": {
                         "status": False,
                         "target_block": "Intersect",
-                        "allowed_connections": ["Technical Indicators"],
+                        "allowed_connections": [
+                            "Technical Indicators",
+                            "Math Operation",
+                        ],
                     },
                 },
             },
