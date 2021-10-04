@@ -9,6 +9,10 @@ python manage.py migrate orchestrator zero
 echo "Apply database migrations"
 python manage.py migrate
 
+# Collects Static Foles
+echo "Apply database migrations"
+python manage.py collectstatic
+
 # Start server
 echo "Starting server"
 python manage.py runserver 0.0.0.0:8000
