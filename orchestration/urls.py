@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
 from django.conf.urls import include, url
 from django.views.generic.base import View
+from django.views.static import serve
 
 from ariadne_django.views import GraphQLView
 
@@ -28,6 +30,7 @@ import orchestrator.views
 import authentication.views
 
 urlpatterns = [
+    url(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
     path(
         "graphql/",
         GraphQLView.as_view(schema=schema, context_value=get_user_context),
