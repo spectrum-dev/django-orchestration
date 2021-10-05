@@ -392,6 +392,7 @@ def seed_blocks_into_registry(apps, schema_editor):
                     {"blockId": "4", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "5", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "6", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "7", "blockType": "SIGNAL_BLOCK"},
                     {"blockId": "1", "blockType": "DATA_BLOCK"},
                     {"blockId": "2", "blockType": "DATA_BLOCK"},
                 ],
