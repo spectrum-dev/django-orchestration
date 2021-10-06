@@ -1,7 +1,7 @@
 from ariadne import convert_kwargs_to_snake_case
 from celery.result import AsyncResult
 
-from strategy.tasks import run_strategy
+from strategy.tasks import run_strategy, run_screener
 from strategy.models import UserStrategy, Strategy
 
 # Queries
@@ -49,9 +49,16 @@ def get_task_result(*_, taskId):
 
 
 # Mutations
-def dispatch_run_strategy(*_, nodeList, edgeList):
-    task = run_strategy.delay(
-        nodeList,
-        edgeList,
-    )
+def dispatch_run_strategy(*_, nodeList, edgeList, strategyType):
+    # Checks if there is a BULK_DATA_BLOCK in the nodeList, and if so runs a screener runner
+    if strategyType == "SCREENER":
+        task = run_screener.delay(
+            nodeList,
+            edgeList
+        )
+    else:
+        task = run_strategy.delay(
+            nodeList,
+            edgeList,
+        )
     return {"status": True, "task_id": task.task_id}

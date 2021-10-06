@@ -185,6 +185,8 @@ class SpectrumEventFlow:
                 self.input_payloads[block] = {"inputs": {}, "outputs": {"ref": set()}}
                 self.input_payloads[block]["blockType"] = block_data["blockType"]
                 self.input_payloads[block]["blockId"] = block_data["blockId"]
+                if "data" in block_data:
+                    self.input_payloads[block]["data"] = block_data["data"]
 
                 for key, value in block_data.items():
                     if type(value) is dict and "value" in value.keys():
@@ -363,20 +365,24 @@ class SpectrumEventFlow:
             output_key = (
                 f"{payload['blockType']}-{payload['blockId']}-{block_id_in_flow}"
             )
+            
+            task = None
+            # Checks if data was passed in from screener level
+            if "data" not in payload:
+                task = current_app.send_task(
+                    "blocks.celery.event_ingestor",
+                    args=(payload,),
+                    queue="blocks",
+                    routing_key="block_task",
+                )
 
-            task = current_app.send_task(
-                "blocks.celery.event_ingestor",
-                args=(payload,),
-                queue="blocks",
-                routing_key="block_task",
-            )
-
-            return (output_key, task)
+            return (output_key, task, payload.get("data", None))
 
         for tasks in self.batched_tasks:
             queued_items = []
             for block in tasks:
                 payload = self.input_payloads[block]
+                print ('Input Payload: ', payload)
                 payload["outputs"]["ref"] = list(payload["outputs"]["ref"])
 
                 # Implement logic to pull data from the self.outputs
@@ -393,16 +399,21 @@ class SpectrumEventFlow:
                 queued_items.append(response)
 
             for queued_item in queued_items:
-                output_key, pending_value = queued_item
+                output_key, pending_value, data = queued_item
 
                 with allow_join_result():
-                    response = pending_value.get()
+                    # Checks if task is none, and if not, will retrieve
+                    # data from celery, otherwise gets from outputs record
+                    if pending_value:
+                        response = pending_value.get()
 
-                    # Some responses come with a "response" key, which we will extract out
-                    if "response" in response:
-                        self.outputs[output_key] = response["response"]
+                        # Some responses come with a "response" key, which we will extract out
+                        if "response" in response:
+                            self.outputs[output_key] = response["response"]
+                        else:
+                            self.outputs[output_key] = response
                     else:
-                        self.outputs[output_key] = response
+                        self.outputs[output_key] = data
 
         # Checks whether a single backtest block exists, and if so run the results dashboard
         backtest_block = [
@@ -415,3 +426,59 @@ class SpectrumEventFlow:
             raise MultipleBacktestBlocksException
 
         return True
+    
+    def run_screener(self):
+        """
+            Takes a BULK_DATA_BLOCK and splits it up into several individual backtest flows.
+            Aggregates results at the end of the flow and returns a JSON List of the names of tickers that meet the situations outlined
+        """
+        def send_helper(block_id_in_flow, payload):
+            """
+            Helper function that invokes the low-level celery
+            function 'send_task' and sends a request payload
+            """
+            output_key = (
+                f"{payload['blockType']}-{payload['blockId']}-{block_id_in_flow}"
+            )
+
+            task = current_app.send_task(
+                "blocks.celery.event_ingestor",
+                args=(payload,),
+                queue="blocks",
+                routing_key="block_task",
+            )
+
+            return (output_key, task)
+        
+        # TODO: Should support only one BULK_DATA_BLOCK
+
+        # 1. Make request to the BULK_DATA_BLOCK to split it up into multiple individual blocks (the "KEY" is the ticker-name)
+        # Finds the BULK_DATA_BLOCK and makes the first request
+        bulk_data = {}
+        block_id = -1
+        for tasks in self.batched_tasks:
+            queued_items = []
+            for block in tasks:
+                # Payload Generation
+                payload = self.input_payloads[block]
+
+                if payload["blockType"] == "BULK_DATA_BLOCK":
+                    del payload["outputs"]["ref"]
+                    response = send_helper(block, payload)
+                    queued_items.append(response)
+
+            for queued_item in queued_items:
+                output_key, pending_value = queued_item
+
+                with allow_join_result():
+                    response = pending_value.get()
+                    bulk_data = response
+                    block_id = block
+                
+        return block_id, bulk_data
+        # 2. For each BULK_DATA_BLOCK key, swap it with a DATA_BLOCK
+        # 3. Invoke a normal run
+        # 4. Wait for all computations to run and store a list of results
+        # 5. Check when the last "TRADE" was on the end_date and aggregate a list of results where this is the case
+        # 6. Save the strategy
+        pass

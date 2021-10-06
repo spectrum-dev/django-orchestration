@@ -118,7 +118,7 @@ class RunFlow(APIView):
         request_body = json.loads(request.body)
 
         flow = SpectrumFlow(request_body["nodeList"], request_body["edgeList"])
-
+        
         response = flow.run(mode="RUN")
 
         return JsonResponse({"response": response})
