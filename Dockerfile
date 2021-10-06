@@ -1,5 +1,5 @@
 # Base image
-FROM python:3.9.7-slim
+FROM python:3.10.0-slim
 
 # Maintainer Info
 LABEL maintainer="Rahul Brahmal <rahul@imbue.dev>"
