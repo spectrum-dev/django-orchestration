@@ -1,10 +1,10 @@
 from celery import current_app
 from celery.result import allow_join_result
 
-from orchestrator.exceptions import MultipleBacktestBlocksException
 from orchestrator.models import BlockRegistry
-from orchestrator.services.flow.graph import DependencyGraph
-from orchestrator.services.results.main import main as results_main
+from orchestrator.exceptions import MultipleBacktestBlocksException
+from orchestrator.services.results.main import main
+from orchestrator.services.flow.spectrum_flow import DependencyGraph
 
 
 class SpectrumFlow:
@@ -50,7 +50,7 @@ class SpectrumFlow:
     ):
         block_data = self.get_block_in_flow_by_id(block_id_in_flow)
 
-        if block_data["blockType"] == target_block_data["blockType"]:
+        if any(block_data["blockType"] == target_block for target_block in target_block_data["blockType"]):
             for allowed_block in allowed_block_data:
                 if block_data["blockType"] == allowed_block["blockType"] and str(
                     block_data["blockId"]
@@ -271,8 +271,7 @@ class SpectrumFlow:
                             "required"
                         ]:
                             if (
-                                not required_block["blockType"]
-                                in assembled_dependency_list
+                                not any(req_block in assembled_dependency_list for req_block in required_block["blockType"])
                             ):
                                 return {
                                     "isValid": False,
@@ -281,27 +280,27 @@ class SpectrumFlow:
                                 }
 
                             if (
-                                len(
+                                any(len(
                                     assembled_dependency_list[
-                                        required_block["blockType"]
+                                        req_block
                                     ]
                                 )
-                                < required_block["number"]
+                                < required_block["number"] for req_block in required_block["blockType"])
                             ):
                                 return {
                                     "isValid": False,
                                     "code": "VALIDATE-006",
                                     "description": f"The number of blocks of {required_block['blockType']} is less than the number ({required_block['number']}) required",
                                 }
-
+                            
                             # Case where there is only meant to be one incoming value, and if there is a direct connection between two blocks, to only use that data
                             if (
-                                len(
+                                any(len(
                                     assembled_dependency_list[
-                                        required_block["blockType"]
+                                        req_block
                                     ]
                                 )
-                                > required_block["number"]
+                                > required_block["number"] for req_block in required_block["blockType"])
                             ):
                                 # Retrieves a list of adjacent blocks that could be of varying types
                                 adjacent_blocks = list(self.dependency_graph[block])
@@ -310,10 +309,7 @@ class SpectrumFlow:
                                 # Checks if adjacent block is in the list of required blocks
                                 for adjacent_block in adjacent_blocks:
                                     if (
-                                        adjacent_block
-                                        in assembled_dependency_list[
-                                            required_block["blockType"]
-                                        ]
+                                        any(adjacent_block in assembled_dependency_list[req_block] for req_block in required_block["blockType"])
                                     ):
                                         adjacent_blocks_of_matching_type.append(
                                             adjacent_block
@@ -324,17 +320,21 @@ class SpectrumFlow:
                                     len(adjacent_blocks_of_matching_type)
                                     == required_block["number"]
                                 ):
-                                    assembled_dependency_list[
-                                        required_block["blockType"]
-                                    ] = adjacent_blocks_of_matching_type
+                                    for req_block in required_block["blockType"]:
+                                        if req_block in assembled_dependency_list:
+                                            assembled_dependency_list[
+                                                req_block
+                                            ] = adjacent_blocks_of_matching_type
 
                             # Adds the block of this block type to the input_payloads output ref
-                            for required_block in assembled_dependency_list[
-                                required_block["blockType"]
-                            ]:
-                                self.input_payloads[block]["outputs"]["ref"].add(
-                                    required_block
-                                )
+                            for req_block in required_block["blockType"]:
+                                if req_block in assembled_dependency_list:
+                                    for required_block in assembled_dependency_list[
+                                        req_block
+                                    ]:
+                                        self.input_payloads[block]["outputs"]["ref"].add(
+                                            required_block
+                                        )
 
                     except BlockRegistry.DoesNotExist:
                         return {
@@ -410,7 +410,7 @@ class SpectrumFlow:
         ]
 
         if len(backtest_block) == 1:
-            self.outputs["results"] = results_main(self.outputs[backtest_block[0]])
+            self.outputs["results"] = main(self.outputs[backtest_block[0]])
         elif len(backtest_block) > 1:
             raise MultipleBacktestBlocksException
 
