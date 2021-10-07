@@ -1,0 +1,19 @@
+[run]
+omit =
+    */site-packages/*
+    */distutils/*
+    */tests/*
+    */migrations/*
+    manage.py
+    orchestration/celery.py
+    orchestration/settings.py
+    
+    authentication/decorators.py
+    authentication/graphql.py
+    authentication/views.py
+    orchestrator/interface.py
+    orchestrator/resolvers.py
+    orchestrator/views.py
+    strategy/resolvers.py
+    strategy/tasks.py
+    strategy/views.py
