@@ -7,7 +7,7 @@ from orchestrator.services.flow.graph import DependencyGraph
 from orchestrator.services.results.main import main as results_main
 
 
-class SpectrumEventFlow:
+class SpectrumFlow:
     def __init__(self, vertices, edges):
         self.vertices = vertices
         self.edges = edges
