@@ -90,19 +90,6 @@ class ProxyBlockActionView(APIView):
         except Exception as e:
             return JsonResponse({"error": "Unhandled error"})
 
-class RunFlow(APIView):
-    authentication_classes = [SpectrumAuthentication]
-    permission_classes = [SpectrumIsAuthenticated]
-
-    def post(self, request):
-        request_body = json.loads(request.body)
-
-        flow = SpectrumFlow(request_body["nodeList"], request_body["edgeList"])
-
-        response = flow.run(mode="RUN")
-
-        return JsonResponse({"response": response})
-
 
 class RunOverlay(APIView):
     authentication_classes = [SpectrumAuthentication]
