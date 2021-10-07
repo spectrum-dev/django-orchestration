@@ -4,7 +4,7 @@ from celery.result import allow_join_result
 from orchestrator.models import BlockRegistry
 from orchestrator.exceptions import MultipleBacktestBlocksException
 from orchestrator.services.results.main import main
-from orchestrator.services.flow.spectrum_flow import DependencyGraph
+from orchestrator.services.flow.graph import DependencyGraph
 
 
 class SpectrumFlow:
