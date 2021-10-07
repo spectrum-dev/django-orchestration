@@ -1,6 +1,6 @@
 from orchestrator.models import BlockRegistry
 from orchestrator.exceptions import BlockDoesNotExist
-from orchestrator.services.flow.spectrum_event_flow import SpectrumEventFlow
+from orchestrator.services.flow.spectrum_flow import SpectrumFlow
 
 
 def get_input_dependency_graph(node_list, edge_list):
@@ -18,7 +18,7 @@ def get_input_dependency_graph(node_list, edge_list):
         [block_id_in_flow]: [list of available input fields]
     }
     """
-    flow = SpectrumEventFlow(node_list, edge_list)
+    flow = SpectrumFlow(node_list, edge_list)
 
     input_dependency_graph = {}
     for key, dependencies in flow.dependency_graph.items():

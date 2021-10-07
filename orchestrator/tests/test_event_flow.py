@@ -1,5 +1,5 @@
 from django.test import TestCase
-from orchestrator.services.flow.spectrum_event_flow import SpectrumEventFlow
+from orchestrator.services.flow.spectrum_flow import SpectrumFlow
 
 # Test Data
 from orchestrator.tests.data.test_event_flow_data import (
@@ -14,9 +14,9 @@ from orchestrator.tests.data.test_event_flow_data import (
 )
 
 
-class SpectrumEventFlowValidateTest(TestCase):
+class SpectrumFlowValidateTest(TestCase):
     def test_empty_flow_returns_001(self):
-        spectrum_event_flow = SpectrumEventFlow({}, [])
+        spectrum_event_flow = SpectrumFlow({}, [])
 
         self.assertDictEqual(
             spectrum_event_flow.valid,
@@ -28,7 +28,7 @@ class SpectrumEventFlowValidateTest(TestCase):
         )
 
     def test_single_node_data_field_empty_003(self):
-        spectrum_event_flow = SpectrumEventFlow(
+        spectrum_event_flow = SpectrumFlow(
             SINGLE_NODE_DATA_FLOW_RETURNS_003["nodeList"],
             SINGLE_NODE_DATA_FLOW_RETURNS_003["edgeList"],
         )
@@ -43,7 +43,7 @@ class SpectrumEventFlowValidateTest(TestCase):
         )
 
     def test_single_node_data_flow_returns_ok(self):
-        spectrum_event_flow = SpectrumEventFlow(
+        spectrum_event_flow = SpectrumFlow(
             SINGLE_NODE_DATA_FLOW_RETURNS_OK["nodeList"],
             SINGLE_NODE_DATA_FLOW_RETURNS_OK["edgeList"],
         )
@@ -54,7 +54,7 @@ class SpectrumEventFlowValidateTest(TestCase):
         )
 
     def test_two_nodes_invalid_connection_returns_002(self):
-        spectrum_event_flow = SpectrumEventFlow(
+        spectrum_event_flow = SpectrumFlow(
             TWO_NODE_INVALID_CONNECTION_RETURNS_002["nodeList"],
             TWO_NODE_INVALID_CONNECTION_RETURNS_002["edgeList"],
         )
@@ -69,7 +69,7 @@ class SpectrumEventFlowValidateTest(TestCase):
         )
 
     def test_two_nodes_not_connected_returns_004(self):
-        spectrum_event_flow = SpectrumEventFlow(
+        spectrum_event_flow = SpectrumFlow(
             TWO_NODE_NOT_CONNECTED_RETURNS_004["nodeList"],
             TWO_NODE_NOT_CONNECTED_RETURNS_004["edgeList"],
         )
@@ -85,7 +85,7 @@ class SpectrumEventFlowValidateTest(TestCase):
 
     # TODO: Determine a case where this is valid
     def test_multiple_blocks_not_in_assembled_dependency_list_returns_005(self):
-        spectrum_event_flow = SpectrumEventFlow(
+        spectrum_event_flow = SpectrumFlow(
             MULTIPLE_BLOCKS_NOT_IN_ASSEMBLED_DEPEDENCY_LIST_RETURNS_005["nodeList"],
             MULTIPLE_BLOCKS_NOT_IN_ASSEMBLED_DEPEDENCY_LIST_RETURNS_005["edgeList"],
         )
@@ -97,7 +97,7 @@ class SpectrumEventFlowValidateTest(TestCase):
         pass
 
     def test_invalid_block_returns_007(self):
-        spectrum_event_flow = SpectrumEventFlow(
+        spectrum_event_flow = SpectrumFlow(
             INVALID_BLOCK_RETURNS_007["nodeList"], INVALID_BLOCK_RETURNS_007["edgeList"]
         )
 
@@ -111,7 +111,7 @@ class SpectrumEventFlowValidateTest(TestCase):
         )
 
     def test_moving_average_crossover_returns_ok(self):
-        spectrum_event_flow = SpectrumEventFlow(
+        spectrum_event_flow = SpectrumFlow(
             MOVING_AVERAGE_CROSSOVER_RETURNS_OK["nodeList"],
             MOVING_AVERAGE_CROSSOVER_RETURNS_OK["edgeList"],
         )
@@ -125,15 +125,3 @@ class SpectrumEventFlowValidateTest(TestCase):
             spectrum_event_flow.input_payloads,
             MOVING_AVERAGE_CROSSOVER_RETURNS_RESPONSE,
         )
-
-
-# class SpectrumEventFlowRunTest(TestCase):
-#     def test_moving_average_crossover_returns_ok(self):
-#         spectrum_event_flow = SpectrumEventFlow(
-#             MOVING_AVERAGE_CROSSOVER_RETURNS_OK["nodeList"],
-#             MOVING_AVERAGE_CROSSOVER_RETURNS_OK["edgeList"],
-#         )
-
-#         spectrum_event_flow.run()
-
-#         assert False
