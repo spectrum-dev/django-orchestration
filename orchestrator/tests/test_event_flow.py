@@ -1,5 +1,5 @@
 from django.test import TestCase
-from orchestrator.services.flow.spectrum_event_flow import SpectrumEventFlow
+from orchestrator.services.flow.spectrum_flow import SpectrumEventFlow
 
 # Test Data
 from orchestrator.tests.data.test_event_flow_data import (
@@ -125,15 +125,3 @@ class SpectrumEventFlowValidateTest(TestCase):
             spectrum_event_flow.input_payloads,
             MOVING_AVERAGE_CROSSOVER_RETURNS_RESPONSE,
         )
-
-
-# class SpectrumEventFlowRunTest(TestCase):
-#     def test_moving_average_crossover_returns_ok(self):
-#         spectrum_event_flow = SpectrumEventFlow(
-#             MOVING_AVERAGE_CROSSOVER_RETURNS_OK["nodeList"],
-#             MOVING_AVERAGE_CROSSOVER_RETURNS_OK["edgeList"],
-#         )
-
-#         spectrum_event_flow.run()
-
-#         assert False
