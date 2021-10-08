@@ -48,6 +48,7 @@ urlpatterns = [
         authentication.views.ValidateAccountWhitelistView.as_view(),
     ),
     path("orchestration/metadata", orchestrator.views.AllMetadataView.as_view()),
+    path("orchestration/validate", orchestrator.views.ValidateFlow.as_view()),
     path(
         "orchestration/<block_type>/<block_id>/metadata",
         orchestrator.views.MetadataView.as_view(),

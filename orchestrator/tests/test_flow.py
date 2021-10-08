@@ -1,8 +1,11 @@
+import json
 from django.test import TestCase
+
+from authentication.factories import set_up_authentication
 from orchestrator.services.flow.spectrum_flow import SpectrumFlow
 
 # Test Data
-from orchestrator.tests.data.test_event_flow_data import (
+from orchestrator.tests.data.test_flow_data import (
     SINGLE_NODE_DATA_FLOW_RETURNS_OK,
     TWO_NODE_INVALID_CONNECTION_RETURNS_002,
     SINGLE_NODE_DATA_FLOW_RETURNS_003,
@@ -11,10 +14,15 @@ from orchestrator.tests.data.test_event_flow_data import (
     INVALID_BLOCK_RETURNS_007,
     MOVING_AVERAGE_CROSSOVER_RETURNS_OK,
     MOVING_AVERAGE_CROSSOVER_RETURNS_RESPONSE,
+    AND_BLOCK_SELECTS_CORRECT_PAYLOAD_AND_RETURNS_OK,
+    AND_BLOCK_SELECTS_CORRECT_PAYLOAD_AND_RETURNS_OK_RESPONSE,
 )
 
 
 class SpectrumFlowValidateTest(TestCase):
+    def setUp(self):
+        self.auth = set_up_authentication()
+
     def test_empty_flow_returns_001(self):
         spectrum_event_flow = SpectrumFlow({}, [])
 
@@ -83,18 +91,18 @@ class SpectrumFlowValidateTest(TestCase):
             },
         )
 
-    # TODO: Determine a case where this is valid
-    def test_multiple_blocks_not_in_assembled_dependency_list_returns_005(self):
-        spectrum_event_flow = SpectrumFlow(
-            MULTIPLE_BLOCKS_NOT_IN_ASSEMBLED_DEPEDENCY_LIST_RETURNS_005["nodeList"],
-            MULTIPLE_BLOCKS_NOT_IN_ASSEMBLED_DEPEDENCY_LIST_RETURNS_005["edgeList"],
-        )
+    # # TODO: Determine a case where this is valid
+    # def test_multiple_blocks_not_in_assembled_dependency_list_returns_005(self):
+    #     spectrum_event_flow = SpectrumFlow(
+    #         MULTIPLE_BLOCKS_NOT_IN_ASSEMBLED_DEPEDENCY_LIST_RETURNS_005["nodeList"],
+    #         MULTIPLE_BLOCKS_NOT_IN_ASSEMBLED_DEPEDENCY_LIST_RETURNS_005["edgeList"],
+    #     )
 
-        pass
+    #     pass
 
-    # TODO: Determine a case where this is valid
-    def test_todo_returns_006(self):
-        pass
+    # # TODO: Determine a case where this is valid
+    # def test_todo_returns_006(self):
+    #     pass
 
     def test_invalid_block_returns_007(self):
         spectrum_event_flow = SpectrumFlow(
@@ -124,4 +132,20 @@ class SpectrumFlowValidateTest(TestCase):
         self.assertDictEqual(
             spectrum_event_flow.input_payloads,
             MOVING_AVERAGE_CROSSOVER_RETURNS_RESPONSE,
+        )
+
+    def test_using_and_block_selects_correct_payload_and_returns_ok(self):
+        spectrum_event_flow = SpectrumFlow(
+            AND_BLOCK_SELECTS_CORRECT_PAYLOAD_AND_RETURNS_OK["nodeList"],
+            AND_BLOCK_SELECTS_CORRECT_PAYLOAD_AND_RETURNS_OK["edgeList"],
+        )
+
+        self.assertDictEqual(
+            spectrum_event_flow.valid,
+            {"isValid": True, "code": "VALIDATE-OK", "description": ""},
+        )
+
+        self.assertDictEqual(
+            spectrum_event_flow.input_payloads,
+            AND_BLOCK_SELECTS_CORRECT_PAYLOAD_AND_RETURNS_OK_RESPONSE,
         )

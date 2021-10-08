@@ -5,9 +5,6 @@ class Graph:
     def __init__(self):
         self.adjacency_list = {}
 
-    def __repr__(self):
-        return repr(self.adjacency_list)
-
     def insert(self, source_vertex, dest_vertex):
         """
         Inserts one or both vertices (depending on if either exists) and

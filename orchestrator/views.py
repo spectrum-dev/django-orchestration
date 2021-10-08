@@ -12,6 +12,7 @@ from authentication.decorators import SpectrumAuthentication, SpectrumIsAuthenti
 
 from orchestrator.models import BlockRegistry
 from orchestrator.services.overlays.main import main
+from orchestrator.services.flow.spectrum_flow import SpectrumFlow
 
 
 class AllMetadataView(APIView):
@@ -89,6 +90,22 @@ class ProxyBlockActionView(APIView):
             return JsonResponse(response.json())
         except Exception as e:
             return JsonResponse({"error": "Unhandled error"})
+
+
+class ValidateFlow(APIView):
+    authentication_classes = [SpectrumAuthentication]
+    permission_classes = [SpectrumIsAuthenticated]
+
+    def post(self, request):
+        request_body = json.loads(request.body)
+
+        if request_body["nodeList"] is not {} and request_body["edgeList"] is not []:
+            flow = SpectrumFlow(request_body["nodeList"], request_body["edgeList"])
+
+            response = {"valid": flow.valid["isValid"], "edges": flow.edge_validation}
+            return JsonResponse(response)
+        else:
+            return JsonResponse({"valid": False, "error": "The strategy is empty"})
 
 
 class RunOverlay(APIView):
