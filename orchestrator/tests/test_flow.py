@@ -22,7 +22,7 @@ from orchestrator.tests.data.test_flow_data import (
 class SpectrumFlowValidateTest(TestCase):
     def setUp(self):
         self.auth = set_up_authentication()
-    
+
     def test_empty_flow_returns_001(self):
         spectrum_event_flow = SpectrumFlow({}, [])
 

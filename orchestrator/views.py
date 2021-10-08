@@ -101,7 +101,7 @@ class ValidateFlow(APIView):
 
         if request_body["nodeList"] is not {} and request_body["edgeList"] is not []:
             flow = SpectrumFlow(request_body["nodeList"], request_body["edgeList"])
-            
+
             response = {"valid": flow.valid["isValid"], "edges": flow.edge_validation}
             return JsonResponse(response)
         else:
