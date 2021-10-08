@@ -50,7 +50,10 @@ class SpectrumFlow:
     ):
         block_data = self.get_block_in_flow_by_id(block_id_in_flow)
 
-        if any(block_data["blockType"] == target_block for target_block in target_block_data["blockType"]):
+        if any(
+            block_data["blockType"] == target_block
+            for target_block in target_block_data["blockType"]
+        ):
             for allowed_block in allowed_block_data:
                 if block_data["blockType"] == allowed_block["blockType"] and str(
                     block_data["blockId"]
@@ -270,8 +273,9 @@ class SpectrumFlow:
                         for required_block in block_registry_data.validations["input"][
                             "required"
                         ]:
-                            if (
-                                not any(req_block in assembled_dependency_list for req_block in required_block["blockType"])
+                            if not any(
+                                req_block in assembled_dependency_list
+                                for req_block in required_block["blockType"]
                             ):
                                 return {
                                     "isValid": False,
@@ -279,28 +283,22 @@ class SpectrumFlow:
                                     "description": f"Required block {required_block['blockType']} is not in the assembled dependency list",
                                 }
 
-                            if (
-                                any(len(
-                                    assembled_dependency_list[
-                                        req_block
-                                    ]
-                                )
-                                < required_block["number"] for req_block in required_block["blockType"])
+                            if any(
+                                len(assembled_dependency_list[req_block])
+                                < required_block["number"]
+                                for req_block in required_block["blockType"]
                             ):
                                 return {
                                     "isValid": False,
                                     "code": "VALIDATE-006",
                                     "description": f"The number of blocks of {required_block['blockType']} is less than the number ({required_block['number']}) required",
                                 }
-                            
+
                             # Case where there is only meant to be one incoming value, and if there is a direct connection between two blocks, to only use that data
-                            if (
-                                any(len(
-                                    assembled_dependency_list[
-                                        req_block
-                                    ]
-                                )
-                                > required_block["number"] for req_block in required_block["blockType"])
+                            if any(
+                                len(assembled_dependency_list[req_block])
+                                > required_block["number"]
+                                for req_block in required_block["blockType"]
                             ):
                                 # Retrieves a list of adjacent blocks that could be of varying types
                                 adjacent_blocks = list(self.dependency_graph[block])
@@ -308,8 +306,10 @@ class SpectrumFlow:
                                 adjacent_blocks_of_matching_type = []
                                 # Checks if adjacent block is in the list of required blocks
                                 for adjacent_block in adjacent_blocks:
-                                    if (
-                                        any(adjacent_block in assembled_dependency_list[req_block] for req_block in required_block["blockType"])
+                                    if any(
+                                        adjacent_block
+                                        in assembled_dependency_list[req_block]
+                                        for req_block in required_block["blockType"]
                                     ):
                                         adjacent_blocks_of_matching_type.append(
                                             adjacent_block
@@ -332,9 +332,9 @@ class SpectrumFlow:
                                     for required_block in assembled_dependency_list[
                                         req_block
                                     ]:
-                                        self.input_payloads[block]["outputs"]["ref"].add(
-                                            required_block
-                                        )
+                                        self.input_payloads[block]["outputs"][
+                                            "ref"
+                                        ].add(required_block)
 
                     except BlockRegistry.DoesNotExist:
                         return {

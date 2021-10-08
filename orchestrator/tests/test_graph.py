@@ -8,7 +8,8 @@ class GraphTest(TestCase):
     def test_insert_when_value_not_in_adjacency_list(self):
         graph = Graph()
         graph.insert("1", "2")
-        self.assertDictEqual(graph.adjacency_list, { "1": {"2"} })
+        self.assertDictEqual(graph.adjacency_list, {"1": {"2"}})
+
 
 class DependencyGraphTest(TestCase):
     @staticmethod
