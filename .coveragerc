@@ -14,6 +14,7 @@ omit =
     orchestrator/interface.py
     orchestrator/resolvers.py
     orchestrator/views.py
+    orchestrator/services/flow/graph.py
     strategy/resolvers.py
     strategy/tasks.py
     strategy/views.py

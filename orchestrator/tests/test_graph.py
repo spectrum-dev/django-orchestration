@@ -1,8 +1,14 @@
 from django.test import TestCase
 
-from orchestrator.services.flow.spectrum_flow import DependencyGraph
+from orchestrator.services.flow.graph import Graph, DependencyGraph
 from orchestrator.tests.data.test_data_validation import SINGLE_FULL_FLOW_VALID
 
+
+class GraphTest(TestCase):
+    def test_insert_when_value_not_in_adjacency_list(self):
+        graph = Graph()
+        graph.insert("1", "2")
+        self.assertDictEqual(graph.adjacency_list, { "1": {"2"} })
 
 class DependencyGraphTest(TestCase):
     @staticmethod
