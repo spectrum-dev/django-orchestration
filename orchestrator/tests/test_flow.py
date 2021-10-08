@@ -1,4 +1,7 @@
+import json
 from django.test import TestCase
+
+from authentication.factories import set_up_authentication
 from orchestrator.services.flow.spectrum_flow import SpectrumFlow
 
 # Test Data
@@ -17,6 +20,9 @@ from orchestrator.tests.data.test_flow_data import (
 
 
 class SpectrumFlowValidateTest(TestCase):
+    def setUp(self):
+        self.auth = set_up_authentication()
+    
     def test_empty_flow_returns_001(self):
         spectrum_event_flow = SpectrumFlow({}, [])
 
