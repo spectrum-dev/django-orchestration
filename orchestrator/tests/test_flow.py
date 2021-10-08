@@ -2,7 +2,7 @@ from django.test import TestCase
 from orchestrator.services.flow.spectrum_flow import SpectrumFlow
 
 # Test Data
-from orchestrator.tests.data.test_event_flow_data import (
+from orchestrator.tests.data.test_flow_data import (
     SINGLE_NODE_DATA_FLOW_RETURNS_OK,
     TWO_NODE_INVALID_CONNECTION_RETURNS_002,
     SINGLE_NODE_DATA_FLOW_RETURNS_003,
