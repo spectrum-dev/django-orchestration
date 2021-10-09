@@ -171,6 +171,12 @@ def seed_blocks_into_registry(apps, schema_editor):
         block_name="Saddle",
         inputs=[
             {
+                "fieldName": "Incoming Data",
+                "fieldVariableName": "incoming_data",
+                "fieldType": "inputs_from_connection",
+                "fieldDefaultValue": "close",
+            },
+            {
                 "fieldData": {"base": "/saddleType", "method": "GET"},
                 "fieldName": "Saddle Type",
                 "fieldType": "dropdown",
@@ -195,8 +201,12 @@ def seed_blocks_into_registry(apps, schema_editor):
         ],
         validations={
             "input": {
-                "required": [{"blockType": ["COMPUTATIONAL_BLOCK"], "number": 1}],
+                "required": [
+                    {"blockType": ["DATA_BLOCK", "COMPUTATIONAL_BLOCK"], "number": 1}
+                ],
                 "allowed_blocks": [
+                    {"blockId": "1", "blockType": "DATA_BLOCK"},
+                    {"blockId": "2", "blockType": "DATA_BLOCK"},
                     {"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"},
                     {"blockId": "2", "blockType": "COMPUTATIONAL_BLOCK"},
                 ],
