@@ -17,6 +17,9 @@ from orchestrator.tests.data.test_flow_data import (
     AND_BLOCK_SELECTS_CORRECT_PAYLOAD_AND_RETURNS_OK,
     AND_BLOCK_SELECTS_CORRECT_PAYLOAD_AND_RETURNS_OK_RESPONSE,
     SINGLE_BLOCK_ALLOWING_SINGLE_INPUT_ALLOWS_BLOCKS_OF_MULTIPLE_TYPES_RETURNS_OK,
+    SINGLE_BLOCK_ALLOWING_SINGLE_INPUT_ALLOWS_BLOCKS_OF_MULTIPLE_TYPES_RETURNS_OK_RESPONSE,
+    MULTIPLE_INCOMING_BLOCKS_OF_DIFFERENT_TYPES_RETURNS_OK,
+    MULTIPLE_INCOMING_BLOCKS_OF_DIFFERENT_TYPES_RETURNS_OK_RESPONSE,
 )
 
 
@@ -168,11 +171,23 @@ class SpectrumFlowValidateTest(TestCase):
             {"isValid": True, "code": "VALIDATE-OK", "description": ""},
         )
 
-        print (spectrum_event_flow.input_payloads)
-        print ()
-        print ()
-        
         self.assertDictEqual(
             spectrum_event_flow.input_payloads,
-            {},
+            SINGLE_BLOCK_ALLOWING_SINGLE_INPUT_ALLOWS_BLOCKS_OF_MULTIPLE_TYPES_RETURNS_OK_RESPONSE,
+        )
+
+    def test_multiple_incoming_blocks_of_different_types_returns_ok(self):
+        spectrum_event_flow = SpectrumFlow(
+            MULTIPLE_INCOMING_BLOCKS_OF_DIFFERENT_TYPES_RETURNS_OK["nodeList"],
+            MULTIPLE_INCOMING_BLOCKS_OF_DIFFERENT_TYPES_RETURNS_OK["edgeList"],
+        )
+
+        self.assertDictEqual(
+            spectrum_event_flow.valid,
+            {"isValid": True, "code": "VALIDATE-OK", "description": ""},
+        )
+
+        self.assertDictEqual(
+            spectrum_event_flow.input_payloads,
+            MULTIPLE_INCOMING_BLOCKS_OF_DIFFERENT_TYPES_RETURNS_OK_RESPONSE,
         )

@@ -349,7 +349,9 @@ def seed_blocks_into_registry(apps, schema_editor):
         ],
         validations={
             "input": {
-                "required": [{"blockType": ["COMPUTATIONAL_BLOCK"], "number": 2}],
+                "required": [
+                    {"blockType": ["DATA_BLOCK", "COMPUTATIONAL_BLOCK"], "number": 2}
+                ],
                 "allowed_blocks": [
                     {"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"},
                     {"blockId": "2", "blockType": "COMPUTATIONAL_BLOCK"},
