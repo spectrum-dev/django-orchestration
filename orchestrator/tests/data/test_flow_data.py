@@ -440,3 +440,39 @@ AND_BLOCK_SELECTS_CORRECT_PAYLOAD_AND_RETURNS_OK_RESPONSE = {
         "blockId": 1,
     },
 }
+
+SINGLE_BLOCK_ALLOWING_SINGLE_INPUT_ALLOWS_BLOCKS_OF_MULTIPLE_TYPES_RETURNS_OK = {
+    "nodeList": {
+        "1": {
+            "inputs": {
+                "equity_name": "AAPL",
+                "candlestick": "1month",
+                "start_date": "2021-05-28 00:00:00",
+                "end_date": "2021-07-30 00:00:00",
+            },
+            "outputs": {"ref": set()},
+            "blockType": "DATA_BLOCK",
+            "blockId": 1,
+        },
+        "2": {
+            "inputs": {
+                "data_field": "close",
+                "operation_type": "*",
+                "operation_value": "3",
+            },
+            "outputs": {"ref": set()},
+            "blockType": "COMPUTATIONAL_BLOCK",
+            "blockId": 2,
+        },
+    },
+    "edgeList": [
+        {
+            "source": "1",
+            "sourceHandle": "output_id888",
+            "target": "2",
+            "targetHandle": "input_id891",
+            "type": "edge",
+            "id": "reactflow__edge-1output_id888-2input_id891",
+        },
+    ],
+}

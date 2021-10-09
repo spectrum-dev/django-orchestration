@@ -284,8 +284,11 @@ class SpectrumFlow:
                                 }
 
                             if any(
-                                len(assembled_dependency_list[req_block])
-                                < required_block["number"]
+                                (
+                                    req_block in assembled_dependency_list
+                                    and len(assembled_dependency_list[req_block])
+                                    < required_block["number"]
+                                )
                                 for req_block in required_block["blockType"]
                             ):
                                 return {
@@ -296,8 +299,11 @@ class SpectrumFlow:
 
                             # Case where there is only meant to be one incoming value, and if there is a direct connection between two blocks, to only use that data
                             if any(
-                                len(assembled_dependency_list[req_block])
-                                > required_block["number"]
+                                (
+                                    req_block in assembled_dependency_list
+                                    and len(assembled_dependency_list[req_block])
+                                    > required_block["number"]
+                                )
                                 for req_block in required_block["blockType"]
                             ):
                                 # Retrieves a list of adjacent blocks that could be of varying types
