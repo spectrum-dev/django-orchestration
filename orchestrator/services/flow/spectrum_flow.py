@@ -297,20 +297,6 @@ class SpectrumFlow:
                                     "description": f"The number of blocks of {required_block['blockType']} is less than the number ({required_block['number']}) required",
                                 }
 
-                            # if any(
-                            #     (
-                            #         req_block in assembled_dependency_list
-                            #         and len(assembled_dependency_list[req_block])
-                            #         < required_block["number"]
-                            #     )
-                            #     for req_block in required_block["blockType"]
-                            # ):
-                            #     return {
-                            #         "isValid": False,
-                            #         "code": "VALIDATE-006",
-                            #         "description": f"The number of blocks of {required_block['blockType']} is less than the number ({required_block['number']}) required",
-                            #     }
-
                             # Case where there is only meant to be one incoming value, and if there is a direct connection between two blocks, to only use that data
                             if any(
                                 (
