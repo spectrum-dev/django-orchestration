@@ -283,11 +283,14 @@ class SpectrumFlow:
                                     "description": f"Required block {required_block['blockType']} is not in the assembled dependency list",
                                 }
 
-                            if any(
-                                len(assembled_dependency_list[req_block])
-                                < required_block["number"]
-                                for req_block in required_block["blockType"]
-                            ):
+                            total_number = 0
+                            for req_block in required_block["blockType"]:
+                                if req_block in assembled_dependency_list:
+                                    total_number += len(
+                                        assembled_dependency_list[req_block]
+                                    )
+
+                            if total_number < required_block["number"]:
                                 return {
                                     "isValid": False,
                                     "code": "VALIDATE-006",
@@ -296,8 +299,11 @@ class SpectrumFlow:
 
                             # Case where there is only meant to be one incoming value, and if there is a direct connection between two blocks, to only use that data
                             if any(
-                                len(assembled_dependency_list[req_block])
-                                > required_block["number"]
+                                (
+                                    req_block in assembled_dependency_list
+                                    and len(assembled_dependency_list[req_block])
+                                    > required_block["number"]
+                                )
                                 for req_block in required_block["blockType"]
                             ):
                                 # Retrieves a list of adjacent blocks that could be of varying types
