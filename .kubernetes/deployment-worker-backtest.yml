@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: spectrum-orchestration-worker
+  name: spectrum-orchestration-worker-backtest
   namespace: production
   labels:
-    app: spectrum-orchestration-worker
+    app: spectrum-orchestration-worker-backtest
 spec:
   replicas: 1 # By default 1 pod only
   selector:
     matchLabels:
-      app: spectrum-orchestration-worker
+      app: spectrum-orchestration-worker-backtest
   template:
     metadata:
       labels:
-        app: spectrum-orchestration-worker
+        app: spectrum-orchestration-worker-backtest
     spec:
       containers:
-        - name: spectrum-orchestration-worker
+        - name: spectrum-orchestration-worker-backtest
           image: <CONTAINER_IMAGE_URL>
           imagePullPolicy: Always
-          command: ['celery', '-A', 'orchestration', 'worker', '-l', 'INFO']
+          command: ['celery', '-A', 'orchestration', 'worker', '-Q', 'backtest', '-l', 'INFO', '--concurrency', '10', '-n' 'orchestration-backtest@%h']
           ports:
             - containerPort: 8000
               name: http
