@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spectrum-orchestration-worker-screener
+  namespace: production
+  labels:
+    app: spectrum-orchestration-worker-screener
+spec:
+  replicas: 1 # By default 1 pod only
+  selector:
+    matchLabels:
+      app: spectrum-orchestration-worker-screener
+  template:
+    metadata:
+      labels:
+        app: spectrum-orchestration-worker-screener
+    spec:
+      containers:
+        - name: spectrum-orchestration-worker-screener
+          image: <CONTAINER_IMAGE_URL>
+          imagePullPolicy: Always
+          command: ['celery', '-A', 'orchestration', 'worker', '-Q', 'screener', '-l', 'INFO', '--concurrency', '10', '-n' 'orchestration-worker@%h']
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            - name: "DATABASE_NAME"
+              valueFrom:
+                secretKeyRef:
+                  name: "spectrum-orchestration"
+                  key: "DATABASE_NAME"
+            - name: "DATABASE_USER"
+              valueFrom:
+                secretKeyRef:
+                  name: "spectrum"
+                  key: "DATABASE_USER"
+            - name: "DATABASE_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: "spectrum"
+                  key: "DATABASE_PASSWORD"
+            - name: "DATABASE_HOST"
+              valueFrom:
+                secretKeyRef:
+                  name: "spectrum"
+                  key: "DATABASE_HOST"
+            - name: "DATABASE_PORT"
+              valueFrom:
+                secretKeyRef:
+                  name: "spectrum"
+                  key: "DATABASE_PORT"
+            - name: "RABBIT_MQ_URL"
+              valueFrom:
+                secretKeyRef:
+                  name: "spectrum"
+                  key: "RABBIT_MQ_URL"
+            - name: "CELERY_BACKEND_DATABASE_NAME"
+              valueFrom:
+                secretKeyRef:
+                  name: "spectrum"
+                  key: "CELERY_BACKEND_DATABASE_NAME"
+            - name: "API_BASE_URL"
+              value: "http://spectrum-block-monolith:8000"
+            - name: "DJANGO_DEBUG"
+              valueFrom:
+                secretKeyRef:
+                  name: "spectrum-orchestration"
+                  key: "DJANGO_DEBUG"
+            - name: "SENTRY_DSN"
+              valueFrom:
+                secretKeyRef:
+                  name: "spectrum-orchestration"
+                  key: "SENTRY_DSN"
+
+      imagePullSecrets:
+        - name: registry-spectrum

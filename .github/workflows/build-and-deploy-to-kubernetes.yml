@@ -30,8 +30,11 @@ jobs:
       - name: Update deployment file
         run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<CONTAINER_IMAGE_URL>|registry.digitalocean.com/spectrum/spectrum-orchestration:'${TAG}'|' $GITHUB_WORKSPACE/.kubernetes/deployment.yml
 
-      - name: Update deployment worker file
-        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<CONTAINER_IMAGE_URL>|registry.digitalocean.com/spectrum/spectrum-orchestration:'${TAG}'|' $GITHUB_WORKSPACE/.kubernetes/deployment-worker.yml
+      - name: Update deployment worker backtest file
+        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<CONTAINER_IMAGE_URL>|registry.digitalocean.com/spectrum/spectrum-orchestration:'${TAG}'|' $GITHUB_WORKSPACE/.kubernetes/deployment-worker-backtest.yml
+
+      - name: Update deployment worker screener file
+        run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<CONTAINER_IMAGE_URL>|registry.digitalocean.com/spectrum/spectrum-orchestration:'${TAG}'|' $GITHUB_WORKSPACE/.kubernetes/deployment-worker-screener.yml
 
       - name: Save DigitalOcean kubeconfig with short-lived credentials
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 spectrum-uk-k8s
