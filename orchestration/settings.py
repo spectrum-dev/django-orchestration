@@ -205,6 +205,8 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_QUEUES = (
     Queue("default", Exchange("default"), routing_key="default"),
     Queue("blocks", Exchange("blocks"), routing_key="block_task"),
+    Queue("backtest", Exchange("backtest"), routing_key="backtest_task"),
+    Queue("screener", Exchange("screener"), routing_key="screener_task"),
 )
 CELERY_ROUTES = {
     "blocks.celery.debug_receive_local": {

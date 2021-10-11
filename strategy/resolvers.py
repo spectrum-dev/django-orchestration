@@ -1,4 +1,5 @@
 from ariadne import convert_kwargs_to_snake_case
+from celery import current_app
 from celery.result import AsyncResult
 
 from strategy.tasks import run_strategy
@@ -50,8 +51,10 @@ def get_task_result(*_, taskId):
 
 # Mutations
 def dispatch_run_strategy(*_, nodeList, edgeList):
-    task = run_strategy.delay(
-        nodeList,
-        edgeList,
+    task = current_app.send_task(
+        "strategy.tasks.run_strategy",
+        queue="backtest",
+        routing_key="backtest_task",
+        args=(nodeList, edgeList),
     )
     return {"status": True, "task_id": task.task_id}
