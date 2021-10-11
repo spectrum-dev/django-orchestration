@@ -42,8 +42,11 @@ jobs:
       - name: Deploy deployment.yml to DigitalOcean Kubernetes
         run: kubectl apply -f $GITHUB_WORKSPACE/.kubernetes/deployment.yml
 
-      - name: Deploy deployment-worker.yml to DigitalOcean Kubernetes
-        run: kubectl apply -f $GITHUB_WORKSPACE/.kubernetes/deployment-worker.yml
+      - name: Deploy deployment-worker-backtest.yml to DigitalOcean Kubernetes
+        run: kubectl apply -f $GITHUB_WORKSPACE/.kubernetes/deployment-worker-backtest.yml
+      
+      - name: Deploy deployment-worker-screener.yml to DigitalOcean Kubernetes
+        run: kubectl apply -f $GITHUB_WORKSPACE/.kubernetes/deployment-worker-screener.yml
 
       - name: Deploy service.yml to DigitalOcean Kubernetes
         run: kubectl apply -f $GITHUB_WORKSPACE/.kubernetes/service.yml
