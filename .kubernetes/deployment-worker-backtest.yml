@@ -19,7 +19,7 @@ spec:
         - name: spectrum-orchestration-worker-backtest
           image: <CONTAINER_IMAGE_URL>
           imagePullPolicy: Always
-          command: ['celery', '-A', 'orchestration', 'worker', '-Q', 'backtest', '-l', 'INFO', '--concurrency', '10', '-n' 'orchestration-backtest@%h']
+          command: ['celery', '-A', 'orchestration', 'worker', '-Q', 'backtest', '-l', 'INFO', '--concurrency', '10', '-n', 'orchestration-backtest@%h']
           ports:
             - containerPort: 8000
               name: http
