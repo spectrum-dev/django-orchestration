@@ -21,6 +21,7 @@ class MultipleBacktestBlocksException(Exception):
     More than one backtest block
     """
 
+
 class ScreenerBulkDataBlockDneException(Exception):
     """
     Bulk Data Block does not exist in the screener

@@ -22,14 +22,14 @@ def run_screener(node_list, edge_list):
 
     if not flow.valid["isValid"]:
         raise StrategyNotValidException
-    
+
     # Retrieve the BULK_DATA_BLOCK
     block_id, bulk_data, payload = flow.get_bulk_data()
 
     queued_task = []
     inner_node_list = node_list
     for ticker, value in bulk_data.items():
-        inner_node_list[block_id]['data'] = value
+        inner_node_list[block_id]["data"] = value
         task = app.send_task(
             "strategy.tasks.run_strategy",
             queue="backtest",
@@ -37,7 +37,7 @@ def run_screener(node_list, edge_list):
             args=(inner_node_list, edge_list),
         )
         queued_task.append((ticker, task))
-    
+
     result = []
     for ticker, task in queued_task:
         # Check the response to get all signals associated with the task
@@ -45,16 +45,17 @@ def run_screener(node_list, edge_list):
         with allow_join_result():
             response = task.get()
 
-            signals = None
+            signal_key, signals = None, None
             for key in response.keys():
-                if 'SIGNAL_BLOCK' in key:
+                if "SIGNAL_BLOCK" in key:
                     signals = response[key]
-                
+                    signal_key = key
+
             target_date = payload["inputs"]["end_date"]
 
             for signal in signals:
                 if signal["timestamp"] == f"{target_date} 00:00:00":
-                    result.append(ticker)
+                    result.append({"ticker": ticker})
                     break
 
-    return result
+    return {signal_key: result}

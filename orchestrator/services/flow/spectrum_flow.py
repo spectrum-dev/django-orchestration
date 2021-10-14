@@ -2,7 +2,10 @@ from celery import current_app
 from celery.result import allow_join_result
 
 from orchestrator.models import BlockRegistry
-from orchestrator.exceptions import MultipleBacktestBlocksException, ScreenerBulkDataBlockDneException
+from orchestrator.exceptions import (
+    MultipleBacktestBlocksException,
+    ScreenerBulkDataBlockDneException,
+)
 from orchestrator.services.results.main import main
 from orchestrator.services.flow.graph import DependencyGraph
 
@@ -190,7 +193,7 @@ class SpectrumFlow:
                 self.input_payloads[block]["blockId"] = block_data["blockId"]
                 if "data" in block_data:
                     self.input_payloads[block]["data"] = block_data["data"]
-                  
+
                 for key, value in block_data.items():
                     if type(value) is dict and "value" in value.keys():
                         if value["value"] == "" or value["value"] == None:
@@ -374,7 +377,7 @@ class SpectrumFlow:
 
             if "data" in payload:
                 return (output_key, None, payload["data"])
-            
+
             task = current_app.send_task(
                 "blocks.celery.event_ingestor",
                 args=(payload,),
@@ -432,10 +435,10 @@ class SpectrumFlow:
 
     def get_bulk_data(self):
         """
-            Takes a BULK_DATA_BLOCK and splits it up into several individual backtest flows.
-            Aggregates results at the end of the flow and returns a JSON List of the names of tickers that meet the situations outlined
+        Takes a BULK_DATA_BLOCK and splits it up into several individual backtest flows.
+        Aggregates results at the end of the flow and returns a JSON List of the names of tickers that meet the situations outlined
         """
-        
+
         def send_helper(block_id_in_flow, payload):
             """
             Helper function that invokes the low-level celery
@@ -453,12 +456,12 @@ class SpectrumFlow:
             )
 
             return (output_key, task)
-        
+
         # ASSUMPTION: BULK_DATA_BLOCK should always be the first block in the flow
         task_containing_bulk_data = self.batched_tasks[0]
-        print (task_containing_bulk_data)
+        print(task_containing_bulk_data)
         bulk_data_task = task_containing_bulk_data.pop()
-        
+
         # If this Block ID is not a data block, raise an exception
         payload = self.input_payloads[bulk_data_task]
         if payload["blockType"] != "BULK_DATA_BLOCK":
