@@ -208,9 +208,9 @@ CELERY_QUEUES = (
     Queue("backtest", Exchange("backtest"), routing_key="backtest_task"),
     Queue("screener", Exchange("screener"), routing_key="screener_task"),
 )
-CELERY_ROUTES = {
-    "blocks.celery.debug_receive_local": {
-        "queue": "blocks",
-        "routing_key": "block_task",
+CELERY_TASK_ROUTES = {
+    "strategy.tasks.run_screener": {
+        "queue": "screener",
+        "routing_key": "screener_task",
     }
 }

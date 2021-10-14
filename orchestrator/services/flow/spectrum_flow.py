@@ -2,7 +2,7 @@ from celery import current_app
 from celery.result import allow_join_result
 
 from orchestrator.models import BlockRegistry
-from orchestrator.exceptions import MultipleBacktestBlocksException
+from orchestrator.exceptions import MultipleBacktestBlocksException, ScreenerBulkDataBlockDneException
 from orchestrator.services.results.main import main
 from orchestrator.services.flow.graph import DependencyGraph
 
@@ -188,7 +188,9 @@ class SpectrumFlow:
                 self.input_payloads[block] = {"inputs": {}, "outputs": {"ref": set()}}
                 self.input_payloads[block]["blockType"] = block_data["blockType"]
                 self.input_payloads[block]["blockId"] = block_data["blockId"]
-
+                if "data" in block_data:
+                    self.input_payloads[block]["data"] = block_data["data"]
+                  
                 for key, value in block_data.items():
                     if type(value) is dict and "value" in value.keys():
                         if value["value"] == "" or value["value"] == None:
@@ -370,6 +372,9 @@ class SpectrumFlow:
                 f"{payload['blockType']}-{payload['blockId']}-{block_id_in_flow}"
             )
 
+            if "data" in payload:
+                return (output_key, None, payload["data"])
+            
             task = current_app.send_task(
                 "blocks.celery.event_ingestor",
                 args=(payload,),
@@ -377,7 +382,7 @@ class SpectrumFlow:
                 routing_key="block_task",
             )
 
-            return (output_key, task)
+            return (output_key, task, None)
 
         for tasks in self.batched_tasks:
             queued_items = []
@@ -399,16 +404,19 @@ class SpectrumFlow:
                 queued_items.append(response)
 
             for queued_item in queued_items:
-                output_key, pending_value = queued_item
+                output_key, pending_value, provided_data = queued_item
 
                 with allow_join_result():
-                    response = pending_value.get()
+                    if pending_value:
+                        response = pending_value.get()
 
-                    # Some responses come with a "response" key, which we will extract out
-                    if "response" in response:
-                        self.outputs[output_key] = response["response"]
+                        # Some responses come with a "response" key, which we will extract out
+                        if "response" in response:
+                            self.outputs[output_key] = response["response"]
+                        else:
+                            self.outputs[output_key] = response
                     else:
-                        self.outputs[output_key] = response
+                        self.outputs[output_key] = provided_data
 
         # Checks whether a single backtest block exists, and if so run the results dashboard
         backtest_block = [
@@ -421,3 +429,46 @@ class SpectrumFlow:
             raise MultipleBacktestBlocksException
 
         return True
+
+    def get_bulk_data(self):
+        """
+            Takes a BULK_DATA_BLOCK and splits it up into several individual backtest flows.
+            Aggregates results at the end of the flow and returns a JSON List of the names of tickers that meet the situations outlined
+        """
+        
+        def send_helper(block_id_in_flow, payload):
+            """
+            Helper function that invokes the low-level celery
+            function 'send_task' and sends a request payload
+            """
+            output_key = (
+                f"{payload['blockType']}-{payload['blockId']}-{block_id_in_flow}"
+            )
+
+            task = current_app.send_task(
+                "blocks.celery.event_ingestor",
+                args=(payload,),
+                queue="blocks",
+                routing_key="screenr_task",
+            )
+
+            return (output_key, task)
+        
+        # ASSUMPTION: BULK_DATA_BLOCK should always be the first block in the flow
+        task_containing_bulk_data = self.batched_tasks[0]
+        print (task_containing_bulk_data)
+        bulk_data_task = task_containing_bulk_data.pop()
+        
+        # If this Block ID is not a data block, raise an exception
+        payload = self.input_payloads[bulk_data_task]
+        if payload["blockType"] != "BULK_DATA_BLOCK":
+            raise ScreenerBulkDataBlockDneException
+
+        # Prepares the payload and makes the request to the block monolith
+        del payload["outputs"]["ref"]
+        _, task = send_helper(bulk_data_task, payload)
+
+        # Gets the response and returns to the user
+        with allow_join_result():
+            response = task.get()
+            return bulk_data_task, response, payload
