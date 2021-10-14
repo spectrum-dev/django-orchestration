@@ -73,6 +73,36 @@ def seed_blocks_into_registry(apps, schema_editor):
     ).save()
 
     BlockRegistry(
+        block_type="BULK_DATA_BLOCK",
+        block_id=1,
+        block_name="Screener Data",
+        inputs=[
+            {
+                "fieldData": {"base": "/exchange", "method": "GET"},
+                "fieldName": "Exchanges",
+                "fieldType": "dropdown",
+                "fieldVariableName": "exchange_name",
+            },
+            {
+                "fieldData": {"base": "/candlestick", "method": "GET"},
+                "fieldName": "Candlesticks",
+                "fieldType": "dropdown",
+                "fieldVariableName": "candlestick",
+            },
+            {
+                "fieldName": "Date Range",
+                "fieldType": "date_range",
+                "fieldVariableNames": ["start_date", "end_date"],
+            },
+        ],
+        validations={
+            "input": {"required": [], "allowed_blocks": []},
+            "output": [{"blockType": "BULK_DATA_BLOCK", "number": 1}],
+        },
+        output_interface={"interface": ["open", "high", "low", "close", "volume"]},
+    ).save()
+
+    BlockRegistry(
         block_type="COMPUTATIONAL_BLOCK",
         block_id=1,
         block_name="Technical Indicators",
@@ -90,10 +120,13 @@ def seed_blocks_into_registry(apps, schema_editor):
         ],
         validations={
             "input": {
-                "required": [{"blockType": ["DATA_BLOCK"], "number": 1}],
+                "required": [
+                    {"blockType": ["DATA_BLOCK", "BULK_DATA_BLOCK"], "number": 1}
+                ],
                 "allowed_blocks": [
                     {"blockId": "1", "blockType": "DATA_BLOCK"},
                     {"blockId": "2", "blockType": "DATA_BLOCK"},
+                    {"blockId": "1", "blockType": "BULK_DATA_BLOCK"},
                 ],
             },
             "output": [{"blockType": "COMPUTATIONAL_BLOCK", "number": 1}],
@@ -127,11 +160,19 @@ def seed_blocks_into_registry(apps, schema_editor):
         validations={
             "input": {
                 "required": [
-                    {"blockType": ["DATA_BLOCK", "COMPUTATIONAL_BLOCK"], "number": 1}
+                    {
+                        "blockType": [
+                            "DATA_BLOCK",
+                            "BULK_DATA_BLOCK",
+                            "COMPUTATIONAL_BLOCK",
+                        ],
+                        "number": 1,
+                    }
                 ],
                 "allowed_blocks": [
                     {"blockId": "1", "blockType": "DATA_BLOCK"},
                     {"blockId": "2", "blockType": "DATA_BLOCK"},
+                    {"blockId": "1", "blockType": "BULK_DATA_BLOCK"},
                     {"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"},
                 ],
             },
@@ -202,11 +243,19 @@ def seed_blocks_into_registry(apps, schema_editor):
         validations={
             "input": {
                 "required": [
-                    {"blockType": ["DATA_BLOCK", "COMPUTATIONAL_BLOCK"], "number": 1}
+                    {
+                        "blockType": [
+                            "DATA_BLOCK",
+                            "BULK_DATA_BLOCK",
+                            "COMPUTATIONAL_BLOCK",
+                        ],
+                        "number": 1,
+                    }
                 ],
                 "allowed_blocks": [
                     {"blockId": "1", "blockType": "DATA_BLOCK"},
                     {"blockId": "2", "blockType": "DATA_BLOCK"},
+                    {"blockId": "1", "blockType": "BULK_DATA_BLOCK"},
                     {"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"},
                     {"blockId": "2", "blockType": "COMPUTATIONAL_BLOCK"},
                 ],
@@ -316,10 +365,13 @@ def seed_blocks_into_registry(apps, schema_editor):
         ],
         validations={
             "input": {
-                "required": [{"blockType": ["DATA_BLOCK"], "number": 1}],
+                "required": [
+                    {"blockType": ["DATA_BLOCK", "BULK_DATA_BLOCK"], "number": 1}
+                ],
                 "allowed_blocks": [
                     {"blockId": "1", "blockType": "DATA_BLOCK"},
                     {"blockId": "2", "blockType": "DATA_BLOCK"},
+                    {"blockId": "1", "blockType": "BULK_DATA_BLOCK"},
                 ],
             },
             "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}],
@@ -360,13 +412,21 @@ def seed_blocks_into_registry(apps, schema_editor):
         validations={
             "input": {
                 "required": [
-                    {"blockType": ["DATA_BLOCK", "COMPUTATIONAL_BLOCK"], "number": 2}
+                    {
+                        "blockType": [
+                            "DATA_BLOCK",
+                            "BULK_DATA_BLOCK",
+                            "COMPUTATIONAL_BLOCK",
+                        ],
+                        "number": 2,
+                    }
                 ],
                 "allowed_blocks": [
                     {"blockId": "1", "blockType": "COMPUTATIONAL_BLOCK"},
                     {"blockId": "2", "blockType": "COMPUTATIONAL_BLOCK"},
                     {"blockId": "1", "blockType": "DATA_BLOCK"},
                     {"blockId": "2", "blockType": "DATA_BLOCK"},
+                    {"blockId": "1", "blockType": "BULK_DATA_BLOCK"},
                 ],
             },
             "output": [{"blockType": "SIGNAL_BLOCK", "number": 1}],

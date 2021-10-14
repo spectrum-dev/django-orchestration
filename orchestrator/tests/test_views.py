@@ -23,6 +23,12 @@ class AllMetadataViewTest(TestCase):
             response.json(),
             {
                 "response": {
+                    "BULK_DATA_BLOCK": {
+                        "1": {
+                            "blockName": "Screener Data",
+                            "blockMetadata": "/orchestration/BULK_DATA_BLOCK/1/",
+                        }
+                    },
                     "DATA_BLOCK": {
                         "1": {
                             "blockName": "US Stock Data",

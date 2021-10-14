@@ -50,11 +50,22 @@ def get_task_result(*_, taskId):
 
 
 # Mutations
-def dispatch_run_strategy(*_, nodeList, edgeList):
-    task = current_app.send_task(
-        "strategy.tasks.run_strategy",
-        queue="backtest",
-        routing_key="backtest_task",
-        args=(nodeList, edgeList),
-    )
-    return {"status": True, "task_id": task.task_id}
+def dispatch_run_strategy(*_, nodeList, edgeList, strategyType):
+    if strategyType == "SCREENER":
+        task = current_app.send_task(
+            "strategy.tasks.run_screener",
+            queue="screener",
+            routing_key="screener_task",
+            args=(nodeList, edgeList),
+        )
+        return {"status": True, "task_id": task.task_id}
+    elif strategyType == "BACKTEST":
+        task = current_app.send_task(
+            "strategy.tasks.run_strategy",
+            queue="backtest",
+            routing_key="backtest_task",
+            args=(nodeList, edgeList),
+        )
+        return {"status": True, "task_id": task.task_id}
+    else:
+        return {"status": False, "task_id": None}
