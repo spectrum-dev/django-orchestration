@@ -23,7 +23,9 @@ class StrategySharing(models.Model):
     )
 
     strategy = models.ForeignKey(
-        UserStrategy, related_name="%(class)s_strategy_sharing", on_delete=models.CASCADE
+        UserStrategy,
+        related_name="%(class)s_strategy_sharing",
+        on_delete=models.CASCADE,
     )
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     permissions = models.IntegerField(choices=permission_types, default=0)

@@ -9,19 +9,43 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('strategy', '0003_change_user_strategy_to_cascade_on_delete'),
+        ("strategy", "0003_change_user_strategy_to_cascade_on_delete"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='StrategySharing',
+            name="StrategySharing",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('permissions', models.IntegerField(choices=[(1, 'Read'), (2, 'Write')], default=0)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('strategy', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='strategysharing_strategy_sharing', to='strategy.userstrategy')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "permissions",
+                    models.IntegerField(choices=[(1, "Read"), (2, "Write")], default=0),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "strategy",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="strategysharing_strategy_sharing",
+                        to="strategy.userstrategy",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

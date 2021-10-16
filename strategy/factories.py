@@ -12,6 +12,7 @@ class StrategyFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Strategy
 
+
 class StrategySharingFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = StrategySharing

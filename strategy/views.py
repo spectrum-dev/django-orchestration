@@ -122,9 +122,11 @@ class StrategyView(APIView):
         """
         try:
             user = request.user
-            
+
             user_strategy = UserStrategy.objects.filter(strategy=strategy_id, user=user)
-            strategy_sharing = StrategySharing.objects.filter(strategy__strategy=strategy_id, user=user)
+            strategy_sharing = StrategySharing.objects.filter(
+                strategy__strategy=strategy_id, user=user
+            )
 
             if user_strategy.exists() or strategy_sharing.exists():
                 strategy = Strategy.objects.filter(

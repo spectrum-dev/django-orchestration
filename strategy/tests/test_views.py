@@ -6,7 +6,11 @@ from unittest.mock import patch
 from django.test import TestCase
 
 from authentication.factories import UserFactory, set_up_authentication
-from strategy.factories import UserStrategyFactory, StrategyFactory, StrategySharingFactory
+from strategy.factories import (
+    UserStrategyFactory,
+    StrategyFactory,
+    StrategySharingFactory,
+)
 
 TEST_UUIDS_COUNT = 0
 
@@ -328,7 +332,7 @@ class StrategyViewTest(TestCase):
         self.assertDictEqual(
             response.json(), {"error": "You are not authorized to view this strategy"}
         )
-    
+
     def test_shared_user_can_view_strategy(self):
         auth = set_up_authentication()
         shared_auth = set_up_authentication()
@@ -345,9 +349,7 @@ class StrategyViewTest(TestCase):
         )
 
         StrategySharingFactory(
-            strategy=user_strategy,
-            user=shared_auth["user"],
-            permissions=0
+            strategy=user_strategy, user=shared_auth["user"], permissions=0
         )
 
         response = self.client.get(
