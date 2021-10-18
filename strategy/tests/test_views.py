@@ -303,10 +303,10 @@ class StrategyViewTest(TestCase):
             f"/strategy/{strategy_id}",
             **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
         )
-        
+
         assert response.status_code == 401
         self.assertDictEqual(
-            response.json(), {'error': 'You are not authorized to view this strategy'}
+            response.json(), {"error": "You are not authorized to view this strategy"}
         )
 
     def test_strategy_id_does_not_belong_to_user_and_is_not_shared(self):
@@ -362,7 +362,7 @@ class StrategyViewTest(TestCase):
         self.assertDictEqual(
             response.json(), {"elements": {}, "inputs": {}, "outputs": {}}
         )
-    
+
 
 class CommitIdViewTest(TestCase):
     @patch("uuid.uuid4", mock_uuid)
