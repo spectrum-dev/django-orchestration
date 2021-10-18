@@ -65,7 +65,7 @@ class CreateStrategyView(APIView):
             )
         except IntegrityError:
             return JsonResponse({"error": "The strategy id already exists"}, status=400)
-        except Exception as e:
+        except Exception:
             return JsonResponse(
                 {"error": "There was an unhandled error creating the user strategy"},
                 status=400,
@@ -130,7 +130,7 @@ class StrategyView(APIView):
 
             if user_strategy.exists() or strategy_sharing.exists():
                 strategy = Strategy.objects.filter(
-                    strategy=user_strategy[0],
+                    strategy__strategy=strategy_id,
                 ).order_by("-updated_at")
 
                 if len(strategy) > 0:
