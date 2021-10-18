@@ -63,9 +63,9 @@ class CreateStrategyView(APIView):
                     "strategy_name": request_body["strategy_name"],
                 }
             )
-        except IntegrityError as e:
+        except IntegrityError:
             return JsonResponse({"error": "The strategy id already exists"}, status=400)
-        except Exception as e:
+        except Exception:
             return JsonResponse(
                 {"error": "There was an unhandled error creating the user strategy"},
                 status=400,
