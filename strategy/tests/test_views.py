@@ -6,7 +6,11 @@ from unittest.mock import patch
 from django.test import TestCase
 
 from authentication.factories import UserFactory, set_up_authentication
-from strategy.factories import UserStrategyFactory, StrategyFactory
+from strategy.factories import (
+    UserStrategyFactory,
+    StrategyFactory,
+    StrategySharingFactory,
+)
 
 TEST_UUIDS_COUNT = 0
 
@@ -300,11 +304,12 @@ class StrategyViewTest(TestCase):
             **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
         )
 
+        assert response.status_code == 401
         self.assertDictEqual(
             response.json(), {"error": "You are not authorized to view this strategy"}
         )
 
-    def test_strategy_id_does_not_belong_to_user(self):
+    def test_strategy_id_does_not_belong_to_user_and_is_not_shared(self):
         auth = set_up_authentication()
         strategy_id = "5f4a0050-6766-40e1-946c-ddbd5533a3d1"
         commit_id = "28061176-a818-4525-a238-c9a73c6418f1"
@@ -325,8 +330,37 @@ class StrategyViewTest(TestCase):
             **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
         )
 
+        assert response.status_code == 401
         self.assertDictEqual(
             response.json(), {"error": "You are not authorized to view this strategy"}
+        )
+
+    def test_shared_user_can_view_strategy(self):
+        auth = set_up_authentication()
+        shared_auth = set_up_authentication()
+        strategy_id = "5f4a0050-6766-40e1-946c-ddbd5533a3d1"
+        commit_id = "28061176-a818-4525-a238-c9a73c6418f1"
+
+        user_strategy = UserStrategyFactory(user=auth["user"], strategy=strategy_id)
+        StrategyFactory(
+            strategy=user_strategy,
+            commit=commit_id,
+            flow_metadata={},
+            input={},
+            output={},
+        )
+
+        StrategySharingFactory(
+            strategy=user_strategy, user=shared_auth["user"], permissions=0
+        )
+
+        response = self.client.get(
+            f"/strategy/{strategy_id}",
+            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(), {"elements": {}, "inputs": {}, "outputs": {}}
         )
 
 
