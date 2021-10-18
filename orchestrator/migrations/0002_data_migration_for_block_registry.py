@@ -292,6 +292,12 @@ def seed_blocks_into_registry(apps, schema_editor):
         block_name="Crossover",
         inputs=[
             {
+                "fieldName": "Incoming Data",
+                "fieldVariableName": "incoming_data",
+                "fieldType": "inputs_from_connection",
+                "fieldDefaultValue": "close",
+            },
+            {
                 "fieldData": {"base": "/crossoverType", "method": "GET"},
                 "fieldName": "Event Type",
                 "fieldType": "dropdown",
