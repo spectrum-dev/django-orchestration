@@ -194,10 +194,16 @@ class SpectrumFlowValidateTest(TestCase):
             MULTIPLE_INCOMING_BLOCKS_OF_DIFFERENT_TYPES_RETURNS_OK_RESPONSE,
         )
 
-    def test_block_dne_in_assembled_dependency_list_but_in_required_fields_returns_ok(self):
+    def test_block_dne_in_assembled_dependency_list_but_in_required_fields_returns_ok(
+        self,
+    ):
         spectrum_event_flow = SpectrumFlow(
-            BLOCK_DNE_IN_ASSEMBLED_DEPENDENCY_LIST_BUT_IN_REQUIRED_FIELDS_RETURNS_OK["nodeList"],
-            BLOCK_DNE_IN_ASSEMBLED_DEPENDENCY_LIST_BUT_IN_REQUIRED_FIELDS_RETURNS_OK["edgeList"],
+            BLOCK_DNE_IN_ASSEMBLED_DEPENDENCY_LIST_BUT_IN_REQUIRED_FIELDS_RETURNS_OK[
+                "nodeList"
+            ],
+            BLOCK_DNE_IN_ASSEMBLED_DEPENDENCY_LIST_BUT_IN_REQUIRED_FIELDS_RETURNS_OK[
+                "edgeList"
+            ],
         )
 
         self.assertDictEqual(
@@ -207,5 +213,5 @@ class SpectrumFlowValidateTest(TestCase):
 
         self.assertDictEqual(
             spectrum_event_flow.input_payloads,
-            BLOCK_DNE_IN_ASSEMBLED_DEPENDENCY_LIST_BUT_IN_REQUIRED_FIELDS_RESPONSE
+            BLOCK_DNE_IN_ASSEMBLED_DEPENDENCY_LIST_BUT_IN_REQUIRED_FIELDS_RESPONSE,
         )
