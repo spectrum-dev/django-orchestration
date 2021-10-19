@@ -35,4 +35,9 @@ type TaskResult {
 
 type ShareStrategy {
     shared: Boolean!
-}  
+}
+
+type ListSharedUsers {
+    email: String!
+    permissions: String!
+}

@@ -37,6 +37,19 @@ def list_strategies(_, info):
     ]
 
 
+@convert_kwargs_to_snake_case
+def list_shared_users(*_, strategy_id):
+    return [
+        {
+            "email": sharing_permission.user.email,
+            "permissions": sharing_permission.permissions,
+        }
+        for sharing_permission in StrategySharing.objects.filter(
+            strategy__strategy=strategy_id
+        )
+    ]
+
+
 def get_task_result(*_, taskId):
     task = AsyncResult(taskId)
     if not task.status == "SUCCESS":
