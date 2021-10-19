@@ -13,4 +13,5 @@ type Query {
 
 type Mutation {
     dispatchRunStrategy(nodeList: JSON!, edgeList: [JSON!], strategyType: String!): DispatchRunStrategy! @isAuthenticated
+    shareStrategy(strategyId: ID! email: String!, permissions: String!): ShareStrategy! @isAuthenticated
 }

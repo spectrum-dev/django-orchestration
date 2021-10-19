@@ -2,8 +2,10 @@ from ariadne import convert_kwargs_to_snake_case
 from celery import current_app
 from celery.result import AsyncResult
 
+from django.contrib.auth.models import User
+
 from strategy.tasks import run_strategy
-from strategy.models import UserStrategy, Strategy
+from strategy.models import UserStrategy, Strategy, StrategySharing
 
 # Queries
 @convert_kwargs_to_snake_case
@@ -69,3 +71,17 @@ def dispatch_run_strategy(*_, nodeList, edgeList, strategyType):
         return {"status": True, "task_id": task.task_id}
     else:
         return {"status": False, "task_id": None}
+
+
+@convert_kwargs_to_snake_case
+def share_strategy(*_, strategy_id, email, permissions):
+    user_strategy = UserStrategy.objects.get(strategy=strategy_id)
+    user = User.objects.get(email=email)
+
+    StrategySharing.objects.update_or_create(
+        strategy=user_strategy,
+        user=user,
+        permissions=permissions
+    )
+
+    return {"shared": True}
