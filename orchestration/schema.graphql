@@ -8,6 +8,7 @@ type Query {
     userStrategies: [UserStrategy!]! @isAuthenticated
     strategies: [Strategy!]! @isAuthenticated
     taskResult(taskId: ID!): TaskResult! @isAuthenticated
+    sharedUsers(strategyId: ID!): [ListSharedUsers!]! @isAuthenticated
     inputDependencyGraph(nodeList: JSON!, edgeList: [JSON!]): JSON!
 }
 
