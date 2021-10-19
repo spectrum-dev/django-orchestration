@@ -32,3 +32,7 @@ type TaskResult {
     status: Status!
     output: JSON
 }
+
+type ShareStrategy {
+    shared: Boolean!
+}  

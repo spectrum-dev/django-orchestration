@@ -30,6 +30,7 @@ query.set_field(
 # Mutation Implementations
 mutation = MutationType()
 mutation.set_field("dispatchRunStrategy", strategy.resolvers.dispatch_run_strategy)
+mutation.set_field("shareStrategy", strategy.resolvers.share_strategy)
 
 # Directives
 directives = {
