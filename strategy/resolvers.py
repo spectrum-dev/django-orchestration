@@ -79,9 +79,7 @@ def share_strategy(*_, strategy_id, email, permissions):
     user = User.objects.get(email=email)
 
     StrategySharing.objects.update_or_create(
-        strategy=user_strategy,
-        user=user,
-        permissions=permissions
+        strategy=user_strategy, user=user, permissions=permissions
     )
 
     return {"shared": True}
