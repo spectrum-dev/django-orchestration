@@ -319,7 +319,7 @@ class SpectrumFlow:
                                 for adjacent_block in adjacent_blocks:
                                     if any(
                                         adjacent_block
-                                        in assembled_dependency_list[req_block]
+                                        in assembled_dependency_list.get(req_block, [])
                                         for req_block in required_block["blockType"]
                                     ):
                                         adjacent_blocks_of_matching_type.append(
