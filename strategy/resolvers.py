@@ -44,7 +44,9 @@ def list_shared_users(*_, strategy_id):
             "email": sharing_permission.user.email,
             "permissions": sharing_permission.permissions,
         }
-        for sharing_permission in StrategySharing.objects.filter(strategy__strategy=strategy_id)
+        for sharing_permission in StrategySharing.objects.filter(
+            strategy__strategy=strategy_id
+        )
     ]
 
 
