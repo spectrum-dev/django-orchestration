@@ -40,7 +40,7 @@ class StrategyIdViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         # TODO: Testing behaviour here is a little flaky
         self.assertDictEqual(
-            response.json(), {"strategy_id": "00000000-0000-0000-0000-000000000005"}
+            response.json(), {"strategy_id": "00000000-0000-0000-0000-000000000004"}
         )
 
     @patch("uuid.uuid4", fixed_mock_uuid)
@@ -396,7 +396,7 @@ class CommitIdViewTest(TestCase):
 
         self.assertDictEqual(response.json(), {"error": "Strategy does not exist"})
 
-    @patch("uuid.uuid4", mock_uuid)
+    @patch("uuid.uuid4", fixed_mock_uuid)
     def test_shared_user_returns_ok(self):
         auth = set_up_authentication()
         sharing_auth = set_up_authentication()
@@ -417,7 +417,7 @@ class CommitIdViewTest(TestCase):
             response.json(),
             {
                 "strategyId": "5f4a0050-6766-40e1-946c-ddbd5533a3d1",
-                "commitId": "00000000-0000-0000-0000-000000000001",
+                "commitId": "00000000-0000-0000-0000-000000000000",
             },
         )
 
