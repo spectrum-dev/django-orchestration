@@ -694,5 +694,6 @@ class StrategyCommitPostViewTest(TestCase):
         )
 
         self.assertDictEqual(
-            response.json(), {"error": "You only have read permissions on this strategy"}
+            response.json(),
+            {"error": "You only have read permissions on this strategy"},
         )
