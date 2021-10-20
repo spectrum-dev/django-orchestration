@@ -421,13 +421,13 @@ class CommitIdViewTest(TestCase):
             },
         )
 
-    def test_non_shared_user_returns_ok(self):
+    def test_non_shared_user_returns_error(self):
         auth = set_up_authentication()
         sharing_auth = set_up_authentication()
 
         strategy_id = "5f4a0050-6766-40e1-946c-ddbd5533a3d1"
 
-        user_strategy = UserStrategyFactory(user=auth["user"], strategy=strategy_id)
+        UserStrategyFactory(user=auth["user"], strategy=strategy_id)
 
         response = self.client.get(
             f"/strategy/{strategy_id}/commitId",
