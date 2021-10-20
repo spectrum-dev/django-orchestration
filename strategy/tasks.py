@@ -51,11 +51,9 @@ def run_screener(node_list, edge_list):
                     signals = response[key]
                     signal_key = key
 
-            target_date = payload["inputs"]["end_date"]
+            # target_date = payload["inputs"]["end_date"]
 
             for signal in signals:
-                if signal["timestamp"] == f"{target_date} 00:00:00":
-                    result.append({"ticker": ticker})
-                    break
+                result.append({"timestamp": signal["timestamp"], "ticker": ticker})
 
     return {signal_key: result}
