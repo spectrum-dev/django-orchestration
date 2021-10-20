@@ -396,6 +396,49 @@ class CommitIdViewTest(TestCase):
 
         self.assertDictEqual(response.json(), {"error": "Strategy does not exist"})
 
+    @patch("uuid.uuid4", fixed_mock_uuid)
+    def test_shared_user_returns_ok(self):
+        auth = set_up_authentication()
+        sharing_auth = set_up_authentication()
+
+        strategy_id = "5f4a0050-6766-40e1-946c-ddbd5533a3d1"
+
+        user_strategy = UserStrategyFactory(user=auth["user"], strategy=strategy_id)
+        StrategySharingFactory(
+            strategy=user_strategy, user=sharing_auth["user"], permissions=2
+        )
+
+        response = self.client.get(
+            f"/strategy/{strategy_id}/commitId",
+            **{"HTTP_AUTHORIZATION": f"Bearer {sharing_auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(),
+            {
+                "strategyId": "5f4a0050-6766-40e1-946c-ddbd5533a3d1",
+                "commitId": "00000000-0000-0000-0000-000000000000",
+            },
+        )
+
+    def test_non_shared_user_returns_error(self):
+        auth = set_up_authentication()
+        sharing_auth = set_up_authentication()
+
+        strategy_id = "5f4a0050-6766-40e1-946c-ddbd5533a3d1"
+
+        UserStrategyFactory(user=auth["user"], strategy=strategy_id)
+
+        response = self.client.get(
+            f"/strategy/{strategy_id}/commitId",
+            **{"HTTP_AUTHORIZATION": f"Bearer {sharing_auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(),
+            {"error": "Strategy does not exist"},
+        )
+
 
 class StrategyCommitGetViewTest(TestCase):
     def test_ok(self):
