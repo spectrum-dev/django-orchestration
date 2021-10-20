@@ -162,20 +162,24 @@ class CommitIdView(APIView):
 
     def get(self, request, strategy_id):
         user = request.user
-        user_strategy = UserStrategy.objects.filter(strategy=strategy_id, user=user)
 
-        if not user_strategy.exists():
-            return JsonResponse({"error": "Strategy does not exist"})
+        user_strategy = UserStrategy.objects.filter(strategy=strategy_id, user=user)
+        sharing_strategy = StrategySharing.objects.filter(
+            strategy__strategy=strategy_id, user=user
+        )
+
+        if not user_strategy.exists() and not sharing_strategy.exists():
+            return JsonResponse({"error": "Strategy does not exist"}, status=404)
 
         commit_id = uuid.uuid4()
         strategy_commit_pair_exist = Strategy.objects.filter(
-            strategy=user_strategy[0], commit=commit_id
+            strategy__strategy=strategy_id, commit=commit_id
         ).exists()
 
         if not strategy_commit_pair_exist:
             return JsonResponse({"strategyId": strategy_id, "commitId": commit_id})
         else:
-            return JsonResponse({"error": "Commit ID already exists"})
+            return JsonResponse({"error": "Commit ID already exists"}, status=400)
 
 
 class StrategyCommitView(APIView):
