@@ -186,6 +186,7 @@ class StrategyCommitView(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]
 
+    # TODO: This needs to be updated to support sharing
     def get(self, request, strategy_id, commit_id):
         try:
             user = request.user
@@ -225,25 +226,36 @@ class StrategyCommitView(APIView):
             request_body = json.loads(request.body)
 
             user_strategy = UserStrategy.objects.filter(strategy=strategy_id, user=user)
+            strategy_sharing = StrategySharing.objects.filter(
+                strategy__strategy=strategy_id, user=user
+            )
 
-            if not user_strategy.exists():
-                user_strategy = UserStrategy.objects.create(
-                    user=user,
-                    strategy=strategy_id,
-                    strategy_name=request_body.get("strategy_name", ""),
+            if not user_strategy.exists() and not strategy_sharing.exists():
+                return JsonResponse(
+                    {"error": "This strategy does not exist"}, status=401
                 )
-            else:
-                user_strategy = user_strategy[0]
+
+            strategy = None
+            if user_strategy.exists():
+                strategy = user_strategy.first()
+
+            if strategy_sharing.exists():
+                if strategy_sharing.first().permissions == 1:
+                    return JsonResponse(
+                        {"error": "You only have read permissions on this strategy"}
+                    )
+
+                strategy = strategy_sharing.first().strategy
 
             Strategy.objects.update_or_create(
-                strategy=user_strategy,
+                strategy=strategy,
                 commit=commit_id,
                 flow_metadata=request_body["metadata"],
                 input=request_body["inputs"],
                 output=request_body["outputs"],
             )
-            return JsonResponse({"message": "Successfully saved strategy "})
 
+            return JsonResponse({"message": "Successfully saved strategy "})
         except IntegrityError:
             return JsonResponse({"error": "The strategy-commit pair already exist"})
         except ValidationError:

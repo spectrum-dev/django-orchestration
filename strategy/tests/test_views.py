@@ -351,7 +351,7 @@ class StrategyViewTest(TestCase):
         )
 
         StrategySharingFactory(
-            strategy=user_strategy, user=shared_auth["user"], permissions=0
+            strategy=user_strategy, user=shared_auth["user"], permissions=2
         )
 
         response = self.client.get(
@@ -613,9 +613,7 @@ class StrategyCommitPostViewTest(TestCase):
             **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
         )
 
-        self.assertDictEqual(
-            response.json(), {"message": "Successfully saved strategy "}
-        )
+        self.assertDictEqual(response.json(), {"error": "This strategy does not exist"})
 
     def test_strategy_commit_already_exists(self):
         auth = set_up_authentication()
@@ -680,4 +678,65 @@ class StrategyCommitPostViewTest(TestCase):
             **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
         )
 
-        self.assertDictEqual(response.json(), {"error": "There was a validation error"})
+        self.assertDictEqual(response.json(), {"error": "This strategy does not exist"})
+
+    def test_shared_user_with_write_permissions_can_save(self):
+        auth = set_up_authentication()
+        shared_auth = set_up_authentication()
+
+        strategy_id = "136f0d6e-1e32-4edb-ac5e-1676047425d2"
+        commit_id = "c98d7e19-673b-4609-9b32-6f827fe515e6"
+
+        user_strategy = UserStrategyFactory(user=auth["user"], strategy=strategy_id)
+        StrategySharingFactory(
+            strategy=user_strategy, user=shared_auth["user"], permissions=2
+        )
+
+        payload = {
+            "strategy_name": "Test Strategy",
+            "metadata": {},
+            "inputs": {},
+            "outputs": {},
+        }
+
+        response = self.client.post(
+            f"/strategy/{strategy_id}/{commit_id}",
+            json.dumps(payload),
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {shared_auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(), {"message": "Successfully saved strategy "}
+        )
+
+    def test_shared_user_with_read_permissions_cannot_save(self):
+        auth = set_up_authentication()
+        shared_auth = set_up_authentication()
+
+        strategy_id = "136f0d6e-1e32-4edb-ac5e-1676047425d2"
+        commit_id = "c98d7e19-673b-4609-9b32-6f827fe515e6"
+
+        user_strategy = UserStrategyFactory(user=auth["user"], strategy=strategy_id)
+        StrategySharingFactory(
+            strategy=user_strategy, user=shared_auth["user"], permissions=1
+        )
+
+        payload = {
+            "strategy_name": "Test Strategy",
+            "metadata": {},
+            "inputs": {},
+            "outputs": {},
+        }
+
+        response = self.client.post(
+            f"/strategy/{strategy_id}/{commit_id}",
+            json.dumps(payload),
+            content_type="application/json",
+            **{"HTTP_AUTHORIZATION": f"Bearer {shared_auth['token']}"},
+        )
+
+        self.assertDictEqual(
+            response.json(),
+            {"error": "You only have read permissions on this strategy"},
+        )
