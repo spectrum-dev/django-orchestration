@@ -43,10 +43,10 @@ urlpatterns = [
         name="google_login",
     ),
     url(r"^authentication/", include("allauth.urls"), name="socialaccount_signup"),
-    path(
-        "authentication/validate",
-        authentication.views.ValidateAccountWhitelistView.as_view(),
-    ),
+    # path(
+    #     "authentication/validate",
+    #     authentication.views.ValidateAccountWhitelistView.as_view(),
+    # ),
     path("orchestration/metadata", orchestrator.views.AllMetadataView.as_view()),
     path("orchestration/validate", orchestrator.views.ValidateFlow.as_view()),
     path(

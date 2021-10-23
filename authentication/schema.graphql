@@ -1,0 +1,3 @@
+type AccountWhitelistStatus {
+    status: Boolean!
+}

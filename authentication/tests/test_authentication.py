@@ -1,61 +1,35 @@
-import json
-
-from django.test import TestCase
-
-from authentication.factories import AccountWhitelistFactory
+from authentication.factories import set_up_authentication
+from orchestration.test_utils import GraphQLTestCase
 
 
-class ValidateEmailWhitelistTest(TestCase):
-    def test_email_exists_and_active(self):
-        account_whitelist = AccountWhitelistFactory(
-            email="valid@testcustomer.com", active=True
+class AuthenticationTest(GraphQLTestCase):
+    def setUp(self):
+        self.QUERY = """
+            query {
+                ping
+            }
+        """
+        self.auth = set_up_authentication()
+
+    def test_request_missing_authorization_header(self):
+        response, content = self.query(
+            self.QUERY,
         )
+        self.assertResponseHasErrors(response)
+        assert content["errors"][0]["message"] == "User is not authenticated"
 
-        payload = {"email": account_whitelist.email}
-
-        response = self.client.post(
-            "/authentication/validate",
-            json.dumps(payload),
-            content_type="application/json",
+    def test_request_has_invalid_authorization_header(self):
+        response, content = self.query(
+            self.QUERY,
+            headers={"HTTP_AUTHORIZATION": f"Bearer invalid-token"},
         )
+        self.assertResponseHasErrors(response)
+        assert content["errors"][0]["message"] == "User is not authenticated"
 
-        self.assertDictEqual(response.json(), {"status": True})
-
-    def test_email_exists_not_active(self):
-        account_whitelist = AccountWhitelistFactory(
-            email="valid@testcustomer.com", active=False
+    def test_request_has_valid_authorization_header(self):
+        response, content = self.query(
+            self.QUERY,
+            headers={"HTTP_AUTHORIZATION": f"Bearer {self.auth['token']}"},
         )
-
-        payload = {"email": account_whitelist.email}
-
-        response = self.client.post(
-            "/authentication/validate",
-            json.dumps(payload),
-            content_type="application/json",
-        )
-
-        self.assertDictEqual(response.json(), {"status": False})
-
-    def test_email_dne(self):
-        payload = {"email": "valid@testuser.com"}
-
-        response = self.client.post(
-            "/authentication/validate",
-            json.dumps(payload),
-            content_type="application/json",
-        )
-
-        self.assertDictEqual(response.json(), {"status": False})
-
-    def test_email_field_empty(self):
-        payload = {"email": ""}
-
-        response = self.client.post(
-            "/authentication/validate",
-            json.dumps(payload),
-            content_type="application/json",
-        )
-
-        self.assertDictEqual(
-            response.json(), {"email": ["This field may not be blank."]}
-        )
+        self.assertResponseNoErrors(response)
+        self.assertDictEqual(content["data"], {"ping": "pong"})
