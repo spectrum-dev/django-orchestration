@@ -1,7 +1,6 @@
-from django.test import TestCase
+from authentication.factories import set_up_authentication
 
 from orchestration.test_utils import GraphQLTestCase
-from authentication.factories import set_up_authentication
 
 
 class AuthenticationTest(GraphQLTestCase):
