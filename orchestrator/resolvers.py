@@ -9,6 +9,7 @@ def get_input_dependency_graph(*_, nodeList, edgeList):
     response = get_input_dependency_graph_interface(nodeList, edgeList)
     return response
 
+
 def get_all_metadata(*_):
     all_blocks_from_registry = BlockRegistry.objects.all()
     response = {}
