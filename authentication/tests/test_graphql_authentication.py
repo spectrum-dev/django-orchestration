@@ -1,57 +1,35 @@
-from django.test import TestCase
-
 from authentication.factories import set_up_authentication
+from orchestration.test_utils import GraphQLTestCase
 
 
-class GraphQLAuthenticationTest(TestCase):
-    def test_request_missing_authorization_header(self):
-        query = """
+class AuthenticationTest(GraphQLTestCase):
+    def setUp(self):
+        self.AUTHENTICATION_QUERY = """
             query {
                 ping
             }
         """
-        response = self.client.post(
-            "/graphql/",
-            {"query": query},
-            content_type="application/json",
+        self.auth = set_up_authentication()
+
+    def test_request_missing_authorization_header(self):
+        response, content = self.query(
+            self.AUTHENTICATION_QUERY,
         )
-
-        response = response.json()
-
-        assert response["data"] == None
-        assert response["errors"][0]["message"] == "User is not authenticated"
+        self.assertResponseHasErrors(response)
+        assert content["errors"][0]["message"] == "User is not authenticated"
 
     def test_request_has_invalid_authorization_header(self):
-        query = """
-            query {
-                ping
-            }
-        """
-        response = self.client.post(
-            "/graphql/",
-            {"query": query},
-            content_type="application/json",
-            **{"HTTP_AUTHORIZATION": f"Bearer invalid-token"},
+        response, content = self.query(
+            self.AUTHENTICATION_QUERY,
+            headers={"HTTP_AUTHORIZATION": f"Bearer invalid-token"},
         )
-
-        response = response.json()
-
-        assert response["data"] == None
-        assert response["errors"][0]["message"] == "User is not authenticated"
+        self.assertResponseHasErrors(response)
+        assert content["errors"][0]["message"] == "User is not authenticated"
 
     def test_request_has_valid_authorization_header(self):
-        auth = set_up_authentication()
-
-        query = """
-            query {
-                ping
-            }
-        """
-        response = self.client.post(
-            "/graphql/",
-            {"query": query},
-            content_type="application/json",
-            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
+        _, content = self.query(
+            self.AUTHENTICATION_QUERY,
+            headers={"HTTP_AUTHORIZATION": f"Bearer {self.auth['token']}"},
         )
 
-        self.assertDictEqual(response.json(), {"data": {"ping": "pong"}})
+        self.assertDictEqual(content["data"], {"ping": "pong"})
