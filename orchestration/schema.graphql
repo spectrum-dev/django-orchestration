@@ -10,10 +10,11 @@ type Query {
     taskResult(taskId: ID!): TaskResult! @isAuthenticated
     sharedUsers(strategyId: ID!): [ListSharedUsers!]! @isAuthenticated
     inputDependencyGraph(nodeList: JSON!, edgeList: [JSON!]): JSON!
+    accountWhitelistStatus(email: String!): AccountWhitelistStatus! @isAuthenticated
+
 }
 
 type Mutation {
-    validateAccountWhitelist(email: String!): ValidateAccountWhitelist! @isAuthenticated
     dispatchRunStrategy(nodeList: JSON!, edgeList: [JSON!], strategyType: String!): DispatchRunStrategy! @isAuthenticated
     shareStrategy(strategyId: ID! email: String!, permissions: String!): ShareStrategy! @isAuthenticated
 }

@@ -21,6 +21,9 @@ type_defs = [
 
 # Query Implementations
 query = QueryType()
+query.set_field(
+    "accountWhitelistStatus", authentication.resolvers.get_account_whitelist_status
+)
 query.set_field("ping", authentication.resolvers.get_ping)
 query.set_field("userStrategies", strategy.resolvers.list_user_strategies)
 query.set_field("strategies", strategy.resolvers.list_strategies)
@@ -32,9 +35,7 @@ query.set_field(
 
 # Mutation Implementations
 mutation = MutationType()
-mutation.set_field(
-    "validateAccountWhitelist", authentication.resolvers.validate_account_whitelist
-)
+
 mutation.set_field("dispatchRunStrategy", strategy.resolvers.dispatch_run_strategy)
 mutation.set_field("shareStrategy", strategy.resolvers.share_strategy)
 

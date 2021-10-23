@@ -8,11 +8,8 @@ def get_ping(*_):
     return "pong"
 
 
-# Mutations
-
-
 @convert_kwargs_to_snake_case
-def validate_account_whitelist(*_, email):
+def get_account_whitelist_status(*_, email):
     try:
         AccountWhitelist.objects.get(
             email=email,
