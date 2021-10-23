@@ -10,7 +10,7 @@ type Query {
     taskResult(taskId: ID!): TaskResult! @isAuthenticated
     sharedUsers(strategyId: ID!): [ListSharedUsers!]! @isAuthenticated
     inputDependencyGraph(nodeList: JSON!, edgeList: [JSON!]): JSON!
-    accountWhitelistStatus(email: String!): AccountWhitelistStatus! @isAuthenticated
+    accountWhitelistStatus(email: String!): AccountWhitelistStatus!
 
 }
 
