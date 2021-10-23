@@ -13,6 +13,7 @@ type Query {
 }
 
 type Mutation {
+    validateAccountWhitelist(email: String!): ValidateAccountWhitelist! @isAuthenticated
     dispatchRunStrategy(nodeList: JSON!, edgeList: [JSON!], strategyType: String!): DispatchRunStrategy! @isAuthenticated
     shareStrategy(strategyId: ID! email: String!, permissions: String!): ShareStrategy! @isAuthenticated
 }

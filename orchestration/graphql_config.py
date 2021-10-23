@@ -8,11 +8,13 @@ from ariadne import (
 
 from authentication.graphql import IsAuthenticatedDirective
 
+import authentication.resolvers
 import strategy.resolvers
 import authentication.resolvers
 import orchestrator.resolvers
 
 type_defs = [
+    load_schema_from_path("authentication/schema.graphql"),
     load_schema_from_path("orchestration/schema.graphql"),
     load_schema_from_path("strategy/schema.graphql"),
 ]
@@ -30,6 +32,9 @@ query.set_field(
 
 # Mutation Implementations
 mutation = MutationType()
+mutation.set_field(
+    "validateAccountWhitelist", authentication.resolvers.validate_account_whitelist
+)
 mutation.set_field("dispatchRunStrategy", strategy.resolvers.dispatch_run_strategy)
 mutation.set_field("shareStrategy", strategy.resolvers.share_strategy)
 
