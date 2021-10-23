@@ -60,7 +60,10 @@ def graphql_query(
         resp = client.post(
             graphql_url, json.dumps(body), content_type="application/json"
         )
-    return resp
+
+    content = json.loads(resp.content)
+
+    return resp, content
 
 
 class GraphQLTestMixin(object):
