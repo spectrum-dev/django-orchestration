@@ -5,6 +5,7 @@ scalar JSON
 
 type Query {
     ping: String! @isAuthenticated
+    allMetadata: JSON! @isAuthenticated
     userStrategies: [UserStrategy!]! @isAuthenticated
     strategies: [Strategy!]! @isAuthenticated
     taskResult(taskId: ID!): TaskResult! @isAuthenticated

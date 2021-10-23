@@ -25,6 +25,7 @@ query.set_field(
     "accountWhitelistStatus", authentication.resolvers.get_account_whitelist_status
 )
 query.set_field("ping", authentication.resolvers.get_ping)
+query.set_field("allMetadata", orchestrator.resolvers.get_all_metadata)
 query.set_field("userStrategies", strategy.resolvers.list_user_strategies)
 query.set_field("strategies", strategy.resolvers.list_strategies)
 query.set_field("sharedUsers", strategy.resolvers.list_shared_users)
