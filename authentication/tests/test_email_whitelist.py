@@ -4,7 +4,7 @@ from orchestration.test_utils import GraphQLTestCase
 
 class ValidateEmailWhitelistTest(GraphQLTestCase):
     def setUp(self):
-        self.AUTHENTICATION_QUERY = """
+        self.QUERY = """
             query accountWhitelistStatus($email: String!) {
                 accountWhitelistStatus(email: $email) {
                     status
@@ -16,7 +16,7 @@ class ValidateEmailWhitelistTest(GraphQLTestCase):
     def test_email_exists_and_active(self):
         AccountWhitelistFactory(email="valid@testcustomer.com", active=True)
         response, content = self.query(
-            self.AUTHENTICATION_QUERY,
+            self.QUERY,
             headers={"HTTP_AUTHORIZATION": f"Bearer {self.auth['token']}"},
             variables={"email": "valid@testcustomer.com"},
         )
@@ -28,7 +28,7 @@ class ValidateEmailWhitelistTest(GraphQLTestCase):
     def test_email_exists_not_active(self):
         AccountWhitelistFactory(email="valid@testcustomer.com", active=False)
         response, content = self.query(
-            self.AUTHENTICATION_QUERY,
+            self.QUERY,
             headers={"HTTP_AUTHORIZATION": f"Bearer {self.auth['token']}"},
             variables={"email": "valid@testcustomer.com"},
         )
@@ -39,7 +39,7 @@ class ValidateEmailWhitelistTest(GraphQLTestCase):
 
     def test_email_dne(self):
         response, content = self.query(
-            self.AUTHENTICATION_QUERY,
+            self.QUERY,
             headers={"HTTP_AUTHORIZATION": f"Bearer {self.auth['token']}"},
             variables={"email": "valid@testcustomer.com"},
         )
