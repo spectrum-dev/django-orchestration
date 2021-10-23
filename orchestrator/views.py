@@ -15,27 +15,6 @@ from orchestrator.services.overlays.main import main
 from orchestrator.services.flow.spectrum_flow import SpectrumFlow
 
 
-class AllMetadataView(APIView):
-    authentication_classes = [SpectrumAuthentication]
-    permission_classes = [SpectrumIsAuthenticated]
-
-    def get(self, request):
-        all_blocks_from_registry = BlockRegistry.objects.all()
-
-        response = {}
-        for block_registry in all_blocks_from_registry:
-            if block_registry.block_type not in response:
-                response[block_registry.block_type] = {}
-
-            if block_registry.block_id not in response[block_registry.block_type]:
-                response[block_registry.block_type][block_registry.block_id] = {
-                    "blockName": block_registry.block_name,
-                    "blockMetadata": f"/orchestration/{block_registry.block_type}/{block_registry.block_id}/",
-                }
-
-        return JsonResponse({"response": response})
-
-
 class MetadataView(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]
