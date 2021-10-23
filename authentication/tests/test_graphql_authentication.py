@@ -1,7 +1,10 @@
 from django.test import TestCase
 
+from orchestration.test_utils import GraphQLTestCase
 from authentication.factories import set_up_authentication
 
+class AuthenticationTest(GraphQLTestCase):
+    pass
 
 class GraphQLAuthenticationTest(TestCase):
     def test_request_missing_authorization_header(self):
