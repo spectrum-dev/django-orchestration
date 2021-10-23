@@ -1,5 +1,4 @@
 from authentication.factories import set_up_authentication
-
 from orchestration.test_utils import GraphQLTestCase
 
 
