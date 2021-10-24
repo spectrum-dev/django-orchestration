@@ -16,6 +16,7 @@ import orchestrator.resolvers
 type_defs = [
     load_schema_from_path("authentication/schema.graphql"),
     load_schema_from_path("orchestration/schema.graphql"),
+    load_schema_from_path("orchestrator/schema.graphql"),
     load_schema_from_path("strategy/schema.graphql"),
 ]
 
