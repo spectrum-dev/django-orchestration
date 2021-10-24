@@ -24,6 +24,7 @@ class SpectrumFlow:
         self.graph = graph.graph.adjacency_list
         self.dependency_graph = graph.dependency_graph.adjacency_list
         self.batched_tasks = graph.batched_tasks
+        self.strategy_type = self.get_strategy_type()
 
         # Valid
         self.valid = self.validate()
@@ -79,6 +80,18 @@ class SpectrumFlow:
                     target_block_data,
                     blocks_found,
                 )
+
+    def get_strategy_type(self):
+        """
+        Goes through the nodeList to determine the strategy type
+        """
+        strategy_type = "BACKTEST"
+        for _, metadata in self.vertices.items():
+            if metadata["blockType"] == "BULK_DATA_BLOCK":
+                strategy_type = "SCREENER"
+                break
+
+        return strategy_type
 
     def validate(self):
         """
