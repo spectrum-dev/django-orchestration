@@ -1,3 +1,5 @@
+from ariadne import convert_kwargs_to_snake_case
+
 from orchestrator.interface import (
     get_input_dependency_graph as get_input_dependency_graph_interface,
 )
@@ -10,7 +12,8 @@ def get_input_dependency_graph(*_, nodeList, edgeList):
     return response
 
 
-def get_all_metadata(*_):
+@convert_kwargs_to_snake_case
+def get_all_metadata(*_, strategy_type):
     all_blocks_from_registry = BlockRegistry.objects.all()
     response = {}
     for block_registry in all_blocks_from_registry:
@@ -22,4 +25,8 @@ def get_all_metadata(*_):
                 "blockName": block_registry.block_name,
                 "blockMetadata": f"/orchestration/{block_registry.block_type}/{block_registry.block_id}/",
             }
+
+    if strategy_type == "SCREENER":
+        del response["STRATEGY_BLOCK"]
+
     return response
