@@ -11,7 +11,7 @@ BACKTEST_FLOW_OK = {
             "end_date": {"value": ""},
         },
     },
-    "edgeList": []
+    "edgeList": [],
 }
 
 SCREENER_FLOW_OK = {
@@ -27,5 +27,5 @@ SCREENER_FLOW_OK = {
             "end_date": {"value": ""},
         },
     },
-    "edgeList": []
+    "edgeList": [],
 }

@@ -90,7 +90,7 @@ class SpectrumFlow:
             if metadata["blockType"] == "BULK_DATA_BLOCK":
                 strategy_type = "SCREENER"
                 break
-        
+
         return strategy_type
 
     def validate(self):
