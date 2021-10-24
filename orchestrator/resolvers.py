@@ -11,6 +11,7 @@ def get_input_dependency_graph(*_, nodeList, edgeList):
     response = get_input_dependency_graph_interface(nodeList, edgeList)
     return response
 
+
 @convert_kwargs_to_snake_case
 def get_all_metadata(*_, strategy_type):
     all_blocks_from_registry = BlockRegistry.objects.all()
@@ -24,8 +25,8 @@ def get_all_metadata(*_, strategy_type):
                 "blockName": block_registry.block_name,
                 "blockMetadata": f"/orchestration/{block_registry.block_type}/{block_registry.block_id}/",
             }
-    
-    if strategy_type == 'SCREENER':
-        del response['STRATEGY_BLOCK']
-    
+
+    if strategy_type == "SCREENER":
+        del response["STRATEGY_BLOCK"]
+
     return response
