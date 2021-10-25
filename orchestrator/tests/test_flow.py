@@ -22,6 +22,8 @@ from orchestrator.tests.data.test_flow_data import (
     MULTIPLE_INCOMING_BLOCKS_OF_DIFFERENT_TYPES_RETURNS_OK_RESPONSE,
     BLOCK_DNE_IN_ASSEMBLED_DEPENDENCY_LIST_BUT_IN_REQUIRED_FIELDS_RETURNS_OK,
     BLOCK_DNE_IN_ASSEMBLED_DEPENDENCY_LIST_BUT_IN_REQUIRED_FIELDS_RESPONSE,
+    FLOW_WITHOUT_SCREENER_BLOCK_RETURNS_008,
+    FLOW_WITH_SCREENER_BLOCK_RETURNS_OK,
 )
 
 
@@ -214,4 +216,30 @@ class SpectrumFlowValidateTest(TestCase):
         self.assertDictEqual(
             spectrum_event_flow.input_payloads,
             BLOCK_DNE_IN_ASSEMBLED_DEPENDENCY_LIST_BUT_IN_REQUIRED_FIELDS_RESPONSE,
+        )
+
+    def test_screener_flow_incomplete_returns_error(self):
+        spectrum_event_flow = SpectrumFlow(
+            FLOW_WITHOUT_SCREENER_BLOCK_RETURNS_008["nodeList"],
+            FLOW_WITHOUT_SCREENER_BLOCK_RETURNS_008["edgeList"],
+        )
+
+        self.assertDictEqual(
+            spectrum_event_flow.valid,
+            {
+                "isValid": False,
+                "code": "VALIDATE-008",
+                "description": "The screener being run is not complete",
+            },
+        )
+
+    def test_screener_flow_compelte_returns_ok(self):
+        spectrum_event_flow = SpectrumFlow(
+            FLOW_WITH_SCREENER_BLOCK_RETURNS_OK["nodeList"],
+            FLOW_WITH_SCREENER_BLOCK_RETURNS_OK["edgeList"],
+        )
+
+        self.assertDictEqual(
+            spectrum_event_flow.valid,
+            {"isValid": True, "code": "VALIDATE-OK", "description": ""},
         )

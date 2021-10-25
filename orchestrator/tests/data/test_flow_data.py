@@ -859,3 +859,93 @@ BLOCK_DNE_IN_ASSEMBLED_DEPENDENCY_LIST_BUT_IN_REQUIRED_FIELDS_RESPONSE = {
         "blockId": 1,
     },
 }
+
+FLOW_WITHOUT_SCREENER_BLOCK_RETURNS_008 = {
+    "nodeList": {
+        "1": {
+            "blockType": "BULK_DATA_BLOCK",
+            "blockId": 1,
+            "equity_name": {"value": "AAPL", "options": []},
+            "data_type": {
+                "value": "intraday",
+                "options": ["intraday", "daily_adjusted"],
+            },
+            "interval": {"value": "1min", "options": ["1min"]},
+            "outputsize": {"value": "compact", "options": ["compact", "full"]},
+            "start_date": {"value": "2021-06-21 19:58:00"},
+            "end_date": {"value": "2021-06-21 19:58:00"},
+        },
+    },
+    "edgeList": [],
+}
+
+FLOW_WITH_SCREENER_BLOCK_RETURNS_OK = {
+    "nodeList": {
+        "1": {
+            "blockType": "BULK_DATA_BLOCK",
+            "blockId": 1,
+            "equity_name": {"value": "AAPL", "options": []},
+            "data_type": {
+                "value": "intraday",
+                "options": ["intraday", "daily_adjusted"],
+            },
+            "interval": {"value": "1min", "options": ["1min"]},
+            "outputsize": {"value": "compact", "options": ["compact", "full"]},
+            "start_date": {"value": "2021-06-21 19:58:00"},
+            "end_date": {"value": "2021-06-21 19:58:00"},
+        },
+        "2": {
+            "blockType": "COMPUTATIONAL_BLOCK",
+            "blockId": 1,
+            "indicator_name": {"value": "MA", "options": []},
+            "lookback_period": {"value": "2"},
+            "lookback_unit": {"value": "DATA_POINT"},
+        },
+        "3": {
+            "blockType": "COMPUTATIONAL_BLOCK",
+            "blockId": 1,
+            "indicator_name": {"value": "MA"},
+            "lookback_period": {"value": "1"},
+            "lookback_unit": {"value": "DATA_POINT"},
+        },
+        "4": {
+            "blockType": "SIGNAL_BLOCK",
+            "blockId": 1,
+            "event_action": {"value": "BUY"},
+        },
+    },
+    "edgeList": [
+        {
+            "source": "1",
+            "sourceHandle": "output_id888",
+            "target": "2",
+            "targetHandle": "input_id891",
+            "type": "edge",
+            "id": "reactflow__edge-1output_id888-2input_id891",
+        },
+        {
+            "source": "1",
+            "sourceHandle": "output_id1136",
+            "target": "3",
+            "targetHandle": "input_id1143",
+            "type": "edge",
+            "id": "reactflow__edge-1output_id1136-3input_id1143",
+        },
+        {
+            "source": "2",
+            "sourceHandle": "output_id1356",
+            "target": "4",
+            "targetHandle": "input_id1363",
+            "type": "edge",
+            "id": "reactflow__edge-2output_id1356-4input_id1363",
+        },
+        {
+            "source": "3",
+            "sourceHandle": "output_id1576",
+            "target": "4",
+            "targetHandle": "input_id1579",
+            "type": "edge",
+            "id": "reactflow__edge-3output_id1576-4input_id1579",
+        },
+    ],
+}
