@@ -367,6 +367,21 @@ class SpectrumFlow:
                             "description": f"The block with parameters block type {block_type} and block ID {block_id} could not be found in the database",
                         }
 
+        # A check for screeners to ensure that the strategy is full
+        if self.strategy_type == "SCREENER":
+            signal_block = False
+            for _, value in self.vertices.items():
+                if value["blockType"] == "SIGNAL_BLOCK":
+                    signal_block = True
+                    break
+
+            if not signal_block:
+                return {
+                    "isValid": False,
+                    "code": "VALIDATE-008",
+                    "description": "The screener being run is not complete",
+                }
+
         return {"isValid": True, "code": "VALIDATE-OK", "description": ""}
 
     def run(self):
