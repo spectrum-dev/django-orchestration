@@ -1,13 +1,13 @@
 from celery import current_app
 from celery.result import allow_join_result
 
-from orchestrator.models import BlockRegistry
 from orchestrator.exceptions import (
     MultipleBacktestBlocksException,
     ScreenerBulkDataBlockDneException,
 )
-from orchestrator.services.results.main import main
+from orchestrator.models import BlockRegistry
 from orchestrator.services.flow.graph import DependencyGraph
+from orchestrator.services.results.main import main
 
 
 class SpectrumFlow:

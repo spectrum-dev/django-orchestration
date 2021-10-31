@@ -1,14 +1,9 @@
 import json
-import responses
 
+import responses
 from django.test import TestCase
 
 from authentication.factories import set_up_authentication
-from orchestrator.tests.data.test_data_validation import (
-    SINGLE_FULL_FLOW_INVALID,
-    SINGLE_FULL_FLOW_VALID,
-    FULL_FLOW_WITH_TWO_BACKTEST_BLOCKS,
-)
 
 
 class MetadataViewTest(TestCase):

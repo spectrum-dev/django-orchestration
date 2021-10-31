@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from strategy.models import UserStrategy, Strategy, StrategySharing
+from strategy.models import Strategy, StrategySharing, UserStrategy
 
 # Register your models here.
 

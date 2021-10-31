@@ -1,10 +1,8 @@
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-
-
-from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-from rest_auth.registration.views import SocialLoginView, SocialLoginSerializer
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from rest_auth.registration.views import SocialLoginSerializer, SocialLoginView
 
 
 @method_decorator(csrf_exempt, name="dispatch")

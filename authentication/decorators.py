@@ -1,8 +1,8 @@
 from allauth.socialaccount.models import SocialToken
-
+from rest_framework.authentication import BasicAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import BasePermission
-from rest_framework.authentication import BasicAuthentication
+
 
 # Authentication Classes
 class SpectrumAuthentication(BasicAuthentication):

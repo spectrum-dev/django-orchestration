@@ -1,18 +1,15 @@
 import json
-import requests
 from os import environ
 
-from django.shortcuts import render
-from django.http import JsonResponse
+import requests
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.http import JsonResponse
 from rest_framework.views import APIView
 
 from authentication.decorators import SpectrumAuthentication, SpectrumIsAuthenticated
-
 from orchestrator.models import BlockRegistry
-from orchestrator.services.overlays.main import main
 from orchestrator.services.flow.spectrum_flow import SpectrumFlow
+from orchestrator.services.overlays.main import main
 
 
 class MetadataView(APIView):
@@ -67,7 +64,7 @@ class ProxyBlockActionView(APIView):
                 )
 
             return JsonResponse(response.json())
-        except Exception as e:
+        except Exception:
             return JsonResponse({"error": "Unhandled error"})
 
 

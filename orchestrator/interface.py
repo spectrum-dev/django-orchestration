@@ -1,5 +1,5 @@
-from orchestrator.models import BlockRegistry
 from orchestrator.exceptions import BlockDoesNotExist
+from orchestrator.models import BlockRegistry
 from orchestrator.services.flow.spectrum_flow import SpectrumFlow
 
 

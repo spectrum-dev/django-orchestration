@@ -1,15 +1,14 @@
 import json
 import uuid
-import datetime
-
 from unittest.mock import patch
+
 from django.test import TestCase
 
 from authentication.factories import UserFactory, set_up_authentication
 from strategy.factories import (
-    UserStrategyFactory,
     StrategyFactory,
     StrategySharingFactory,
+    UserStrategyFactory,
 )
 
 TEST_UUIDS_COUNT = 0

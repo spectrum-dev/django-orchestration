@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from orchestrator.services.flow.graph import Graph, DependencyGraph
+from orchestrator.services.flow.graph import DependencyGraph, Graph
 from orchestrator.tests.data.test_data_validation import SINGLE_FULL_FLOW_VALID
 
 

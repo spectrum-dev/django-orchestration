@@ -1,8 +1,7 @@
 import factory
 import factory.fuzzy
-
+from allauth.socialaccount.models import SocialAccount, SocialApp, SocialToken
 from django.contrib.auth.models import User
-from allauth.socialaccount.models import SocialToken, SocialAccount, SocialApp
 
 from authentication.models import AccountWhitelist
 
