@@ -16,7 +16,7 @@ jobs:
         include:
           - db: postgres
             db_port: 5432
-    
+
     services:
       postgres:
         image: postgres:12
@@ -30,7 +30,7 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-    
+
     steps:
     - uses: actions/checkout@v2
 
@@ -58,7 +58,15 @@ jobs:
         DJANGO_DEBUG: "1"
       run: |
         python manage.py test
-    
-    - name: Run Lint
+
+    - name: Runs Black Linter
       run: |
         python -m black . -t py38 --check
+
+    - name: Runs Autoflake
+      run: |
+        python -m autoflake --recursive --check .
+
+    - name: Runs isort
+      run: |
+        python -m isort . --profile=black --check-only
