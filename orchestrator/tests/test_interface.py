@@ -1,9 +1,7 @@
 from django.test import TestCase
-from orchestrator.interface import get_input_dependency_graph
 
-from orchestrator.tests.data.test_flow_data import (
-    MOVING_AVERAGE_CROSSOVER_RETURNS_OK,
-)
+from orchestrator.interface import get_input_dependency_graph
+from orchestrator.tests.data.test_flow_data import MOVING_AVERAGE_CROSSOVER_RETURNS_OK
 
 
 class ResultsTest(TestCase):

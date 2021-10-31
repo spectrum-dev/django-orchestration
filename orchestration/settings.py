@@ -10,17 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import logging
-import sentry_sdk
-
 from os import environ, path
-from dotenv import load_dotenv
-
-from corsheaders.defaults import default_headers
-
 from pathlib import Path
 
-from kombu import Queue, Exchange
-
+import sentry_sdk
+from corsheaders.defaults import default_headers
+from dotenv import load_dotenv
+from kombu import Exchange, Queue
 from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

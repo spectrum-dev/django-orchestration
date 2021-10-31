@@ -13,21 +13,18 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path
+from ariadne_django.views import GraphQLView
 from django.conf import settings
 from django.conf.urls import include, url
-from django.views.generic.base import View
+from django.contrib import admin
+from django.urls import path
 from django.views.static import serve
 
-from ariadne_django.views import GraphQLView
-
-from orchestration.graphql_config import schema
-from authentication.graphql import get_user_context
-
-import strategy.views
-import orchestrator.views
 import authentication.views
+import orchestrator.views
+import strategy.views
+from authentication.graphql import get_user_context
+from orchestration.graphql_config import schema
 
 urlpatterns = [
     url(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),

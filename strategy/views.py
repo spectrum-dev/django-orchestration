@@ -1,13 +1,13 @@
-import uuid
 import json
+import uuid
 
-from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db.utils import IntegrityError
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.http import JsonResponse
 from rest_framework.views import APIView
 
 from authentication.decorators import SpectrumAuthentication, SpectrumIsAuthenticated
-from strategy.models import UserStrategy, StrategySharing, Strategy
+from strategy.models import Strategy, StrategySharing, UserStrategy
 
 # Create your views here.
 
@@ -108,7 +108,7 @@ class GetAllStrategiesView(APIView):
                 )
 
             return JsonResponse({"strategies": response})
-        except Exception as e:
+        except Exception:
             return JsonResponse({"error": "Unhandled error"}, status=400)
 
 
@@ -150,7 +150,7 @@ class StrategyView(APIView):
                     {"error": "You are not authorized to view this strategy"},
                     status=401,
                 )
-        except Exception as e:
+        except Exception:
             return JsonResponse(
                 {"error": "There was an unhandled error with the response"}, status=500
             )
@@ -211,11 +211,11 @@ class StrategyCommitView(APIView):
                     {"error": "You are not authorized to view this strategy"},
                     status=401,
                 )
-        except ValidationError as e:
+        except ValidationError:
             return JsonResponse({"validation_error": "There was a validation error"})
-        except ObjectDoesNotExist as e:
+        except ObjectDoesNotExist:
             return JsonResponse({"error": "ID does not exist"})
-        except Exception as e:
+        except Exception:
             return JsonResponse(
                 {"error": "There was an unhandled error with the response"}, status=500
             )

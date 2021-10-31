@@ -1,6 +1,6 @@
-from ariadne import SchemaDirectiveVisitor
-from graphql import default_field_resolver, GraphQLError
 from allauth.socialaccount.models import SocialToken
+from ariadne import SchemaDirectiveVisitor
+from graphql import GraphQLError, default_field_resolver
 
 
 def get_user_context(request):

@@ -1,17 +1,15 @@
 from ariadne import (
-    QueryType,
-    make_executable_schema,
-    load_schema_from_path,
-    snake_case_fallback_resolvers,
     MutationType,
+    QueryType,
+    load_schema_from_path,
+    make_executable_schema,
+    snake_case_fallback_resolvers,
 )
 
-from authentication.graphql import IsAuthenticatedDirective
-
-import authentication.resolvers
-import strategy.resolvers
 import authentication.resolvers
 import orchestrator.resolvers
+import strategy.resolvers
+from authentication.graphql import IsAuthenticatedDirective
 
 type_defs = [
     load_schema_from_path("authentication/schema.graphql"),

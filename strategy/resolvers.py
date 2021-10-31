@@ -1,11 +1,10 @@
 from ariadne import convert_kwargs_to_snake_case
 from celery import current_app
 from celery.result import AsyncResult
-
 from django.contrib.auth.models import User
 
-from strategy.tasks import run_strategy
-from strategy.models import UserStrategy, Strategy, StrategySharing
+from strategy.models import Strategy, StrategySharing, UserStrategy
+
 
 # Queries
 @convert_kwargs_to_snake_case

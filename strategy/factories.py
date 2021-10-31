@@ -1,6 +1,6 @@
 import factory
 
-from strategy.models import UserStrategy, Strategy, StrategySharing
+from strategy.models import Strategy, StrategySharing, UserStrategy
 
 
 class UserStrategyFactory(factory.django.DjangoModelFactory):
