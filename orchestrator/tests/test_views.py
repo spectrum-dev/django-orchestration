@@ -36,7 +36,18 @@ class MetadataViewTest(TestCase):
                         "fieldVariableName": "equity_name",
                     },
                     {
-                        "fieldData": {"base": "/candlestick", "method": "GET"},
+                        "fieldData": {
+                            "data": [
+                                "1min",
+                                "5min",
+                                "15min",
+                                "30min",
+                                "60min",
+                                "1day",
+                                "1week",
+                                "1month",
+                            ]
+                        },
                         "fieldName": "Candlesticks",
                         "fieldType": "dropdown",
                         "fieldVariableName": "candlestick",

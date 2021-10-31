@@ -21,7 +21,18 @@ def seed_blocks_into_registry(apps, schema_editor):
                 "fieldVariableName": "equity_name",
             },
             {
-                "fieldData": {"base": "/candlestick", "method": "GET"},
+                "fieldData": {
+                    "data": [
+                        "1min",
+                        "5min",
+                        "15min",
+                        "30min",
+                        "60min",
+                        "1day",
+                        "1week",
+                        "1month",
+                    ]
+                },
                 "fieldName": "Candlesticks",
                 "fieldType": "dropdown",
                 "fieldVariableName": "candlestick",
@@ -54,7 +65,18 @@ def seed_blocks_into_registry(apps, schema_editor):
                 "fieldVariableName": "crypto_name",
             },
             {
-                "fieldData": {"base": "/candlestick", "method": "GET"},
+                "fieldData": {
+                    "data": [
+                        "1min",
+                        "5min",
+                        "15min",
+                        "30min",
+                        "60min",
+                        "1day",
+                        "1week",
+                        "1month",
+                    ]
+                },
                 "fieldName": "Candlesticks",
                 "fieldType": "dropdown",
                 "fieldVariableName": "candlestick",
@@ -78,13 +100,18 @@ def seed_blocks_into_registry(apps, schema_editor):
         block_name="Screener Data",
         inputs=[
             {
-                "fieldData": {"base": "/exchange", "method": "GET"},
+                "fieldData": {
+                    "data": [
+                        "US",
+                        "KLSE",
+                    ]
+                },
                 "fieldName": "Exchanges",
                 "fieldType": "dropdown",
                 "fieldVariableName": "exchange_name",
             },
             {
-                "fieldData": {"base": "/candlestick", "method": "GET"},
+                "fieldData": {"data": ["1day"]},
                 "fieldName": "Candlesticks",
                 "fieldType": "dropdown",
                 "fieldVariableName": "candlestick",
@@ -146,7 +173,15 @@ def seed_blocks_into_registry(apps, schema_editor):
                 "fieldDefaultValue": "close",
             },
             {
-                "fieldData": {"base": "/operationType", "method": "GET"},
+                "fieldData": {
+                    "data": [
+                        "+",
+                        "-",
+                        "*",
+                        "/",
+                        "^",
+                    ]
+                },
                 "fieldName": "Operation Type",
                 "fieldType": "dropdown",
                 "fieldVariableName": "operation_type",
@@ -187,7 +222,7 @@ def seed_blocks_into_registry(apps, schema_editor):
         block_name="Intersect",
         inputs=[
             {
-                "fieldData": {"base": "/eventAction", "method": "GET"},
+                "fieldData": {"data": ["BUY", "SELL"]},
                 "fieldName": "Event Action",
                 "fieldType": "dropdown",
                 "fieldVariableName": "event_action",
@@ -218,13 +253,13 @@ def seed_blocks_into_registry(apps, schema_editor):
                 "fieldDefaultValue": "close",
             },
             {
-                "fieldData": {"base": "/saddleType", "method": "GET"},
+                "fieldData": {"data": ["DOWNWARD", "UPWARD"]},
                 "fieldName": "Saddle Type",
                 "fieldType": "dropdown",
                 "fieldVariableName": "saddle_type",
             },
             {
-                "fieldData": {"base": "/eventAction", "method": "GET"},
+                "fieldData": {"data": ["BUY", "SELL"]},
                 "fieldName": "Event Action",
                 "fieldType": "dropdown",
                 "fieldVariableName": "event_action",
@@ -298,7 +333,7 @@ def seed_blocks_into_registry(apps, schema_editor):
                 "fieldDefaultValue": "close",
             },
             {
-                "fieldData": {"base": "/crossoverType", "method": "GET"},
+                "fieldData": {"data": ["ABOVE", "BELOW"]},
                 "fieldName": "Event Type",
                 "fieldType": "dropdown",
                 "fieldVariableName": "event_type",
@@ -309,7 +344,7 @@ def seed_blocks_into_registry(apps, schema_editor):
                 "fieldType": "input",
             },
             {
-                "fieldData": {"base": "/eventAction", "method": "GET"},
+                "fieldData": {"data": ["BUY", "SELL"]},
                 "fieldName": "Event Action",
                 "fieldType": "dropdown",
                 "fieldVariableName": "event_action",
@@ -357,13 +392,22 @@ def seed_blocks_into_registry(apps, schema_editor):
         block_name="Candle Close",
         inputs=[
             {
-                "fieldData": {"base": "/candleCloseType", "method": "GET"},
+                "fieldData": {
+                    "data": [
+                        "CLOSE_ABOVE_OPEN",
+                        "CLOSE_BELOW_OPEN",
+                        "CLOSE_EQ_HIGH",
+                        "CLOSE_BELOW_HIGH",
+                        "CLOSE_ABOVE_LOW",
+                        "CLOSE_EQ_LOW",
+                    ]
+                },
                 "fieldName": "Candle Close Type",
                 "fieldType": "dropdown",
                 "fieldVariableName": "event_type",
             },
             {
-                "fieldData": {"base": "/eventAction", "method": "GET"},
+                "fieldData": {"data": ["BUY", "SELL"]},
                 "fieldName": "Event Action",
                 "fieldType": "dropdown",
                 "fieldVariableName": "event_action",
@@ -397,7 +441,14 @@ def seed_blocks_into_registry(apps, schema_editor):
                 "fieldDefaultValue": "close",
             },
             {
-                "fieldData": {"base": "/comparisonType", "method": "GET"},
+                "fieldData": {
+                    "data": [
+                        "<",
+                        "<=",
+                        ">",
+                        ">=",
+                    ]
+                },
                 "fieldName": "Comparison Type",
                 "fieldType": "dropdown",
                 "fieldVariableName": "comparison_type",
@@ -409,7 +460,7 @@ def seed_blocks_into_registry(apps, schema_editor):
                 "fieldDefaultValue": "close",
             },
             {
-                "fieldData": {"base": "/eventAction", "method": "GET"},
+                "fieldData": {"data": ["BUY", "SELL"]},
                 "fieldName": "Event Action",
                 "fieldType": "dropdown",
                 "fieldVariableName": "event_action",
