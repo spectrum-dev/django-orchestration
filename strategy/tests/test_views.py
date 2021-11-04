@@ -221,53 +221,6 @@ class DeleteStrategyViewTest(TestCase):
         self.assertDictEqual(response.json(), {"error": "Strategy ID does not exist"})
 
 
-class GetAllStrategiesViewTest(TestCase):
-    @patch("uuid.uuid4", mock_uuid)
-    @patch("django.utils.timezone.now", mock_now)
-    def test_ok(self):
-        auth = set_up_authentication()
-
-        UserStrategyFactory(
-            user=auth["user"], strategy=uuid.uuid4(), strategy_name="Strategy 1"
-        )
-        UserStrategyFactory(
-            user=auth["user"], strategy=uuid.uuid4(), strategy_name="Strategy 2"
-        )
-
-        response = self.client.get(
-            f"/strategy/getStrategies",
-            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
-        )
-
-        self.assertDictEqual(
-            response.json(),
-            {
-                "strategies": [
-                    {
-                        "strategy_id": "00000000-0000-0000-0000-000000000002",
-                        "strategy_name": "Strategy 1",
-                        "created_at": "2012-11-01T08:16:13Z",
-                    },
-                    {
-                        "strategy_id": "00000000-0000-0000-0000-000000000003",
-                        "strategy_name": "Strategy 2",
-                        "created_at": "2012-11-01T08:16:13Z",
-                    },
-                ]
-            },
-        )
-
-    def test_no_strategies(self):
-        auth = set_up_authentication()
-
-        response = self.client.get(
-            f"/strategy/getStrategies",
-            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
-        )
-
-        self.assertDictEqual(response.json(), {"strategies": []})
-
-
 class StrategyViewTest(TestCase):
     @patch("uuid.uuid4", fixed_mock_uuid)
     def test_ok(self):
