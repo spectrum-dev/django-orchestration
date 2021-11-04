@@ -88,30 +88,6 @@ class DeleteStrategyView(APIView):
             return JsonResponse({"error": "Unhandled Error"}, status=400)
 
 
-class GetAllStrategiesView(APIView):
-    authentication_classes = [SpectrumAuthentication]
-    permission_classes = [SpectrumIsAuthenticated]
-
-    def get(self, request):
-        try:
-            user = request.user
-            user_strategies = UserStrategy.objects.filter(user=user)
-
-            response = []
-            for user_strategy in user_strategies:
-                response.append(
-                    {
-                        "strategy_id": user_strategy.strategy,
-                        "strategy_name": user_strategy.strategy_name,
-                        "created_at": user_strategy.created_at,
-                    }
-                )
-
-            return JsonResponse({"strategies": response})
-        except Exception:
-            return JsonResponse({"error": "Unhandled error"}, status=400)
-
-
 class StrategyView(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]

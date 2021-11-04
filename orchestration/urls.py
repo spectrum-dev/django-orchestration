@@ -40,11 +40,6 @@ urlpatterns = [
         name="google_login",
     ),
     url(r"^authentication/", include("allauth.urls"), name="socialaccount_signup"),
-    # path(
-    #     "authentication/validate",
-    #     authentication.views.ValidateAccountWhitelistView.as_view(),
-    # ),
-    # path("orchestration/metadata", orchestrator.views.AllMetadataView.as_view()),
     path("orchestration/validate", orchestrator.views.ValidateFlow.as_view()),
     path(
         "orchestration/<block_type>/<block_id>/metadata",
@@ -61,7 +56,6 @@ urlpatterns = [
         "strategy/deleteStrategy/<strategy_id>",
         strategy.views.DeleteStrategyView.as_view(),
     ),
-    path("strategy/getStrategies", strategy.views.GetAllStrategiesView.as_view()),
     path("strategy/<strategy_id>", strategy.views.StrategyView.as_view()),
     path("strategy/<strategy_id>/detail", strategy.views.StrategyDetailView.as_view()),
     path("strategy/<strategy_id>/commitId", strategy.views.CommitIdView.as_view()),
