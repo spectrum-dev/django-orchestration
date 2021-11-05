@@ -11,6 +11,21 @@ from strategy.models import Strategy, StrategySharing, UserStrategy
 
 # Queries
 @convert_kwargs_to_snake_case
+def get_user_strategy(*_, strategy_id):
+    try:
+        strategy = UserStrategy.objects.get(strategy=strategy_id)
+
+        return {
+            "strategy_id": strategy_id,
+            "strategy_name": strategy.strategy_name,
+            "created_at": strategy.created_at,
+            "updated_at": strategy.updated_at,
+        }
+    except UserStrategy.DoesNotExist:
+        raise Exception("This strategy ID does not exist")
+
+
+@convert_kwargs_to_snake_case
 def list_user_strategies(_, info):
     return [
         {

@@ -55,7 +55,6 @@ urlpatterns = [
         strategy.views.DeleteStrategyView.as_view(),
     ),
     path("strategy/<strategy_id>", strategy.views.StrategyView.as_view()),
-    path("strategy/<strategy_id>/detail", strategy.views.StrategyDetailView.as_view()),
     path("strategy/<strategy_id>/commitId", strategy.views.CommitIdView.as_view()),
     path(
         "strategy/<strategy_id>/<commit_id>",
