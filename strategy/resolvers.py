@@ -103,6 +103,19 @@ def create_user_strategy(_, info, strategy_name):
         raise Exception("There was an unhandled error creating the user strategy")
 
 
+@convert_kwargs_to_snake_case
+def delete_strategy(_, info, strategy_id):
+    try:
+        UserStrategy.objects.get(
+            user=info.context["user"], strategy=strategy_id
+        ).delete()
+        return True
+    except UserStrategy.DoesNotExist:
+        raise Exception("Strategy does not exist")
+    except Exception:
+        raise Exception("An unhandled error occurred when deleting this strategy")
+
+
 def dispatch_run_strategy(*_, nodeList, edgeList, strategyType):
     if strategyType == "SCREENER":
         task = current_app.send_task(
