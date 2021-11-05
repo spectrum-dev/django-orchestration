@@ -1,7 +1,10 @@
+import uuid
+
 from ariadne import convert_kwargs_to_snake_case
 from celery import current_app
 from celery.result import AsyncResult
 from django.contrib.auth.models import User
+from django.db.utils import IntegrityError
 
 from strategy.models import Strategy, StrategySharing, UserStrategy
 
@@ -64,6 +67,27 @@ def get_task_result(*_, taskId):
 
 
 # Mutations
+@convert_kwargs_to_snake_case
+def create_user_strategy(_, info, strategy_name):
+    try:
+        strategy_id = uuid.uuid4()
+
+        user_strategy = UserStrategy.objects.create(
+            strategy=strategy_id, user=info.context["user"], strategy_name=strategy_name
+        )
+
+        return {
+            "strategy_id": strategy_id,
+            "strategy_name": user_strategy.strategy_name,
+            "created_at": user_strategy.created_at,
+            "updated_at": user_strategy.updated_at,
+        }
+    except IntegrityError:
+        raise Exception("The strategy ID - user pair already exists")
+    except Exception:
+        raise Exception("There was an unhandled error creating the user strategy")
+
+
 def dispatch_run_strategy(*_, nodeList, edgeList, strategyType):
     if strategyType == "SCREENER":
         task = current_app.send_task(

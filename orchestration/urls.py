@@ -50,8 +50,6 @@ urlpatterns = [
         orchestrator.views.ProxyBlockActionView.as_view(),
     ),
     path("orchestration/overlay", orchestrator.views.RunOverlay.as_view()),
-    path("strategy/strategyId", strategy.views.StrategyIdView.as_view()),
-    path("strategy/createStrategy", strategy.views.CreateStrategyView.as_view()),
     path(
         "strategy/deleteStrategy/<strategy_id>",
         strategy.views.DeleteStrategyView.as_view(),
