@@ -35,8 +35,8 @@ class DeleteStrategyViewTest(GraphQLTestCase):
         self.assertResponseNoErrors(response)
         self.assertDictEqual(content["data"], {"deleteStrategy": True})
 
-        assert len(UserStrategy.objects.all()) == 0
-        assert len(Strategy.objects.all()) == 0
+        self.assertEqual(len(UserStrategy.objects.all()), 0)
+        self.assertEqual(len(Strategy.objects.all()), 0)
 
     @patch("uuid.uuid4", fixed_mock_uuid)
     def test_strategy_delete_with_single_commit(self):
@@ -62,8 +62,8 @@ class DeleteStrategyViewTest(GraphQLTestCase):
         self.assertResponseNoErrors(response)
         self.assertDictEqual(content["data"], {"deleteStrategy": True})
 
-        assert len(UserStrategy.objects.all()) == 0
-        assert len(Strategy.objects.all()) == 0
+        self.assertEqual(len(UserStrategy.objects.all()), 0)
+        self.assertEqual(len(Strategy.objects.all()), 0)
 
     def test_strategy_delete_with_multiple_commits(self):
         strategy_id = str(uuid.uuid4())
@@ -98,8 +98,8 @@ class DeleteStrategyViewTest(GraphQLTestCase):
         self.assertResponseNoErrors(response)
         self.assertDictEqual(content["data"], {"deleteStrategy": True})
 
-        assert len(UserStrategy.objects.all()) == 0
-        assert len(Strategy.objects.all()) == 0
+        self.assertEqual(len(UserStrategy.objects.all()), 0)
+        self.assertEqual(len(Strategy.objects.all()), 0)
 
     def test_strategy_id_dne(self):
         strategy_id = str(uuid.uuid4())
