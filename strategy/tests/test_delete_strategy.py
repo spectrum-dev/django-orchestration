@@ -4,6 +4,7 @@ from unittest.mock import patch
 from authentication.factories import set_up_authentication
 from orchestration.test_utils import GraphQLTestCase
 from strategy.factories import StrategyFactory, UserStrategyFactory
+from strategy.models import Strategy, UserStrategy
 
 
 def fixed_mock_uuid():
@@ -34,8 +35,11 @@ class DeleteStrategyViewTest(GraphQLTestCase):
         self.assertResponseNoErrors(response)
         self.assertDictEqual(content["data"], {"deleteStrategy": True})
 
+        self.assertEqual(len(UserStrategy.objects.all()), 0)
+        self.assertEqual(len(Strategy.objects.all()), 0)
+
     @patch("uuid.uuid4", fixed_mock_uuid)
-    def test_strategy_delete_with_commits(self):
+    def test_strategy_delete_with_single_commit(self):
         strategy_id = str(uuid.uuid4())
         user_strategy = UserStrategyFactory(
             user=self.auth["user"], strategy=strategy_id
@@ -57,6 +61,45 @@ class DeleteStrategyViewTest(GraphQLTestCase):
 
         self.assertResponseNoErrors(response)
         self.assertDictEqual(content["data"], {"deleteStrategy": True})
+
+        self.assertEqual(len(UserStrategy.objects.all()), 0)
+        self.assertEqual(len(Strategy.objects.all()), 0)
+
+    def test_strategy_delete_with_multiple_commits(self):
+        strategy_id = str(uuid.uuid4())
+        commit_id_one = "fbdd81fe-7c99-4921-9148-e11466430823"
+        commit_id_two = "5385886d-b11a-4d2a-9178-ed31259d1ede"
+        user_strategy = UserStrategyFactory(
+            user=self.auth["user"], strategy=strategy_id
+        )
+
+        StrategyFactory(
+            strategy=user_strategy,
+            commit=commit_id_one,
+            flow_metadata={},
+            input={},
+            output={},
+        )
+
+        StrategyFactory(
+            strategy=user_strategy,
+            commit=commit_id_two,
+            flow_metadata={},
+            input={},
+            output={},
+        )
+
+        response, content = self.query(
+            self.MUTATION,
+            headers={"HTTP_AUTHORIZATION": f"Bearer {self.auth['token']}"},
+            variables={"strategyId": strategy_id},
+        )
+
+        self.assertResponseNoErrors(response)
+        self.assertDictEqual(content["data"], {"deleteStrategy": True})
+
+        self.assertEqual(len(UserStrategy.objects.all()), 0)
+        self.assertEqual(len(Strategy.objects.all()), 0)
 
     def test_strategy_id_dne(self):
         strategy_id = str(uuid.uuid4())
