@@ -1,8 +1,4 @@
-import json
-import uuid
-
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.db.utils import IntegrityError
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
@@ -12,6 +8,7 @@ from strategy.models import Strategy, StrategySharing, UserStrategy
 # Create your views here.
 
 
+# Gets the strategy if no commit ID is provided by the latest saved version of the strategy
 class StrategyView(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]
@@ -56,32 +53,6 @@ class StrategyView(APIView):
             )
 
 
-class CommitIdView(APIView):
-    authentication_classes = [SpectrumAuthentication]
-    permission_classes = [SpectrumIsAuthenticated]
-
-    def get(self, request, strategy_id):
-        user = request.user
-
-        user_strategy = UserStrategy.objects.filter(strategy=strategy_id, user=user)
-        sharing_strategy = StrategySharing.objects.filter(
-            strategy__strategy=strategy_id, user=user
-        )
-
-        if not user_strategy.exists() and not sharing_strategy.exists():
-            return JsonResponse({"error": "Strategy does not exist"}, status=404)
-
-        commit_id = uuid.uuid4()
-        strategy_commit_pair_exist = Strategy.objects.filter(
-            strategy__strategy=strategy_id, commit=commit_id
-        ).exists()
-
-        if not strategy_commit_pair_exist:
-            return JsonResponse({"strategyId": strategy_id, "commitId": commit_id})
-        else:
-            return JsonResponse({"error": "Commit ID already exists"}, status=400)
-
-
 class StrategyCommitView(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]
@@ -119,48 +90,3 @@ class StrategyCommitView(APIView):
             return JsonResponse(
                 {"error": "There was an unhandled error with the response"}, status=500
             )
-
-    def post(self, request, strategy_id, commit_id):
-        try:
-            user = request.user
-            request_body = json.loads(request.body)
-
-            user_strategy = UserStrategy.objects.filter(strategy=strategy_id, user=user)
-            strategy_sharing = StrategySharing.objects.filter(
-                strategy__strategy=strategy_id, user=user
-            )
-
-            if not user_strategy.exists() and not strategy_sharing.exists():
-                return JsonResponse(
-                    {"error": "This strategy does not exist"}, status=401
-                )
-
-            strategy = None
-            if user_strategy.exists():
-                strategy = user_strategy.first()
-
-            if strategy_sharing.exists():
-                if strategy_sharing.first().permissions == 1:
-                    return JsonResponse(
-                        {"error": "You only have read permissions on this strategy"}
-                    )
-
-                strategy = strategy_sharing.first().strategy
-
-            Strategy.objects.update_or_create(
-                strategy=strategy,
-                commit=commit_id,
-                flow_metadata=request_body["metadata"],
-                input=request_body["inputs"],
-                output=request_body["outputs"],
-            )
-
-            return JsonResponse({"message": "Successfully saved strategy "})
-        except IntegrityError:
-            return JsonResponse({"error": "The strategy-commit pair already exist"})
-        except ValidationError:
-            return JsonResponse({"error": "There was a validation error"})
-        except Exception as e:
-            print(type(e))
-            print(e)
-            return JsonResponse({"error": "There was an error saving the strategy"})

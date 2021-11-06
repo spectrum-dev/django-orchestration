@@ -4,6 +4,7 @@ from ariadne import convert_kwargs_to_snake_case
 from celery import current_app
 from celery.result import AsyncResult
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 
 from strategy.models import Strategy, StrategySharing, UserStrategy
@@ -101,6 +102,50 @@ def create_user_strategy(_, info, strategy_name):
         raise Exception("The strategy ID - user pair already exists")
     except Exception:
         raise Exception("There was an unhandled error creating the user strategy")
+
+
+def create_strategy(_, info, strategyId, commitId, metadata, inputs, outputs):
+    try:
+        user_strategy = UserStrategy.objects.filter(
+            strategy=strategyId, user=info.context["user"]
+        )
+        strategy_sharing = StrategySharing.objects.filter(
+            strategy__strategy=strategyId, user=info.context["user"]
+        )
+
+        if not user_strategy.exists() and not strategy_sharing.exists():
+            raise Exception("This strategy does not exist")
+
+        strategy = None
+        if user_strategy.exists():
+            strategy = user_strategy.first()
+
+        if strategy_sharing.exists():
+            if strategy_sharing.first().permissions == 1:
+                raise Exception("You only have read permissions on this strategy")
+
+            strategy = strategy_sharing.first().strategy
+
+        # If commitId is None, then generates a new one. Otherwise uses the one passed in
+        commit_id = commitId
+        if not commitId:
+            commit_id = uuid.uuid4()
+
+        Strategy.objects.update_or_create(
+            strategy=strategy,
+            commit=commit_id,
+            flow_metadata=metadata,
+            input=inputs,
+            output=outputs,
+        )
+
+        return True
+    except IntegrityError:
+        raise Exception("The strategy-commit pair already exist")
+    except ValidationError:
+        raise Exception("There was a validation error")
+    except Exception:
+        raise Exception("There was an error saving the strategy")
 
 
 @convert_kwargs_to_snake_case
