@@ -12,20 +12,6 @@ from strategy.models import Strategy, StrategySharing, UserStrategy
 # Create your views here.
 
 
-class StrategyIdView(APIView):
-    authentication_classes = [SpectrumAuthentication]
-    permission_classes = [SpectrumIsAuthenticated]
-
-    def get(self, request):
-        strategy_id = uuid.uuid4()
-
-        strategy_exists = UserStrategy.objects.filter(strategy=strategy_id).exists()
-        if not strategy_exists:
-            return JsonResponse({"strategy_id": strategy_id})
-        else:
-            return JsonResponse({"error": "Strategy does not exist"}, status=404)
-
-
 class StrategyDetailView(APIView):
     authentication_classes = [SpectrumAuthentication]
     permission_classes = [SpectrumIsAuthenticated]
@@ -38,38 +24,6 @@ class StrategyDetailView(APIView):
             )
         except ObjectDoesNotExist:
             return JsonResponse({"error": "Strategy does not exist"}, status=404)
-
-
-class CreateStrategyView(APIView):
-    authentication_classes = [SpectrumAuthentication]
-    permission_classes = [SpectrumIsAuthenticated]
-
-    def post(self, request):
-        try:
-            user = request.user
-            strategy_id = uuid.uuid4()
-
-            request_body = json.loads(request.body)
-
-            UserStrategy.objects.create(
-                strategy=strategy_id,
-                user=user,
-                strategy_name=request_body["strategy_name"],
-            )
-
-            return JsonResponse(
-                {
-                    "strategy_id": strategy_id,
-                    "strategy_name": request_body["strategy_name"],
-                }
-            )
-        except IntegrityError:
-            return JsonResponse({"error": "The strategy id already exists"}, status=400)
-        except Exception:
-            return JsonResponse(
-                {"error": "There was an unhandled error creating the user strategy"},
-                status=400,
-            )
 
 
 class DeleteStrategyView(APIView):

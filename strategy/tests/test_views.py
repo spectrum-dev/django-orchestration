@@ -28,47 +28,6 @@ def mock_now():
     return "2012-11-01T04:16:13-04:00"
 
 
-class StrategyIdViewTest(TestCase):
-    @patch("uuid.uuid4", mock_uuid)
-    def test_ok(self):
-        auth = set_up_authentication()
-        response = self.client.get(
-            "/strategy/strategyId", **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"}
-        )
-
-        self.assertEqual(response.status_code, 200)
-        # TODO: Testing behaviour here is a little flaky
-        self.assertDictEqual(
-            response.json(), {"strategy_id": "00000000-0000-0000-0000-000000000002"}
-        )
-
-    @patch("uuid.uuid4", fixed_mock_uuid)
-    def test_strategy_id_already_exists(self):
-        auth = set_up_authentication()
-        UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4())
-
-        response = self.client.get(
-            "/strategy/strategyId", **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"}
-        )
-
-        self.assertEqual(response.status_code, 404)
-        self.assertDictEqual(response.json(), {"error": "Strategy does not exist"})
-
-    @patch("uuid.uuid4", fixed_mock_uuid)
-    def test_strategy_id_not_associated_with_user(self):
-        auth = set_up_authentication()
-
-        user = UserFactory()
-        UserStrategyFactory(user=user, strategy=uuid.uuid4())
-
-        response = self.client.get(
-            "/strategy/strategyId", **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"}
-        )
-
-        self.assertEqual(response.status_code, 404)
-        self.assertDictEqual(response.json(), {"error": "Strategy does not exist"})
-
-
 class StrategyDetailViewTest(TestCase):
     @patch("uuid.uuid4", fixed_mock_uuid)
     def test_ok(self):
@@ -107,46 +66,6 @@ class StrategyDetailViewTest(TestCase):
         assert response.status_code == 404
 
         self.assertDictEqual(response.json(), {"error": "Strategy does not exist"})
-
-
-class CreateStrategyViewTest(TestCase):
-    @patch("uuid.uuid4", fixed_mock_uuid)
-    def test_ok(self):
-        auth = set_up_authentication()
-        payload = {"strategy_name": "Test Strategy"}
-        response = self.client.post(
-            f"/strategy/createStrategy",
-            json.dumps(payload),
-            content_type="application/json",
-            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
-        )
-
-        self.assertDictEqual(
-            response.json(),
-            {
-                "strategy_id": "00000000-0000-0000-0000-000000000000",
-                "strategy_name": "Test Strategy",
-            },
-        )
-
-    @patch("uuid.uuid4", fixed_mock_uuid)
-    def test_strategy_user_pair_exists(self):
-        auth = set_up_authentication()
-        payload = {"strategy_name": "Test Strategy"}
-
-        UserStrategyFactory(user=auth["user"], strategy=uuid.uuid4())
-
-        response = self.client.post(
-            f"/strategy/createStrategy",
-            json.dumps(payload),
-            content_type="application/json",
-            **{"HTTP_AUTHORIZATION": f"Bearer {auth['token']}"},
-        )
-
-        self.assertEqual(response.status_code, 400)
-        self.assertDictEqual(
-            response.json(), {"error": "The strategy id already exists"}
-        )
 
 
 class DeleteStrategyViewTest(TestCase):
