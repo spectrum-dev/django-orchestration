@@ -26,6 +26,54 @@ def get_user_strategy(*_, strategy_id):
         raise Exception("This strategy ID does not exist")
 
 
+def get_strategy(_, info, strategyId, commitId=None):
+    user_strategy = UserStrategy.objects.filter(strategy=strategyId)
+    strategy_sharing = StrategySharing.objects.filter(
+        strategy__strategy=strategyId, user=info.context["user"]
+    )
+
+    if user_strategy.exists() or strategy_sharing.exists():
+        if user_strategy.exists():
+            user_strategy = user_strategy[0]
+
+        if strategy_sharing.exists():
+            strategy_sharing = strategy_sharing[0]
+
+        if commitId:
+            strategy = Strategy.objects.get(
+                strategy=user_strategy[0],
+                commit=commitId,
+            )
+
+        else:
+            strategy = (
+                Strategy.objects.filter(
+                    strategy__strategy=strategyId,
+                )
+                .order_by("-updated_at")
+                .first()
+            )
+
+        response = {
+            "strategy": {
+                "strategyId": strategyId,
+                "strategyName": user_strategy.strategy_name,
+                "createdAt": user_strategy.created_at,
+                "updatedAt": user_strategy.updated_at,
+            },
+            "commitId": str(strategy.commit),
+            "flowMetadata": strategy.flow_metadata,
+            "input": strategy.input,
+            "output": strategy.output,
+            "createdAt": strategy.created_at,
+            "updatedAt": strategy.updated_at,
+        }
+        print(response)
+        return response
+    else:
+        raise Exception("You are not authorized to view this strategy")
+
+
 @convert_kwargs_to_snake_case
 def list_user_strategies(_, info):
     return [

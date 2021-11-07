@@ -22,7 +22,6 @@ from django.views.static import serve
 
 import authentication.views
 import orchestrator.views
-import strategy.views
 from authentication.graphql import get_user_context
 from orchestration.graphql_config import schema
 
@@ -50,9 +49,4 @@ urlpatterns = [
         orchestrator.views.ProxyBlockActionView.as_view(),
     ),
     path("orchestration/overlay", orchestrator.views.RunOverlay.as_view()),
-    path("strategy/<strategy_id>", strategy.views.StrategyView.as_view()),
-    path(
-        "strategy/<strategy_id>/<commit_id>",
-        strategy.views.StrategyCommitView.as_view(),
-    ),
 ]

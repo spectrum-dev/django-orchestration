@@ -8,6 +8,7 @@ type Query {
     allMetadata(strategyType: StrategyType!): JSON! @isAuthenticated
     userStrategy(strategyId: ID!): UserStrategy! @isAuthenticated
     userStrategies: [UserStrategy!]! @isAuthenticated
+    strategy(strategyId: ID!, commitId: ID): Strategy! @isAuthenticated
     strategies: [Strategy!]! @isAuthenticated
     taskResult(taskId: ID!): TaskResult! @isAuthenticated
     sharedUsers(strategyId: ID!): [ListSharedUsers!]! @isAuthenticated
