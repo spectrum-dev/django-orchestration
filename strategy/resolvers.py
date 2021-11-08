@@ -106,6 +106,11 @@ def create_user_strategy(_, info, strategy_name):
 
 def create_strategy(_, info, strategyId, metadata, inputs, outputs, commitId=None):
     try:
+        # Checks UUID Validation
+        uuid.UUID(strategyId, version=4)
+        if commitId:
+            uuid.UUID(commitId, version=4)
+
         user_strategy = UserStrategy.objects.filter(
             strategy=strategyId, user=info.context["user"]
         )
@@ -142,6 +147,8 @@ def create_strategy(_, info, strategyId, metadata, inputs, outputs, commitId=Non
         return True
     except IntegrityError:
         raise Exception("The strategy-commit pair already exist")
+    except ValueError:
+        raise Exception("The strategy id or commit id is invalid")
     except ValidationError:
         raise Exception("There was a validation error")
 

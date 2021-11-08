@@ -134,7 +134,7 @@ class CreateStrategyTest(GraphQLTestCase):
             content["errors"],
             [
                 {
-                    "message": "There was a validation error",
+                    "message": "The strategy id or commit id is invalid",
                     "locations": [{"line": 3, "column": 17}],
                     "path": ["strategy"],
                 }
@@ -162,7 +162,7 @@ class CreateStrategyTest(GraphQLTestCase):
             content["errors"],
             [
                 {
-                    "message": "This strategy does not exist",
+                    "message": "The strategy id or commit id is invalid",
                     "locations": [{"line": 3, "column": 17}],
                     "path": ["strategy"],
                 }
