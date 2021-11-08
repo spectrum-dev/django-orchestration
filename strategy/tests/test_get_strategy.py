@@ -213,7 +213,7 @@ class GetStrategyTest(GraphQLTestCase):
 
         response, content = self.query(
             self.QUERY,
-            headers={"HTTP_AUTHORIZATION": f"Bearer {self.auth['token']}"},
+            headers={"HTTP_AUTHORIZATION": f"Bearer {shared_auth['token']}"},
             variables={"strategyId": strategy_id},
         )
 

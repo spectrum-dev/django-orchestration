@@ -36,19 +36,19 @@ def get_strategy(_, info, strategyId, commitId=None):
         )
 
         if user_strategy.exists() or strategy_sharing.exists():
+            chosen_user_strategy = None
             if user_strategy.exists():
-                user_strategy = user_strategy[0]
+                chosen_user_strategy = user_strategy[0]
 
             if strategy_sharing.exists():
-                strategy_sharing = strategy_sharing[0]
+                chosen_user_strategy = strategy_sharing[0].strategy
 
             strategy = None
             if commitId:
                 strategy = Strategy.objects.get(
-                    strategy=user_strategy,
+                    strategy=chosen_user_strategy,
                     commit=commitId,
                 )
-
             else:
                 strategy = (
                     Strategy.objects.filter(
@@ -61,9 +61,9 @@ def get_strategy(_, info, strategyId, commitId=None):
             return {
                 "strategy": {
                     "strategy_id": strategyId,
-                    "strategy_name": user_strategy.strategy_name,
-                    "created_at": user_strategy.created_at,
-                    "updated_at": user_strategy.updated_at,
+                    "strategy_name": chosen_user_strategy.strategy_name,
+                    "created_at": chosen_user_strategy.created_at,
+                    "updated_at": chosen_user_strategy.updated_at,
                 },
                 "commit_id": str(strategy.commit),
                 "flow_metadata": strategy.flow_metadata,
