@@ -206,7 +206,7 @@ class CreateStrategyTest(GraphQLTestCase):
 
         response, content = self.query(
             self.MUTATION,
-            headers={"HTTP_AUTHORIZATION": f"Bearer {self.auth['token']}"},
+            headers={"HTTP_AUTHORIZATION": f"Bearer {shared_auth['token']}"},
             variables={
                 "strategyId": strategy_id,
                 "commitId": commit_id,
