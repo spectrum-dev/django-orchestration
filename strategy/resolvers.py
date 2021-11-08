@@ -104,7 +104,7 @@ def create_user_strategy(_, info, strategy_name):
         raise Exception("There was an unhandled error creating the user strategy")
 
 
-def create_strategy(_, info, strategyId, commitId, metadata, inputs, outputs):
+def create_strategy(_, info, strategyId, metadata, inputs, outputs, commitId=None):
     try:
         user_strategy = UserStrategy.objects.filter(
             strategy=strategyId, user=info.context["user"]
@@ -131,7 +131,7 @@ def create_strategy(_, info, strategyId, commitId, metadata, inputs, outputs):
         if not commitId:
             commit_id = uuid.uuid4()
 
-        Strategy.objects.update_or_create(
+        Strategy.objects.create(
             strategy=strategy,
             commit=commit_id,
             flow_metadata=metadata,
