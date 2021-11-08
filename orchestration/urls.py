@@ -51,7 +51,6 @@ urlpatterns = [
     ),
     path("orchestration/overlay", orchestrator.views.RunOverlay.as_view()),
     path("strategy/<strategy_id>", strategy.views.StrategyView.as_view()),
-    path("strategy/<strategy_id>/commitId", strategy.views.CommitIdView.as_view()),
     path(
         "strategy/<strategy_id>/<commit_id>",
         strategy.views.StrategyCommitView.as_view(),

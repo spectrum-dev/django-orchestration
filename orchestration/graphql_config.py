@@ -38,6 +38,7 @@ query.set_field(
 mutation = MutationType()
 
 mutation.set_field("userStrategy", strategy.resolvers.create_user_strategy)
+mutation.set_field("strategy", strategy.resolvers.create_strategy)
 mutation.set_field("deleteStrategy", strategy.resolvers.delete_strategy)
 mutation.set_field("dispatchRunStrategy", strategy.resolvers.dispatch_run_strategy)
 mutation.set_field("shareStrategy", strategy.resolvers.share_strategy)
