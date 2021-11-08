@@ -144,8 +144,6 @@ def create_strategy(_, info, strategyId, commitId, metadata, inputs, outputs):
         raise Exception("The strategy-commit pair already exist")
     except ValidationError:
         raise Exception("There was a validation error")
-    except Exception:
-        raise Exception("There was an error saving the strategy")
 
 
 @convert_kwargs_to_snake_case

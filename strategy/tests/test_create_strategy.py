@@ -66,7 +66,7 @@ class CreateStrategyTest(GraphQLTestCase):
             content["errors"],
             [
                 {
-                    "message": "There was an error saving the strategy",
+                    "message": "This strategy does not exist",
                     "locations": [{"line": 3, "column": 17}],
                     "path": ["strategy"],
                 }
@@ -162,7 +162,7 @@ class CreateStrategyTest(GraphQLTestCase):
             content["errors"],
             [
                 {
-                    "message": "There was an error saving the strategy",
+                    "message": "This strategy does not exist",
                     "locations": [{"line": 3, "column": 17}],
                     "path": ["strategy"],
                 }
@@ -249,7 +249,7 @@ class CreateStrategyTest(GraphQLTestCase):
             content["errors"],
             [
                 {
-                    "message": "There was an error saving the strategy",
+                    "message": "You only have read permissions on this strategy",
                     "locations": [{"line": 3, "column": 17}],
                     "path": ["strategy"],
                 }
