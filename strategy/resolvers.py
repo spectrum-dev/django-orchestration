@@ -58,6 +58,22 @@ def get_strategy(_, info, strategyId, commitId=None):
                     .first()
                 )
 
+            if not strategy:
+                return {
+                    "strategy": {
+                        "strategy_id": strategyId,
+                        "strategy_name": chosen_user_strategy.strategy_name,
+                        "created_at": chosen_user_strategy.created_at,
+                        "updated_at": chosen_user_strategy.updated_at,
+                    },
+                    "commit_id": str(uuid.uuid4()),
+                    "flow_metadata": [],
+                    "input": {},
+                    "output": {},
+                    "created_at": "2020-01-01",
+                    "updated_at": "2020-01-01",
+                }
+
             return {
                 "strategy": {
                     "strategy_id": strategyId,

@@ -1,3 +1,6 @@
+import uuid
+from unittest.mock import patch
+
 from authentication.factories import set_up_authentication
 from orchestration.test_utils import GraphQLTestCase
 from strategy.factories import (
@@ -5,6 +8,10 @@ from strategy.factories import (
     StrategySharingFactory,
     UserStrategyFactory,
 )
+
+
+def fixed_mock_uuid():
+    return uuid.UUID(int=0)
 
 
 class GetStrategyTest(GraphQLTestCase):
@@ -256,4 +263,33 @@ class GetStrategyTest(GraphQLTestCase):
                     "path": ["strategy"],
                 }
             ],
+        )
+
+    @patch("uuid.uuid4", fixed_mock_uuid)
+    def test_only_user_strategy_exists(self):
+        strategy_id = "5f4a0050-6766-40e1-946c-ddbd5533a3d1"
+
+        UserStrategyFactory(user=self.auth["user"], strategy=strategy_id)
+
+        response, content = self.query(
+            self.QUERY,
+            headers={"HTTP_AUTHORIZATION": f"Bearer {self.auth['token']}"},
+            variables={"strategyId": strategy_id},
+        )
+
+        self.assertResponseNoErrors(response)
+        self.assertEqual(
+            content["data"],
+            {
+                "strategy": {
+                    "strategy": {
+                        "strategyId": "5f4a0050-6766-40e1-946c-ddbd5533a3d1",
+                        "strategyName": "",
+                    },
+                    "commitId": "00000000-0000-0000-0000-000000000000",
+                    "flowMetadata": [],
+                    "input": {},
+                    "output": {},
+                }
+            },
         )
