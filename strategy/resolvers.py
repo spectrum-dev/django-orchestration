@@ -26,6 +26,74 @@ def get_user_strategy(*_, strategy_id):
         raise Exception("This strategy ID does not exist")
 
 
+def get_strategy(_, info, strategyId, commitId=None):
+    try:
+        user_strategy = UserStrategy.objects.filter(
+            strategy=strategyId, user=info.context["user"]
+        )
+        strategy_sharing = StrategySharing.objects.filter(
+            strategy__strategy=strategyId, user=info.context["user"]
+        )
+
+        if user_strategy.exists() or strategy_sharing.exists():
+            chosen_user_strategy = None
+            if user_strategy.exists():
+                chosen_user_strategy = user_strategy[0]
+
+            if strategy_sharing.exists():
+                chosen_user_strategy = strategy_sharing[0].strategy
+
+            strategy = None
+            if commitId:
+                strategy = Strategy.objects.get(
+                    strategy=chosen_user_strategy,
+                    commit=commitId,
+                )
+            else:
+                strategy = (
+                    Strategy.objects.filter(
+                        strategy__strategy=strategyId,
+                    )
+                    .order_by("-updated_at")
+                    .first()
+                )
+
+            if not strategy:
+                return {
+                    "strategy": {
+                        "strategy_id": strategyId,
+                        "strategy_name": chosen_user_strategy.strategy_name,
+                        "created_at": chosen_user_strategy.created_at,
+                        "updated_at": chosen_user_strategy.updated_at,
+                    },
+                    "commit_id": str(uuid.uuid4()),
+                    "flow_metadata": [],
+                    "input": {},
+                    "output": {},
+                    "created_at": "2020-01-01",
+                    "updated_at": "2020-01-01",
+                }
+
+            return {
+                "strategy": {
+                    "strategy_id": strategyId,
+                    "strategy_name": chosen_user_strategy.strategy_name,
+                    "created_at": chosen_user_strategy.created_at,
+                    "updated_at": chosen_user_strategy.updated_at,
+                },
+                "commit_id": str(strategy.commit),
+                "flow_metadata": strategy.flow_metadata,
+                "input": strategy.input,
+                "output": strategy.output,
+                "created_at": strategy.created_at,
+                "updated_at": strategy.updated_at,
+            }
+        else:
+            raise Exception("You are not authorized to view this strategy")
+    except Strategy.DoesNotExist:
+        raise Exception("The strategy and commit pair does not exist")
+
+
 @convert_kwargs_to_snake_case
 def list_user_strategies(_, info):
     return [
