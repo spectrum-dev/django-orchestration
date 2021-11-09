@@ -10,6 +10,7 @@ type Query {
     userStrategies: [UserStrategy!]! @isAuthenticated
     strategy(strategyId: ID!, commitId: ID): Strategy! @isAuthenticated
     strategies: [Strategy!]! @isAuthenticated
+    validateFlow(nodeList: JSON!, edgeList: [JSON!]): ValidateFlow! @isAuthenticated
     taskResult(taskId: ID!): TaskResult! @isAuthenticated
     sharedUsers(strategyId: ID!): [ListSharedUsers!]! @isAuthenticated
     inputDependencyGraph(nodeList: JSON!, edgeList: [JSON!]): JSON!

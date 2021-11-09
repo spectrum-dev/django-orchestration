@@ -39,7 +39,6 @@ urlpatterns = [
         name="google_login",
     ),
     url(r"^authentication/", include("allauth.urls"), name="socialaccount_signup"),
-    path("orchestration/validate", orchestrator.views.ValidateFlow.as_view()),
     path(
         "orchestration/<block_type>/<block_id>/metadata",
         orchestrator.views.MetadataView.as_view(),

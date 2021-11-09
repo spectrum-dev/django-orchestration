@@ -25,6 +25,7 @@ query.set_field(
 )
 query.set_field("ping", authentication.resolvers.get_ping)
 query.set_field("allMetadata", orchestrator.resolvers.get_all_metadata)
+query.set_field("validateFlow", orchestrator.resolvers.get_validate_flow)
 query.set_field("userStrategy", strategy.resolvers.get_user_strategy)
 query.set_field("userStrategies", strategy.resolvers.list_user_strategies)
 query.set_field("strategy", strategy.resolvers.get_strategy)
