@@ -5,6 +5,7 @@ scalar JSON
 
 type Query {
     ping: String! @isAuthenticated
+    blockMetadata(blockType: BlockType!, blockId: Int!): BlockMetadata! @isAuthenticated
     allMetadata(strategyType: StrategyType!): JSON! @isAuthenticated
     userStrategy(strategyId: ID!): UserStrategy! @isAuthenticated
     userStrategies: [UserStrategy!]! @isAuthenticated

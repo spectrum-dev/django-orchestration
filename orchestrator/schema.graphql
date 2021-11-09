@@ -4,7 +4,24 @@ enum StrategyType {
     PENDING
 }
 
+enum BlockType {
+    DATA_BLOCK
+    BULK_DATA_BLOCK
+    COMPUTATIONAL_BLOCK
+    SIGNAL_BLOCK
+    STRATEGY_BLOCK
+}
+
 type ValidateFlow {
     valid: Boolean!
     edges: JSON
+}
+
+type BlockMetadata {
+    blockName: String!
+    blockType: BlockType!
+    blockId: Int!
+    inputs: JSON!
+    validation: JSON!
+    outputInterface: JSON!
 }

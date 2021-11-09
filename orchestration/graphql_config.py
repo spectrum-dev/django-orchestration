@@ -24,6 +24,7 @@ query.set_field(
     "accountWhitelistStatus", authentication.resolvers.get_account_whitelist_status
 )
 query.set_field("ping", authentication.resolvers.get_ping)
+query.set_field("blockMetadata", orchestrator.resolvers.get_block_metadata)
 query.set_field("allMetadata", orchestrator.resolvers.get_all_metadata)
 query.set_field("validateFlow", orchestrator.resolvers.get_validate_flow)
 query.set_field("userStrategy", strategy.resolvers.get_user_strategy)
