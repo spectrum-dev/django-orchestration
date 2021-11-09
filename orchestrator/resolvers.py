@@ -4,6 +4,7 @@ from orchestrator.interface import (
     get_input_dependency_graph as get_input_dependency_graph_interface,
 )
 from orchestrator.models import BlockRegistry
+from orchestrator.services.flow.spectrum_flow import SpectrumFlow
 
 
 # Queries
@@ -30,3 +31,11 @@ def get_all_metadata(*_, strategy_type):
         del response["STRATEGY_BLOCK"]
 
     return response
+
+
+def get_validate_flow(*_, nodeList, edgeList):
+    if nodeList is not {} and edgeList is not []:
+        flow = SpectrumFlow(nodeList, edgeList)
+        return {"valid": flow.valid["isValid"], "edges": flow.edge_validation}
+    else:
+        return {"valid": False}

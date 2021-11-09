@@ -3,3 +3,8 @@ enum StrategyType {
     BACKTEST
     PENDING
 }
+
+type ValidateFlow {
+    valid: Boolean!
+    edges: JSON
+}
