@@ -13,6 +13,27 @@ def get_input_dependency_graph(*_, nodeList, edgeList):
     return response
 
 
+def get_block_metadata(*_, blockType, blockId):
+    try:
+        block_registry = BlockRegistry.objects.get(
+            block_type=blockType, block_id=blockId
+        )
+
+        return {
+            "block_name": block_registry.block_name,
+            "block_type": block_registry.block_type,
+            "block_id": block_registry.block_id,
+            "inputs": block_registry.inputs,
+            "validation": block_registry.validations,
+            "output_interface": block_registry.output_interface,
+        }
+
+    except BlockRegistry.DoesNotExist:
+        return Exception("Block Type - ID Pair does not exist")
+    except Exception:
+        return Exception("There was an unhandled error retrieving the block metadata")
+
+
 @convert_kwargs_to_snake_case
 def get_all_metadata(*_, strategy_type):
     all_blocks_from_registry = BlockRegistry.objects.all()

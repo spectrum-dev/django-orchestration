@@ -40,12 +40,10 @@ urlpatterns = [
     ),
     url(r"^authentication/", include("allauth.urls"), name="socialaccount_signup"),
     path(
-        "orchestration/<block_type>/<block_id>/metadata",
-        orchestrator.views.MetadataView.as_view(),
-    ),
-    path(
         "orchestration/<block_type>/<block_id>/<action_name>",
         orchestrator.views.ProxyBlockActionView.as_view(),
-    ),
-    path("orchestration/overlay", orchestrator.views.RunOverlay.as_view()),
+    ),  # NOT BEING CHANGED TO GQL AS WANT TO UNDERSTAND MORE EFFICIENT AND SCALABLE WAYS TO DO THIS
+    path(
+        "orchestration/overlay", orchestrator.views.RunOverlay.as_view()
+    ),  # NOT CURRENTLY BEING USED
 ]
