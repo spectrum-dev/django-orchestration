@@ -231,7 +231,7 @@ class SpectrumFlowValidateTest(TestCase):
             },
         )
 
-    def test_screener_flow_compelte_returns_ok(self):
+    def test_screener_flow_complete_returns_ok(self):
         spectrum_event_flow = SpectrumFlow(
             FLOW_WITH_SCREENER_BLOCK_RETURNS_OK["nodeList"],
             FLOW_WITH_SCREENER_BLOCK_RETURNS_OK["edgeList"],
