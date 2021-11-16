@@ -4,12 +4,34 @@ from orchestrator.interface import (
     get_input_dependency_graph as get_input_dependency_graph_interface,
 )
 from orchestrator.models import BlockRegistry
+from orchestrator.services.flow.spectrum_flow import SpectrumFlow
 
 
 # Queries
 def get_input_dependency_graph(*_, nodeList, edgeList):
     response = get_input_dependency_graph_interface(nodeList, edgeList)
     return response
+
+
+def get_block_metadata(*_, blockType, blockId):
+    try:
+        block_registry = BlockRegistry.objects.get(
+            block_type=blockType, block_id=blockId
+        )
+
+        return {
+            "block_name": block_registry.block_name,
+            "block_type": block_registry.block_type,
+            "block_id": block_registry.block_id,
+            "inputs": block_registry.inputs,
+            "validation": block_registry.validations,
+            "output_interface": block_registry.output_interface,
+        }
+
+    except BlockRegistry.DoesNotExist:
+        return Exception("Block Type - ID Pair does not exist")
+    except Exception:
+        return Exception("There was an unhandled error retrieving the block metadata")
 
 
 @convert_kwargs_to_snake_case
@@ -30,3 +52,11 @@ def get_all_metadata(*_, strategy_type):
         del response["STRATEGY_BLOCK"]
 
     return response
+
+
+def get_validate_flow(*_, nodeList, edgeList):
+    if nodeList is not {} and edgeList is not []:
+        flow = SpectrumFlow(nodeList, edgeList)
+        return {"valid": flow.valid["isValid"], "edges": flow.edge_validation}
+    else:
+        return {"valid": False}

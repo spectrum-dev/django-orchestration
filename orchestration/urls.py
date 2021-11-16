@@ -22,7 +22,6 @@ from django.views.static import serve
 
 import authentication.views
 import orchestrator.views
-import strategy.views
 from authentication.graphql import get_user_context
 from orchestration.graphql_config import schema
 
@@ -40,33 +39,11 @@ urlpatterns = [
         name="google_login",
     ),
     url(r"^authentication/", include("allauth.urls"), name="socialaccount_signup"),
-    # path(
-    #     "authentication/validate",
-    #     authentication.views.ValidateAccountWhitelistView.as_view(),
-    # ),
-    # path("orchestration/metadata", orchestrator.views.AllMetadataView.as_view()),
-    path("orchestration/validate", orchestrator.views.ValidateFlow.as_view()),
-    path(
-        "orchestration/<block_type>/<block_id>/metadata",
-        orchestrator.views.MetadataView.as_view(),
-    ),
     path(
         "orchestration/<block_type>/<block_id>/<action_name>",
         orchestrator.views.ProxyBlockActionView.as_view(),
-    ),
-    path("orchestration/overlay", orchestrator.views.RunOverlay.as_view()),
-    path("strategy/strategyId", strategy.views.StrategyIdView.as_view()),
-    path("strategy/createStrategy", strategy.views.CreateStrategyView.as_view()),
+    ),  # NOT BEING CHANGED TO GQL AS WANT TO UNDERSTAND MORE EFFICIENT AND SCALABLE WAYS TO DO THIS
     path(
-        "strategy/deleteStrategy/<strategy_id>",
-        strategy.views.DeleteStrategyView.as_view(),
-    ),
-    path("strategy/getStrategies", strategy.views.GetAllStrategiesView.as_view()),
-    path("strategy/<strategy_id>", strategy.views.StrategyView.as_view()),
-    path("strategy/<strategy_id>/detail", strategy.views.StrategyDetailView.as_view()),
-    path("strategy/<strategy_id>/commitId", strategy.views.CommitIdView.as_view()),
-    path(
-        "strategy/<strategy_id>/<commit_id>",
-        strategy.views.StrategyCommitView.as_view(),
-    ),
+        "orchestration/overlay", orchestrator.views.RunOverlay.as_view()
+    ),  # NOT CURRENTLY BEING USED
 ]

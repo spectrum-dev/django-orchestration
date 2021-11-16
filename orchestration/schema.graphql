@@ -5,9 +5,13 @@ scalar JSON
 
 type Query {
     ping: String! @isAuthenticated
+    blockMetadata(blockType: BlockType!, blockId: Int!): BlockMetadata! @isAuthenticated
     allMetadata(strategyType: StrategyType!): JSON! @isAuthenticated
+    userStrategy(strategyId: ID!): UserStrategy! @isAuthenticated
     userStrategies: [UserStrategy!]! @isAuthenticated
+    strategy(strategyId: ID!, commitId: ID): Strategy! @isAuthenticated
     strategies: [Strategy!]! @isAuthenticated
+    validateFlow(nodeList: JSON!, edgeList: [JSON!]): ValidateFlow! @isAuthenticated
     taskResult(taskId: ID!): TaskResult! @isAuthenticated
     sharedUsers(strategyId: ID!): [ListSharedUsers!]! @isAuthenticated
     inputDependencyGraph(nodeList: JSON!, edgeList: [JSON!]): JSON!
@@ -16,6 +20,9 @@ type Query {
 }
 
 type Mutation {
+    userStrategy(strategyName: String!): UserStrategy! @isAuthenticated
+    strategy(strategyId: ID!, commitId: ID, metadata: JSON!, inputs: JSON!, outputs: JSON!): Boolean! @isAuthenticated
+    deleteStrategy(strategyId: ID!): Boolean! @isAuthenticated
     dispatchRunStrategy(nodeList: JSON!, edgeList: [JSON!], strategyType: String!): DispatchRunStrategy! @isAuthenticated
     shareStrategy(strategyId: ID! email: String!, permissions: String!): ShareStrategy! @isAuthenticated
 }
