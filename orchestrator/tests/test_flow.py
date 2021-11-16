@@ -1,3 +1,5 @@
+from unittest import mock
+
 from django.test import TestCase
 
 from authentication.factories import set_up_authentication
@@ -240,4 +242,29 @@ class SpectrumFlowValidateTest(TestCase):
         self.assertDictEqual(
             spectrum_event_flow.valid,
             {"isValid": True, "code": "VALIDATE-OK", "description": ""},
+        )
+
+
+class SpectrumFlowRunTest(TestCase):
+    def setUp(self):
+        self.auth = set_up_authentication()
+
+    @mock.patch("orchestrator.services.flow.spectrum_flow.SpectrumFlow.run_send_helper")
+    def test_monitor_all(self, mock_spectrum_flow):
+        class MockCeleryClass:
+            def get(self):
+                return "result-value-here"
+
+        mock_spectrum_flow.return_value = (
+            "foo-bar-foo-bar-foo-bar",
+            MockCeleryClass(),
+            None,
+        )
+        spectrum_event_flow = SpectrumFlow(
+            FLOW_WITH_SCREENER_BLOCK_RETURNS_OK["nodeList"],
+            FLOW_WITH_SCREENER_BLOCK_RETURNS_OK["edgeList"],
+        )
+        self.assertEqual(
+            spectrum_event_flow.run(),
+            True,
         )
