@@ -26,7 +26,7 @@ class AuthenticationTest(GraphQLTestCase):
         self.assertResponseHasErrors(response)
         assert content["errors"][0]["message"] == "User is not authenticated"
 
-    def test_request_has_valid_bearer_authorization_header(self):
+    def test_request_has_valid_authorization_header_with_bearer_token(self):
         response, content = self.query(
             self.QUERY,
             headers={"HTTP_AUTHORIZATION": f"Bearer {self.auth['token']}"},
@@ -34,7 +34,7 @@ class AuthenticationTest(GraphQLTestCase):
         self.assertResponseNoErrors(response)
         self.assertDictEqual(content["data"], {"ping": "pong"})
 
-    def test_request_has_valid_basic_authorization_header(self):
+    def test_request_has_valid_authorization_header_with_basic_token(self):
         basic_auth = set_up_basic_authentication()
         response, content = self.query(
             self.QUERY,
