@@ -3,6 +3,7 @@ from unittest import mock
 from django.test import TestCase
 
 from authentication.factories import set_up_authentication
+from orchestrator.exceptions import MultipleBacktestBlocksException
 from orchestrator.services.flow.spectrum_flow import SpectrumFlow
 
 # Test Data
@@ -18,6 +19,7 @@ from orchestrator.tests.data.test_flow_data import (
     MOVING_AVERAGE_CROSSOVER_RETURNS_RESPONSE,
     MULTIPLE_INCOMING_BLOCKS_OF_DIFFERENT_TYPES_RETURNS_OK,
     MULTIPLE_INCOMING_BLOCKS_OF_DIFFERENT_TYPES_RETURNS_OK_RESPONSE,
+    MULTIPLE_STRATEGY_BLOCKS_RAISE_EXCEPTION,
     SINGLE_BLOCK_ALLOWING_SINGLE_INPUT_ALLOWS_BLOCKS_OF_MULTIPLE_TYPES_RETURNS_OK,
     SINGLE_BLOCK_ALLOWING_SINGLE_INPUT_ALLOWS_BLOCKS_OF_MULTIPLE_TYPES_RETURNS_OK_RESPONSE,
     SINGLE_NODE_DATA_FLOW_RETURNS_003,
@@ -268,3 +270,53 @@ class SpectrumFlowRunTest(TestCase):
             spectrum_event_flow.run(),
             True,
         )
+
+    class MockCeleryClass:
+        def get(self):
+            return "mock-result-value-here"
+
+    # TODO: Find a way to mock returned value without writing many classes
+    mocked_result = [
+        (
+            "DATA_BLOCK-1-1",
+            MockCeleryClass(),
+            None,
+        ),
+        (
+            "COMPUTATIONAL_BLOCK-1-3",
+            MockCeleryClass(),
+            None,
+        ),
+        (
+            "COMPUTATIONAL_BLOCK-1-2",
+            MockCeleryClass(),
+            None,
+        ),
+        (
+            "SIGNAL_BLOCK-1-4",
+            MockCeleryClass(),
+            None,
+        ),
+        (
+            "STRATEGY_BLOCK-1-5",
+            MockCeleryClass(),
+            None,
+        ),
+        (
+            "STRATEGY_BLOCK-1-6",
+            MockCeleryClass(),
+            None,
+        ),
+    ]
+
+    @mock.patch(
+        "orchestrator.services.flow.spectrum_flow.SpectrumFlow.run_send_helper",
+        side_effect=mocked_result,
+    )
+    def test_failure_multiple_strategy_blocks(self, mock_spectrum_flow):
+        with self.assertRaises(MultipleBacktestBlocksException):
+            spectrum_event_flow = SpectrumFlow(
+                MULTIPLE_STRATEGY_BLOCKS_RAISE_EXCEPTION["nodeList"],
+                MULTIPLE_STRATEGY_BLOCKS_RAISE_EXCEPTION["edgeList"],
+            )
+            spectrum_event_flow.run()
