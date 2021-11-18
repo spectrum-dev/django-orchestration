@@ -251,7 +251,9 @@ class SpectrumFlowRunTest(TestCase):
     def setUp(self):
         self.auth = set_up_authentication()
 
-    @mock.patch("orchestrator.services.flow.spectrum_flow.SpectrumFlow.run_send_helper")
+    @mock.patch(
+        "orchestrator.services.flow.spectrum_flow.SpectrumFlow.celery_send_helper"
+    )
     def test_monitor_all(self, mock_spectrum_flow):
         class MockCeleryClass:
             def get(self):
@@ -310,7 +312,7 @@ class SpectrumFlowRunTest(TestCase):
     ]
 
     @mock.patch(
-        "orchestrator.services.flow.spectrum_flow.SpectrumFlow.run_send_helper",
+        "orchestrator.services.flow.spectrum_flow.SpectrumFlow.celery_send_helper",
         side_effect=mocked_result,
     )
     def test_failure_multiple_strategy_blocks(self, mock_spectrum_flow):
