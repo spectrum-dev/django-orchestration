@@ -2,6 +2,9 @@ from allauth.socialaccount.models import SocialToken
 from ariadne import SchemaDirectiveVisitor
 from graphql import GraphQLError, default_field_resolver
 
+from .exceptions import InvalidTokenSchemeException
+from .models import BasicAuthToken
+
 
 def get_user_context(request):
     context = {}
@@ -14,15 +17,27 @@ def get_user_context(request):
 
     scheme, token = request.headers["Authorization"].split()
 
-    # If not a bearer token - no user assigned
-    if scheme.lower() != "bearer":
+    # If not a bearer or basic token - no user assigned
+    if scheme.lower() != "bearer" and scheme.lower() != "basic":
         return context
 
     try:
-        social_token = SocialToken.objects.get(token=token)
-        context["user"] = social_token.account.user
+        if scheme.lower() == "bearer":
+            social_token = SocialToken.objects.get(token=token)
+            context["user"] = social_token.account.user
+        elif scheme.lower() == "basic":
+            basic_auth_token = BasicAuthToken.objects.get(token=token)
+            context["user"] = basic_auth_token.user
+        else:
+            raise InvalidTokenSchemeException
     except SocialToken.DoesNotExist:
         # Bearer token does not exist in DB
+        return context
+    except BasicAuthToken.DoesNotExist:
+        # Basic token does not exist in DB
+        return context
+    except InvalidTokenSchemeException:
+        # Scheme does not exist
         return context
 
     return context
