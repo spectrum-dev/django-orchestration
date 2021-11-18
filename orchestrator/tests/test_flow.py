@@ -5,6 +5,10 @@ from django.test import TestCase
 from authentication.factories import set_up_authentication
 from orchestrator.exceptions import MultipleBacktestBlocksException
 from orchestrator.services.flow.spectrum_flow import SpectrumFlow
+from orchestrator.tests.data.test_data_flow_mock import (
+    MULTIPLE_STRATEGY_BLOCK_MOCK_RESPONSE,
+    GenericCeleryMockClass,
+)
 
 # Test Data
 from orchestrator.tests.data.test_flow_data import (
@@ -255,13 +259,9 @@ class SpectrumFlowRunTest(TestCase):
         "orchestrator.services.flow.spectrum_flow.SpectrumFlow.celery_send_helper"
     )
     def test_monitor_all(self, mock_spectrum_flow):
-        class MockCeleryClass:
-            def get(self):
-                return "result-value-here"
-
         mock_spectrum_flow.return_value = (
-            "foo-bar-foo-bar-foo-bar",
-            MockCeleryClass(),
+            "FOO_BLOCK-99-1",
+            GenericCeleryMockClass(),
             None,
         )
         spectrum_event_flow = SpectrumFlow(
@@ -273,47 +273,9 @@ class SpectrumFlowRunTest(TestCase):
             True,
         )
 
-    class MockCeleryClass:
-        def get(self):
-            return "mock-result-value-here"
-
-    # TODO: Find a way to mock returned value without writing many classes
-    mocked_result = [
-        (
-            "DATA_BLOCK-1-1",
-            MockCeleryClass(),
-            None,
-        ),
-        (
-            "COMPUTATIONAL_BLOCK-1-3",
-            MockCeleryClass(),
-            None,
-        ),
-        (
-            "COMPUTATIONAL_BLOCK-1-2",
-            MockCeleryClass(),
-            None,
-        ),
-        (
-            "SIGNAL_BLOCK-1-4",
-            MockCeleryClass(),
-            None,
-        ),
-        (
-            "STRATEGY_BLOCK-1-5",
-            MockCeleryClass(),
-            None,
-        ),
-        (
-            "STRATEGY_BLOCK-1-6",
-            MockCeleryClass(),
-            None,
-        ),
-    ]
-
     @mock.patch(
         "orchestrator.services.flow.spectrum_flow.SpectrumFlow.celery_send_helper",
-        side_effect=mocked_result,
+        side_effect=MULTIPLE_STRATEGY_BLOCK_MOCK_RESPONSE,
     )
     def test_failure_multiple_strategy_blocks(self, mock_spectrum_flow):
         with self.assertRaises(MultipleBacktestBlocksException):
