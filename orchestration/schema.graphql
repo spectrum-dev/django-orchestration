@@ -20,6 +20,7 @@ type Query {
 }
 
 type Mutation {
+    accountWhitelist(email: String!): AccountWhitelistStatus! @isAuthenticated
     userStrategy(strategyName: String!): UserStrategy! @isAuthenticated
     strategy(strategyId: ID!, commitId: ID, metadata: JSON!, inputs: JSON!, outputs: JSON!): Boolean! @isAuthenticated
     deleteStrategy(strategyId: ID!): Boolean! @isAuthenticated
