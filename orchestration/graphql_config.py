@@ -40,6 +40,9 @@ query.set_field(
 # Mutation Implementations
 mutation = MutationType()
 
+mutation.set_field(
+    "accountWhitelist", authentication.resolvers.create_account_whitelist
+)
 mutation.set_field("userStrategy", strategy.resolvers.create_user_strategy)
 mutation.set_field("strategy", strategy.resolvers.create_strategy)
 mutation.set_field("deleteStrategy", strategy.resolvers.delete_strategy)
