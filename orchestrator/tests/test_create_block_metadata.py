@@ -43,20 +43,33 @@ class CreateBlockMetadataTest(GraphQLTestCase):
         pass
 
     def test_adds_to_block_metadata_failure_block_type_dne(self):
-        pass
+        block_type = "DATA_BLOCK_DNE"
+        block_name = "Test Block"
+        inputs = []
+        validations = {}
+        output_interface = {"interface": ["timestamp", "order"]}
 
-    def test_adds_to_block_metadata_failure_block_already_exists(self):
-        pass
-
-    def test_adds_to_block_metadata_failure_negative_block_id(self):
-        pass
-
-    # def test_email_exists_in_whitelist(self):
-    #     AccountWhitelistFactory(email="valid@testcustomer.com", active=True)
-    #     response, content = self.query(
-    #         self.MUTATION,
-    #         headers={"HTTP_AUTHORIZATION": f"Bearer {self.auth['token']}"},
-    #         variables={"email": "valid@testcustomer.com"},
-    #     )
-    #     self.assertResponseNoErrors(response)
-    #     self.assertDictEqual(content["data"], {"accountWhitelist": {"status": False}})
+        response, content = self.query(
+            self.MUTATION,
+            headers={"HTTP_AUTHORIZATION": f"Bearer {self.auth['token']}"},
+            variables={
+                "blockType": block_type,
+                "blockName": block_name,
+                "inputs": inputs,
+                "validations": validations,
+                "outputInterface": output_interface,
+            },
+        )
+        self.assertResponseHasErrors(response)
+        self.assertEqual(
+            content["errors"],
+            [
+                {
+                    "locations": [{"column": 36, "line": 2}],
+                    "message": "Variable '$blockType' got invalid value 'DATA_BLOCK_DNE'; Value "
+                    "'DATA_BLOCK_DNE' does not exist in 'BlockType' enum. Did you "
+                    "mean the enum value 'DATA_BLOCK'?",
+                    "path": None,
+                }
+            ],
+        )
