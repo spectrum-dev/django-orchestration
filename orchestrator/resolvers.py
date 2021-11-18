@@ -1,5 +1,6 @@
 from ariadne import convert_kwargs_to_snake_case
 from django.db import IntegrityError
+from django.db.models import Max
 
 from orchestrator.interface import (
     get_input_dependency_graph as get_input_dependency_graph_interface,
@@ -56,10 +57,15 @@ def get_all_metadata(*_, strategy_type):
 
 
 @convert_kwargs_to_snake_case
-def create_all_metadata(
-    *_, block_type, block_id, block_name, inputs, validations, output_interface
+def create_block_metadata(
+    *_, block_type, block_name, inputs, validations, output_interface
 ):
+    block_id = BlockRegistry.objects.filter(block_type=block_type).aggregate(
+        max_block_id=Max("block_id")
+    )["max_block_id"]
+    block_id = (block_id or 0) + 1
     try:
+        # TODO: Do we need to validate that block_name is unique as well for frontend purposes?
         block_registry = BlockRegistry.objects.create(
             block_type=block_type,
             block_id=block_id,
@@ -68,7 +74,7 @@ def create_all_metadata(
             validations=validations,
             output_interface=output_interface,
         )
-        return {"status": True}
+        return {"uniqueBlockId": block_registry.id, "blockId": block_id, "status": True}
     except IntegrityError:
         return {"status": False}
 
