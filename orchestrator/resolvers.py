@@ -1,4 +1,5 @@
 from ariadne import convert_kwargs_to_snake_case
+from django.db import IntegrityError
 
 from orchestrator.interface import (
     get_input_dependency_graph as get_input_dependency_graph_interface,
@@ -52,6 +53,24 @@ def get_all_metadata(*_, strategy_type):
         del response["STRATEGY_BLOCK"]
 
     return response
+
+
+@convert_kwargs_to_snake_case
+def create_all_metadata(
+    *_, block_type, block_id, block_name, inputs, validations, output_interface
+):
+    try:
+        block_registry = BlockRegistry.objects.create(
+            block_type=block_type,
+            block_id=block_id,
+            block_name=block_name,
+            inputs=inputs,
+            validations=validations,
+            output_interface=output_interface,
+        )
+        return {"status": True}
+    except IntegrityError:
+        return {"status": False}
 
 
 def get_validate_flow(*_, nodeList, edgeList):

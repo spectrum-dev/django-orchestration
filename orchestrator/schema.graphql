@@ -25,3 +25,7 @@ type BlockMetadata {
     validation: JSON!
     outputInterface: JSON!
 }
+
+type BlockMetadataStatus {
+    status: Boolean!
+}

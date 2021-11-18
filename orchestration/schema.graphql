@@ -21,6 +21,7 @@ type Query {
 
 type Mutation {
     accountWhitelist(email: String!): AccountWhitelistStatus! @isAuthenticated
+    blockMetadata(blockType: BlockType!, blockId: Int!, blockName: String!, inputs: JSON!, validations: JSON!, outputInterface: JSON!): BlockMetadataStatus! @isAuthenticated
     userStrategy(strategyName: String!): UserStrategy! @isAuthenticated
     strategy(strategyId: ID!, commitId: ID, metadata: JSON!, inputs: JSON!, outputs: JSON!): Boolean! @isAuthenticated
     deleteStrategy(strategyId: ID!): Boolean! @isAuthenticated
