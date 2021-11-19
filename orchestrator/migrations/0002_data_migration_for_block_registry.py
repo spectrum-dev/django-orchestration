@@ -535,6 +535,60 @@ def seed_blocks_into_registry(apps, schema_editor):
         output_interface={"interface": ["trades", "portVals"]},
     ).save()
 
+    BlockRegistry(
+        block_type="STRATEGY_BLOCK",
+        block_id=2,
+        block_name="Advance Backtest",
+        inputs=[
+            {
+                "fieldName": "Commission ($)",
+                "fieldVariableName": "commission",
+                "fieldType": "input",
+            },
+            {
+                "fieldName": "Start Value ($)",
+                "fieldVariableName": "start_value",
+                "fieldType": "input",
+            },
+            {
+                "fieldName": "Trade Amount Value ($)",
+                "fieldVariableName": "trade_amount_value",
+                "fieldType": "input",
+            },
+            {
+                "fieldName": "Stop Loss (%)",
+                "fieldVariableName": "stop_loss",
+                "fieldType": "input",
+            },
+            {
+                "fieldName": "Take Profit (%)",
+                "fieldVariableName": "take_profit",
+                "fieldType": "input",
+            },
+        ],
+        validations={
+            "input": {
+                "required": [
+                    {"blockType": ["DATA_BLOCK"], "number": 1},
+                    {"blockType": ["SIGNAL_BLOCK"], "number": 1},
+                ],
+                "allowed_blocks": [
+                    {"blockId": "1", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "2", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "3", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "4", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "5", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "6", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "7", "blockType": "SIGNAL_BLOCK"},
+                    {"blockId": "1", "blockType": "DATA_BLOCK"},
+                    {"blockId": "2", "blockType": "DATA_BLOCK"},
+                ],
+            },
+            "output": [{"blockType": "STRATEGY_BLOCK", "number": 2}],
+        },
+        output_interface={"interface": ["trades", "portVals"]},
+    ).save()
+
 
 def reverse_blocks_into_registry(apps, schema_editor):
     BlockRegistry = apps.get_model("orchestrator", "BlockRegistry")
