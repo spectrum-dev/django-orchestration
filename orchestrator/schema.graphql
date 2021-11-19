@@ -22,11 +22,6 @@ type BlockMetadata {
     blockType: BlockType!
     blockId: Int!
     inputs: JSON!
-    validation: JSON!
+    validations: JSON!
     outputInterface: JSON!
-}
-
-type BlockMetadataStatus {
-    uniqueBlockId: Int!
-    blockId: Int!
 }

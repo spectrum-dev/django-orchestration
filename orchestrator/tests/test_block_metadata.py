@@ -11,7 +11,7 @@ class MetadataViewTest(GraphQLTestCase):
                     blockType
                     blockId
                     inputs
-                    validation
+                    validations
                     outputInterface
                 }
             }
