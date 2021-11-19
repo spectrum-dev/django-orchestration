@@ -29,5 +29,4 @@ type BlockMetadata {
 type BlockMetadataStatus {
     uniqueBlockId: Int
     blockId: Int
-    status: Boolean!
 }

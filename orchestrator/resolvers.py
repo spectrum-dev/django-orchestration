@@ -76,7 +76,6 @@ def create_block_metadata(
     return {
         "unique_block_id": block_registry.id,
         "block_id": block_registry.block_id,
-        "status": True,
     }
 
 

@@ -9,7 +9,6 @@ class CreateBlockMetadataTest(GraphQLTestCase):
                 blockMetadata(blockType: $blockType, blockName: $blockName, inputs: $inputs, validations: $validations, outputInterface: $outputInterface) {
                     uniqueBlockId
                     blockId
-                    status
                 }
             }
         """
@@ -36,7 +35,7 @@ class CreateBlockMetadataTest(GraphQLTestCase):
         self.assertResponseNoErrors(response)
         self.assertDictEqual(
             content["data"],
-            {"blockMetadata": {"uniqueBlockId": 14, "blockId": 2, "status": True}},
+            {"blockMetadata": {"uniqueBlockId": 14, "blockId": 2}},
         )
 
     def test_adds_to_block_metadata_failure_block_type_dne(self):
