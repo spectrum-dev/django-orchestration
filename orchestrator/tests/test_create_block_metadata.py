@@ -18,11 +18,29 @@ class CreateBlockMetadataTest(GraphQLTestCase):
         """
         self.auth = set_up_authentication()
 
+    maxDiff = None
+
     def test_adds_to_block_metadata_successfully(self):
         block_type = "STRATEGY_BLOCK"
         block_name = "Test Block"
-        inputs = []
-        validations = {}
+        inputs = [
+            {
+                "fieldName": "Commission ($)",
+                "fieldVariableName": "commission",
+                "fieldType": "input",
+            },
+        ]
+        validations = {
+            "input": {
+                "required": [
+                    {"blockType": ["DATA_BLOCK"], "number": 1},
+                ],
+                "allowed_blocks": [
+                    {"blockId": "1", "blockType": "SIGNAL_BLOCK"},
+                ],
+            },
+            "output": [{"blockType": "STRATEGY_BLOCK", "number": 1}],
+        }
         output_interface = {"interface": ["timestamp", "order"]}
 
         response, content = self.query(
@@ -44,8 +62,24 @@ class CreateBlockMetadataTest(GraphQLTestCase):
                     "blockName": "Test Block",
                     "blockType": "STRATEGY_BLOCK",
                     "blockId": 3,  # Intentionally flaky test, strategy blocks should rarely be implemented but will increment if more blocks become available
-                    "inputs": [],
-                    "validations": {},
+                    "inputs": [
+                        {
+                            "field_name": "Commission ($)",
+                            "field_variable_name": "commission",
+                            "field_type": "input",
+                        },
+                    ],
+                    "validations": {
+                        "input": {
+                            "required": [
+                                {"block_type": ["DATA_BLOCK"], "number": 1},
+                            ],
+                            "allowed_blocks": [
+                                {"block_id": "1", "block_type": "SIGNAL_BLOCK"},
+                            ],
+                        },
+                        "output": [{"block_type": "STRATEGY_BLOCK", "number": 1}],
+                    },
                     "outputInterface": {"interface": ["timestamp", "order"]},
                 }
             },
