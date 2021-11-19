@@ -74,8 +74,12 @@ def create_block_metadata(
         output_interface=output_interface,
     )
     return {
-        "unique_block_id": block_registry.id,
+        "block_name": block_registry.block_name,
+        "block_type": block_registry.block_type,
         "block_id": block_registry.block_id,
+        "inputs": block_registry.inputs,
+        "validations": block_registry.validations,
+        "output_interface": block_registry.output_interface,
     }
 
 

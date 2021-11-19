@@ -7,8 +7,12 @@ class CreateBlockMetadataTest(GraphQLTestCase):
         self.MUTATION = """
             mutation blockMetadata($blockType: BlockType!, $blockName: String!, $inputs: [JSON!], $validations: JSON!, $outputInterface: JSON!) {
                 blockMetadata(blockType: $blockType, blockName: $blockName, inputs: $inputs, validations: $validations, outputInterface: $outputInterface) {
-                    uniqueBlockId
+                    blockName
+                    blockType
                     blockId
+                    inputs
+                    validations
+                    outputInterface
                 }
             }
         """
@@ -35,7 +39,16 @@ class CreateBlockMetadataTest(GraphQLTestCase):
         self.assertResponseNoErrors(response)
         self.assertDictEqual(
             content["data"],
-            {"blockMetadata": {"uniqueBlockId": 14, "blockId": 2}},
+            {
+                "blockMetadata": {
+                    "blockName": "Test Block",
+                    "blockType": "STRATEGY_BLOCK",
+                    "blockId": 3,
+                    "inputs": [],
+                    "validations": {},
+                    "outputInterface": {},
+                }
+            },
         )
 
     def test_adds_to_block_metadata_failure_block_type_dne(self):
