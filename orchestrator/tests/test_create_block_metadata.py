@@ -43,10 +43,10 @@ class CreateBlockMetadataTest(GraphQLTestCase):
                 "blockMetadata": {
                     "blockName": "Test Block",
                     "blockType": "STRATEGY_BLOCK",
-                    "blockId": 3,
+                    "blockId": 3,  # Intentionally flaky test, strategy blocks should rarely be implemented but will increment if more blocks become available
                     "inputs": [],
                     "validations": {},
-                    "outputInterface": {},
+                    "outputInterface": {"interface": ["timestamp", "order"]},
                 }
             },
         )
