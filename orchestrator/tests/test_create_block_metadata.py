@@ -16,7 +16,7 @@ class CreateBlockMetadataTest(GraphQLTestCase):
         self.auth = set_up_authentication()
 
     def test_adds_to_block_metadata_successfully(self):
-        block_type = "SIGNAL_BLOCK"
+        block_type = "STRATEGY_BLOCK"
         block_name = "Test Block"
         inputs = []
         validations = {}
@@ -36,11 +36,8 @@ class CreateBlockMetadataTest(GraphQLTestCase):
         self.assertResponseNoErrors(response)
         self.assertDictEqual(
             content["data"],
-            {"blockMetadata": {"uniqueBlockId": 1, "blockId": 1, "status": True}},
+            {"blockMetadata": {"uniqueBlockId": 14, "blockId": 2, "status": True}},
         )
-
-    def test_adds_multiple_to_block_metadata_successfully(self):
-        pass
 
     def test_adds_to_block_metadata_failure_block_type_dne(self):
         block_type = "DATA_BLOCK_DNE"
@@ -69,6 +66,35 @@ class CreateBlockMetadataTest(GraphQLTestCase):
                     "message": "Variable '$blockType' got invalid value 'DATA_BLOCK_DNE'; Value "
                     "'DATA_BLOCK_DNE' does not exist in 'BlockType' enum. Did you "
                     "mean the enum value 'DATA_BLOCK'?",
+                    "path": None,
+                }
+            ],
+        )
+
+    def test_adds_to_block_metadata_failure_missing_input(self):
+        block_name = "Test Block"
+        inputs = []
+        validations = {}
+        output_interface = {"interface": ["timestamp", "order"]}
+
+        response, content = self.query(
+            self.MUTATION,
+            headers={"HTTP_AUTHORIZATION": f"Bearer {self.auth['token']}"},
+            variables={
+                "blockName": block_name,
+                "inputs": inputs,
+                "validations": validations,
+                "outputInterface": output_interface,
+            },
+        )
+        self.assertResponseHasErrors(response)
+        self.assertEqual(
+            content["errors"],
+            [
+                {
+                    "locations": [{"column": 36, "line": 2}],
+                    "message": "Variable '$blockType' of required type 'BlockType!' was not "
+                    "provided.",
                     "path": None,
                 }
             ],

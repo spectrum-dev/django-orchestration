@@ -1,5 +1,4 @@
 from ariadne import convert_kwargs_to_snake_case
-from django.db import IntegrityError
 from django.db.models import Max
 
 from orchestrator.interface import (
@@ -63,20 +62,22 @@ def create_block_metadata(
     block_id = BlockRegistry.objects.filter(block_type=block_type).aggregate(
         max_block_id=Max("block_id")
     )["max_block_id"]
+    # block_id will be None if corresponding block_type DNE yet, in which case we want to start ID at 1
     block_id = (block_id or 0) + 1
-    try:
-        # TODO: Do we need to validate that block_name is unique as well for frontend purposes?
-        block_registry = BlockRegistry.objects.create(
-            block_type=block_type,
-            block_id=block_id,
-            block_name=block_name,
-            inputs=inputs,
-            validations=validations,
-            output_interface=output_interface,
-        )
-        return {"uniqueBlockId": block_registry.id, "blockId": block_id, "status": True}
-    except IntegrityError:
-        return {"status": False}
+
+    block_registry = BlockRegistry.objects.create(
+        block_type=block_type,
+        block_id=block_id,
+        block_name=block_name,
+        inputs=inputs,
+        validations=validations,
+        output_interface=output_interface,
+    )
+    return {
+        "unique_block_id": block_registry.id,
+        "block_id": block_registry.block_id,
+        "status": True,
+    }
 
 
 def get_validate_flow(*_, nodeList, edgeList):
