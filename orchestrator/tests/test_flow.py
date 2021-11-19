@@ -5,7 +5,7 @@ from django.test import TestCase
 from authentication.factories import set_up_authentication
 from orchestrator.exceptions import MultipleBacktestBlocksException
 from orchestrator.services.flow.spectrum_flow import SpectrumFlow
-from orchestrator.tests.data.test_data_flow_mock import (
+from orchestrator.tests.data.fixture_mock import (
     MULTIPLE_STRATEGY_BLOCK_MOCK_RESPONSE,
     GenericCeleryMockClass,
 )
