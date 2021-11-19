@@ -27,6 +27,6 @@ type BlockMetadata {
 }
 
 type BlockMetadataStatus {
-    uniqueBlockId: Int
-    blockId: Int
+    uniqueBlockId: Int!
+    blockId: Int!
 }
