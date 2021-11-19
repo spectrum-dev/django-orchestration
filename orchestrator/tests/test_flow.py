@@ -5,13 +5,9 @@ from django.test import TestCase
 from authentication.factories import set_up_authentication
 from orchestrator.exceptions import MultipleBacktestBlocksException
 from orchestrator.services.flow.spectrum_flow import SpectrumFlow
-from orchestrator.tests.data.fixture_mock import (
-    MULTIPLE_STRATEGY_BLOCK_MOCK_RESPONSE,
-    GenericCeleryMockClass,
-)
 
 # Test Data
-from orchestrator.tests.data.test_flow_data import (
+from orchestrator.tests.data.fixture_data import (
     AND_BLOCK_SELECTS_CORRECT_PAYLOAD_AND_RETURNS_OK,
     AND_BLOCK_SELECTS_CORRECT_PAYLOAD_AND_RETURNS_OK_RESPONSE,
     BLOCK_DNE_IN_ASSEMBLED_DEPENDENCY_LIST_BUT_IN_REQUIRED_FIELDS_RESPONSE,
@@ -30,6 +26,10 @@ from orchestrator.tests.data.test_flow_data import (
     SINGLE_NODE_DATA_FLOW_RETURNS_OK,
     TWO_NODE_INVALID_CONNECTION_RETURNS_002,
     TWO_NODE_NOT_CONNECTED_RETURNS_004,
+)
+from orchestrator.tests.data.fixture_mock import (
+    MULTIPLE_STRATEGY_BLOCK_MOCK_RESPONSE,
+    GenericCeleryMockClass,
 )
 
 
