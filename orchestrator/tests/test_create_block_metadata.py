@@ -12,7 +12,7 @@ class CreateBlockMetadataTest(GraphQLTestCase):
                     blockType
                     blockId
                     inputs
-                    validations
+                    validation
                     outputInterface
                 }
             }
@@ -74,7 +74,7 @@ class CreateBlockMetadataTest(GraphQLTestCase):
                             "fieldType": "input",
                         }
                     ],
-                    "validations": {
+                    "validation": {
                         "input": {
                             "required": [{"blockType": ["DATA_BLOCK"], "number": 1}],
                             "allowed_blocks": [

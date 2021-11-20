@@ -25,7 +25,7 @@ def get_block_metadata(*_, blockType, blockId):
             "block_type": block_registry.block_type,
             "block_id": block_registry.block_id,
             "inputs": block_registry.inputs,
-            "validations": block_registry.validations,
+            "validation": block_registry.validations,
             "output_interface": block_registry.output_interface,
         }
 
@@ -78,7 +78,7 @@ def create_block_metadata(
         "block_type": block_registry.block_type,
         "block_id": block_registry.block_id,
         "inputs": block_registry.inputs,
-        "validations": block_registry.validations,
+        "validation": block_registry.validations,
         "output_interface": block_registry.output_interface,
     }
 
