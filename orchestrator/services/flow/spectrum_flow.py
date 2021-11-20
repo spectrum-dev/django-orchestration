@@ -384,7 +384,7 @@ class SpectrumFlow:
 
         return {"isValid": True, "code": "VALIDATE-OK", "description": ""}
 
-    def celery_send_helper(block_id_in_flow, payload):
+    def celery_send_helper(self, block_id_in_flow, payload):
         """
         Helper function that invokes the low-level celery
         function 'send_task' and sends a request payload
@@ -429,7 +429,9 @@ class SpectrumFlow:
 
                     del payload["outputs"]["ref"]
 
-                response = self.celery_send_helper(block, payload)
+                response = self.celery_send_helper(
+                    block_id_in_flow=block, payload=payload
+                )
                 queued_items.append(response)
 
             for queued_item in queued_items:
