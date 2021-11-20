@@ -55,24 +55,24 @@ def get_all_metadata(*_, strategy_type):
     return response
 
 
-@convert_kwargs_to_snake_case
 def create_block_metadata(
-    *_, block_type, block_name, inputs, validations, output_interface
+    *_, blockType, blockName, inputs, validations, outputInterface
 ):
-    block_id = BlockRegistry.objects.filter(block_type=block_type).aggregate(
+    block_id = BlockRegistry.objects.filter(block_type=blockType).aggregate(
         max_block_id=Max("block_id")
     )["max_block_id"]
     # block_id will be None if corresponding block_type DNE yet, in which case we want to start ID at 1
     block_id = (block_id or 0) + 1
 
     block_registry = BlockRegistry.objects.create(
-        block_type=block_type,
+        block_type=blockType,
         block_id=block_id,
-        block_name=block_name,
+        block_name=blockName,
         inputs=inputs,
         validations=validations,
-        output_interface=output_interface,
+        output_interface=outputInterface,
     )
+    
     return {
         "block_name": block_registry.block_name,
         "block_type": block_registry.block_type,
