@@ -11,7 +11,7 @@ class MetadataViewTest(GraphQLTestCase):
                     blockType
                     blockId
                     inputs
-                    validations
+                    validation
                     outputInterface
                 }
             }
@@ -66,7 +66,7 @@ class MetadataViewTest(GraphQLTestCase):
                             "fieldVariableNames": ["start_date", "end_date"],
                         },
                     ],
-                    "validations": {
+                    "validation": {
                         "input": {"required": [], "allowed_blocks": []},
                         "output": [{"number": 1, "blockType": "DATA_BLOCK"}],
                     },

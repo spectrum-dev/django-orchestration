@@ -22,6 +22,6 @@ type BlockMetadata {
     blockType: BlockType!
     blockId: Int!
     inputs: [JSON!]
-    validations: JSON!
+    validation: JSON!
     outputInterface: JSON!
 }
