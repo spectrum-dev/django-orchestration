@@ -25,7 +25,7 @@ def get_block_metadata(*_, blockType, blockId):
             "block_type": block_registry.block_type,
             "block_id": block_registry.block_id,
             "inputs": block_registry.inputs,
-            "validation": block_registry.validations,
+            "validations": block_registry.validations,
             "output_interface": block_registry.output_interface,
         }
 
