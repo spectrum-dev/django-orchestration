@@ -18,7 +18,6 @@ class CreateBlockMetadataTest(GraphQLTestCase):
         """
         self.auth = set_up_authentication()
 
-    maxDiff = None
 
     def test_adds_to_block_metadata_successfully(self):
         block_type = "STRATEGY_BLOCK"
