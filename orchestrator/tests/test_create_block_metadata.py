@@ -66,24 +66,22 @@ class CreateBlockMetadataTest(GraphQLTestCase):
                 "blockMetadata": {
                     "blockName": "Test Block",
                     "blockType": "STRATEGY_BLOCK",
-                    "blockId": 3,  # Intentionally flaky test, strategy blocks should rarely be implemented but will increment if more blocks become available
+                    "blockId": 3,
                     "inputs": [
                         {
-                            "field_name": "Commission ($)",
-                            "field_variable_name": "commission",
-                            "field_type": "input",
-                        },
+                            "fieldName": "Commission ($)",
+                            "fieldVariableName": "commission",
+                            "fieldType": "input",
+                        }
                     ],
                     "validations": {
                         "input": {
-                            "required": [
-                                {"block_type": ["DATA_BLOCK"], "number": 1},
-                            ],
+                            "required": [{"blockType": ["DATA_BLOCK"], "number": 1}],
                             "allowed_blocks": [
-                                {"block_id": "1", "block_type": "SIGNAL_BLOCK"},
+                                {"blockId": "1", "blockType": "SIGNAL_BLOCK"}
                             ],
                         },
-                        "output": [{"block_type": "STRATEGY_BLOCK", "number": 1}],
+                        "output": [{"blockType": "STRATEGY_BLOCK", "number": 1}],
                     },
                     "outputInterface": {"interface": ["timestamp", "order"]},
                 }

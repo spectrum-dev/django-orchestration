@@ -72,7 +72,7 @@ def create_block_metadata(
         validations=validations,
         output_interface=outputInterface,
     )
-    
+
     return {
         "block_name": block_registry.block_name,
         "block_type": block_registry.block_type,
