@@ -21,7 +21,7 @@ type BlockMetadata {
     blockName: String!
     blockType: BlockType!
     blockId: Int!
-    inputs: JSON!
-    validation: JSON!
+    inputs: [JSON!]
+    validations: JSON!
     outputInterface: JSON!
 }

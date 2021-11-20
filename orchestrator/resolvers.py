@@ -1,4 +1,5 @@
 from ariadne import convert_kwargs_to_snake_case
+from django.db.models import Max
 
 from orchestrator.interface import (
     get_input_dependency_graph as get_input_dependency_graph_interface,
@@ -24,7 +25,7 @@ def get_block_metadata(*_, blockType, blockId):
             "block_type": block_registry.block_type,
             "block_id": block_registry.block_id,
             "inputs": block_registry.inputs,
-            "validation": block_registry.validations,
+            "validations": block_registry.validations,
             "output_interface": block_registry.output_interface,
         }
 
@@ -52,6 +53,34 @@ def get_all_metadata(*_, strategy_type):
         del response["STRATEGY_BLOCK"]
 
     return response
+
+
+def create_block_metadata(
+    *_, blockType, blockName, inputs, validations, outputInterface
+):
+    block_id = BlockRegistry.objects.filter(block_type=blockType).aggregate(
+        max_block_id=Max("block_id")
+    )["max_block_id"]
+    # block_id will be None if corresponding block_type DNE yet, in which case we want to start ID at 1
+    block_id = (block_id or 0) + 1
+
+    block_registry = BlockRegistry.objects.create(
+        block_type=blockType,
+        block_id=block_id,
+        block_name=blockName,
+        inputs=inputs,
+        validations=validations,
+        output_interface=outputInterface,
+    )
+
+    return {
+        "block_name": block_registry.block_name,
+        "block_type": block_registry.block_type,
+        "block_id": block_registry.block_id,
+        "inputs": block_registry.inputs,
+        "validations": block_registry.validations,
+        "output_interface": block_registry.output_interface,
+    }
 
 
 def get_validate_flow(*_, nodeList, edgeList):
