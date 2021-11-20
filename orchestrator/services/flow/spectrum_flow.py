@@ -384,6 +384,25 @@ class SpectrumFlow:
 
         return {"isValid": True, "code": "VALIDATE-OK", "description": ""}
 
+    def celery_send_helper(block_id_in_flow, payload):
+        """
+        Helper function that invokes the low-level celery
+        function 'send_task' and sends a request payload
+        """
+        output_key = f"{payload['blockType']}-{payload['blockId']}-{block_id_in_flow}"
+
+        if "data" in payload:
+            return (output_key, None, payload["data"])
+
+        task = current_app.send_task(
+            "blocks.celery.event_ingestor",
+            args=(payload,),
+            queue="blocks",
+            routing_key="block_task",
+        )
+
+        return (output_key, task, None)
+
     def run(self):
         """
         Takes a queue of operations that need to be run and a
@@ -393,27 +412,6 @@ class SpectrumFlow:
         Outputs:
             - An output cache
         """
-
-        def send_helper(block_id_in_flow, payload):
-            """
-            Helper function that invokes the low-level celery
-            function 'send_task' and sends a request payload
-            """
-            output_key = (
-                f"{payload['blockType']}-{payload['blockId']}-{block_id_in_flow}"
-            )
-
-            if "data" in payload:
-                return (output_key, None, payload["data"])
-
-            task = current_app.send_task(
-                "blocks.celery.event_ingestor",
-                args=(payload,),
-                queue="blocks",
-                routing_key="block_task",
-            )
-
-            return (output_key, task, None)
 
         for tasks in self.batched_tasks:
             queued_items = []
@@ -431,7 +429,7 @@ class SpectrumFlow:
 
                     del payload["outputs"]["ref"]
 
-                response = send_helper(block, payload)
+                response = self.celery_send_helper(block, payload)
                 queued_items.append(response)
 
             for queued_item in queued_items:
