@@ -1,5 +1,6 @@
 from authentication.factories import set_up_authentication
 from orchestration.test_utils import GraphQLTestCase
+from orchestrator.models import BlockRegistry
 
 
 class CreateBlockMetadataTest(GraphQLTestCase):
@@ -17,7 +18,6 @@ class CreateBlockMetadataTest(GraphQLTestCase):
             }
         """
         self.auth = set_up_authentication()
-
 
     def test_adds_to_block_metadata_successfully(self):
         block_type = "STRATEGY_BLOCK"
@@ -54,6 +54,12 @@ class CreateBlockMetadataTest(GraphQLTestCase):
             },
         )
         self.assertResponseNoErrors(response)
+        block_registry = BlockRegistry.objects.get(
+            block_id=3, block_type="STRATEGY_BLOCK"
+        )
+        self.assertListEqual(block_registry.inputs, inputs)
+        self.assertDictEqual(block_registry.validations, validations)
+        self.assertDictEqual(block_registry.output_interface, output_interface)
         self.assertDictEqual(
             content["data"],
             {
