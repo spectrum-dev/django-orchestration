@@ -10,7 +10,7 @@ certifi==2021.10.8
 cffi==1.15.0
 chardet==4.0.0
 click==8.0.3
-coverage==6.1.2
+coverage==6.2
 cryptography==35.0.0
 defusedxml==0.7.1
 Django==3.2.9
