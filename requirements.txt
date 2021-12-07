@@ -13,7 +13,7 @@ click==8.0.3
 coverage==6.2
 cryptography==36.0.0
 defusedxml==0.7.1
-Django==3.2.9
+Django==3.2.10
 django-admin==2.0.1
 django-allauth==0.46.0
 django-celery-results==2.2.0
