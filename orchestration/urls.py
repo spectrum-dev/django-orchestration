@@ -15,9 +15,8 @@ Including another URLconf
 """
 from ariadne_django.views import GraphQLView
 from django.conf import settings
-from django.conf.urls import include, url
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 from django.views.static import serve
 
 import authentication.views
@@ -26,7 +25,7 @@ from authentication.graphql import get_user_context
 from orchestration.graphql_config import schema
 
 urlpatterns = [
-    url(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
+    path(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
     path(
         "graphql/",
         GraphQLView.as_view(schema=schema, context_value=get_user_context),
@@ -38,7 +37,7 @@ urlpatterns = [
         authentication.views.GoogleLogin.as_view(),
         name="google_login",
     ),
-    url(r"^authentication/", include("allauth.urls"), name="socialaccount_signup"),
+    path(r"^authentication/", include("allauth.urls"), name="socialaccount_signup"),
     path(
         "orchestration/<block_type>/<block_id>/<action_name>",
         orchestrator.views.ProxyBlockActionView.as_view(),
