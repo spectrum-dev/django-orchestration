@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "rest_auth",
     # django celery
+    "django_celery_beat",
     "django_celery_results",
     # for social login
     "allauth",
@@ -210,3 +211,5 @@ CELERY_TASK_ROUTES = {
         "routing_key": "screener_task",
     }
 }
+
+CELERYBEAT_SCHEDULER = "django_celery_beat.schedulers.DatabaseScheduler"
