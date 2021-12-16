@@ -25,14 +25,14 @@ django-excel-base==1.0.4
 django-excel-response2==3.0.2
 django-rest-auth==0.9.5
 django-six==1.0.4
-djangorestframework==3.13.0
+djangorestframework==3.13.1
 empyrical==0.5.5
 factory-boy==3.2.1
 Faker==10.0.0
 gunicorn==20.1.0
 idna==3.3
 isort==5.10.1
-lazy-object-proxy==1.7.0
+lazy-object-proxy==1.7.1
 mccabe==0.6.1
 mypy-extensions==0.4.3
 oauthlib==3.1.1
