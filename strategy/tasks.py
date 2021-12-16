@@ -62,7 +62,7 @@ def run_screener(node_list, edge_list):
 @app.task
 def scheduled_run_strategy():
     # TODO: How to build node list and edge list from strategy data?
-    # scheduled_strategies = ScheduledUserStrategy.objects.filter(next_run_at__lt=datetime.utcnow())
+    # scheduled_strategies = ScheduledStrategy.objects.filter(next_run_at__lt=datetime.utcnow())
     # for scheduled_strategy in scheduled_strategies:
     #     task = app.send_task(
     #         "strategy.tasks.run_strategy",
@@ -74,3 +74,4 @@ def scheduled_run_strategy():
     print("*" * 100)
     print(3)
     print("*" * 100)
+    return True

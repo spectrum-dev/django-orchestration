@@ -53,8 +53,8 @@ class Strategy(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class ScheduledUserStrategy(models.Model):
-    user_strategy = models.ForeignKey(UserStrategy, on_delete=models.CASCADE)
+class ScheduledStrategy(models.Model):
+    user_strategy = models.ForeignKey(Strategy, on_delete=models.CASCADE)
     last_run_at = models.DateTimeField(null=True, blank=True)
     next_run_at = models.DateTimeField(null=True, blank=True)
     cron_expression = models.CharField(max_length=200)
