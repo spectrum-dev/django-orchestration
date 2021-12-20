@@ -209,15 +209,15 @@ def create_strategy(_, info, strategyId, metadata, inputs, outputs, commitId=Non
         commit_id = commitId
         if not commitId:
             commit_id = uuid.uuid4()
-        
+
         Strategy.objects.update_or_create(
             strategy=strategy,
             commit=commit_id,
             defaults={
-                'flow_metadata': metadata,
-                'input': inputs,
-                'output': outputs,
-            }
+                "flow_metadata": metadata,
+                "input": inputs,
+                "output": outputs,
+            },
         )
 
         return True
