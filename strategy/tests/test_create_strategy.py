@@ -90,8 +90,8 @@ class CreateStrategyTest(GraphQLTestCase):
             output={"1": {}},
         )
 
-        updated_payload = {'updated': True}
-        
+        updated_payload = {"updated": True}
+
         response, content = self.query(
             self.MUTATION,
             headers={"HTTP_AUTHORIZATION": f"Bearer {self.auth['token']}"},
@@ -103,16 +103,17 @@ class CreateStrategyTest(GraphQLTestCase):
                 "metadata": updated_payload,
             },
         )
-        
-        updated_strategy = Strategy.objects.get(strategy=user_strategy, commit=commit_id)
+
+        updated_strategy = Strategy.objects.get(
+            strategy=user_strategy, commit=commit_id
+        )
 
         self.assertResponseNoErrors(response)
         self.assertDictEqual(content["data"], {"strategy": True})
-        
+
         self.assertDictEqual(updated_strategy.flow_metadata, updated_payload)
         self.assertDictEqual(updated_strategy.input, updated_payload)
         self.assertDictEqual(updated_strategy.output, updated_payload)
-
 
     def test_strategy_id_not_valid(self):
         strategy_id = "strategy_id_invalid"
