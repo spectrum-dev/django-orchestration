@@ -209,18 +209,18 @@ def create_strategy(_, info, strategyId, metadata, inputs, outputs, commitId=Non
         commit_id = commitId
         if not commitId:
             commit_id = uuid.uuid4()
-
-        Strategy.objects.create(
+        
+        Strategy.objects.update_or_create(
             strategy=strategy,
             commit=commit_id,
-            flow_metadata=metadata,
-            input=inputs,
-            output=outputs,
+            defaults={
+                'flow_metadata': metadata,
+                'input': inputs,
+                'output': outputs,
+            }
         )
 
         return True
-    except IntegrityError:
-        raise Exception("The strategy-commit pair already exist")
     except ValidationError:
         raise Exception("There was a validation error")
 
