@@ -403,7 +403,7 @@ class SpectrumFlow:
 
         return (output_key, task, None)
 
-    def run(self, log_trades=False):
+    def run(self):
         """
         Takes a queue of operations that need to be run and a
         dictionary mapping of what each request payload should
@@ -456,9 +456,6 @@ class SpectrumFlow:
 
         if len(backtest_block) == 1:
             self.outputs["results"] = main(self.outputs[backtest_block[0]])
-            if log_trades:
-                # TODO: log trades in DB
-                pass
         elif len(backtest_block) > 1:
             raise MultipleBacktestBlocksException
 

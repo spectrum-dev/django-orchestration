@@ -67,21 +67,3 @@ class ScheduledStrategy(models.Model):
         iter = croniter(self.cron_expression, self.last_run_at)
         self.next_run_at = iter.get_next(datetime)
         super().save(*args, **kwargs)
-
-
-class Trade(models.Model):
-    strategy = models.ForeignKey(Strategy, on_delete=models.CASCADE)
-    trade_id = models.UUIDField(default=uuid.uuid4)
-    timestamp = models.DateTimeField()
-    order = models.CharField(
-        choices=[
-            ("BUY", "BUY"),
-            ("SELL", "SELL"),
-        ]
-    )
-    cash_allocated = models.DecimalField(decimal_places=2)
-    units = models.DecimalField(decimal_places=2)
-    amount_invested = models.DecimalField(decimal_places=2)
-
-    class Meta:
-        unique_together = ("strategy", "timestamp")
