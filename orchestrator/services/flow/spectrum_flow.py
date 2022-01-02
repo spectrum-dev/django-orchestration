@@ -1,13 +1,9 @@
 from celery import current_app
 from celery.result import allow_join_result
 
-from orchestrator.exceptions import (
-    MultipleBacktestBlocksException,
-    ScreenerBulkDataBlockDneException,
-)
+from orchestrator.exceptions import ScreenerBulkDataBlockDneException
 from orchestrator.models import BlockRegistry
 from orchestrator.services.flow.graph import DependencyGraph
-from orchestrator.services.results.main import main
 
 
 class SpectrumFlow:
@@ -17,6 +13,7 @@ class SpectrumFlow:
         self.input_payloads = {}
         # TODO: Can populate this from the database to perform some caching optimization
         self.outputs = {}
+        self.signals = {}
         self.edge_validation = {}
 
         graph = DependencyGraph(vertices, edges)
@@ -412,7 +409,6 @@ class SpectrumFlow:
         Outputs:
             - An output cache
         """
-
         for tasks in self.batched_tasks:
             queued_items = []
             for block in tasks:
@@ -449,15 +445,15 @@ class SpectrumFlow:
                     else:
                         self.outputs[output_key] = provided_data
 
-        # Checks whether a single backtest block exists, and if so run the results dashboard
-        backtest_block = [
-            string for string in self.outputs.keys() if "STRATEGY_BLOCK" in string
-        ]
-
-        if len(backtest_block) == 1:
-            self.outputs["results"] = main(self.outputs[backtest_block[0]])
-        elif len(backtest_block) > 1:
-            raise MultipleBacktestBlocksException
+        # Extracts signals
+        last_tasks = self.batched_tasks[-1]
+        if len(last_tasks) == 1:
+            last_task_id = last_tasks.pop()
+            last_block_data = self.get_block_in_flow_by_id(last_task_id)
+            if last_block_data["blockType"] == "SIGNAL_BLOCK":
+                for key in self.outputs.keys():
+                    if key.split("-")[2] == last_task_id:
+                        self.signals = self.outputs[key]
 
         return True
 
