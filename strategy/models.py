@@ -1,7 +1,10 @@
 import uuid
+from datetime import datetime
 
+from croniter import croniter
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 
 # Create your models here.
@@ -48,3 +51,19 @@ class Strategy(models.Model):
     output = models.JSONField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class ScheduledStrategy(models.Model):
+    strategy = models.ForeignKey(Strategy, on_delete=models.CASCADE)
+    last_run_at = models.DateTimeField(null=True, blank=True)
+    next_run_at = models.DateTimeField(null=True, blank=True)
+    cron_expression = models.CharField(max_length=200)
+
+    def save(self, *args, **kwargs):
+        """
+        function to evaluate "next_run_at" using the cron expression, so that it is updated once the report is sent.
+        """
+        self.last_run_at = timezone.now()
+        iter = croniter(self.cron_expression, self.last_run_at)
+        self.next_run_at = iter.get_next(datetime)
+        super().save(*args, **kwargs)

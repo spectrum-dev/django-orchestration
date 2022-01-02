@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "rest_auth",
     # django celery
+    "django_celery_beat",
     "django_celery_results",
     # for social login
     "allauth",
@@ -193,6 +194,7 @@ WSGI_APPLICATION = "orchestration.wsgi.application"
 CELERY_RESULT_BACKEND = f'db+postgresql://{environ["DATABASE_USER"]}:{environ["DATABASE_PASSWORD"]}@{environ["DATABASE_HOST"]}:{environ["DATABASE_PORT"]}/{environ["CELERY_BACKEND_DATABASE_NAME"]}'
 CELERY_CACHE_BACKEND = "django-cache"
 CELERY_BROKER_URL = environ["RABBIT_MQ_URL"]
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"

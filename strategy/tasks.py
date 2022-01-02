@@ -57,3 +57,24 @@ def run_screener(node_list, edge_list):
                 result.append({"timestamp": signal["timestamp"], "ticker": ticker})
 
     return {signal_key: result}
+
+
+@app.task
+def scheduled_run_strategy():
+    print("Placeholder")
+    # scheduled_strategies = ScheduledStrategy.objects.filter(
+    #     next_run_at__lt=datetime.utcnow()
+    # )
+    # for scheduled_strategy in scheduled_strategies:
+    #     task = app.send_task(
+    #         "strategy.tasks.run_strategy",
+    #         queue="backtest",
+    #         routing_key="backtest_task",
+    #         args=(
+    #             scheduled_strategy.input,
+    #             scheduled_strategy.flow_metadata,
+    #             True,
+    #         ),  # Is this correct?
+    #     )
+    #     scheduled_strategy.save()
+    return True
