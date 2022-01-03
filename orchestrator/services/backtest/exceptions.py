@@ -1,0 +1,2 @@
+class StrategyBlockOneInvalidInputPayloadException(Exception):
+    pass
