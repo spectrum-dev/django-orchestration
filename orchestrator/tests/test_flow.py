@@ -3,7 +3,6 @@ from unittest import mock
 from django.test import TestCase
 
 from authentication.factories import set_up_authentication
-from orchestrator.exceptions import MultipleBacktestBlocksException
 from orchestrator.services.flow.spectrum_flow import SpectrumFlow
 
 # Test Data
@@ -19,7 +18,6 @@ from orchestrator.tests.data.fixture_data import (
     MOVING_AVERAGE_CROSSOVER_RETURNS_RESPONSE,
     MULTIPLE_INCOMING_BLOCKS_OF_DIFFERENT_TYPES_RETURNS_OK,
     MULTIPLE_INCOMING_BLOCKS_OF_DIFFERENT_TYPES_RETURNS_OK_RESPONSE,
-    MULTIPLE_STRATEGY_BLOCKS_RAISE_EXCEPTION,
     SINGLE_BLOCK_ALLOWING_SINGLE_INPUT_ALLOWS_BLOCKS_OF_MULTIPLE_TYPES_RETURNS_OK,
     SINGLE_BLOCK_ALLOWING_SINGLE_INPUT_ALLOWS_BLOCKS_OF_MULTIPLE_TYPES_RETURNS_OK_RESPONSE,
     SINGLE_NODE_DATA_FLOW_RETURNS_003,
@@ -27,10 +25,7 @@ from orchestrator.tests.data.fixture_data import (
     TWO_NODE_INVALID_CONNECTION_RETURNS_002,
     TWO_NODE_NOT_CONNECTED_RETURNS_004,
 )
-from orchestrator.tests.data.fixture_mock import (
-    MULTIPLE_STRATEGY_BLOCK_MOCK_RESPONSE,
-    GenericCeleryMockClass,
-)
+from orchestrator.tests.data.fixture_mock import GenericCeleryMockClass
 
 
 class SpectrumFlowValidateTest(TestCase):
@@ -272,15 +267,3 @@ class SpectrumFlowRunTest(TestCase):
             spectrum_event_flow.run(),
             True,
         )
-
-    @mock.patch(
-        "orchestrator.services.flow.spectrum_flow.SpectrumFlow.celery_send_helper",
-        side_effect=MULTIPLE_STRATEGY_BLOCK_MOCK_RESPONSE,
-    )
-    def test_failure_multiple_strategy_blocks(self, mock_spectrum_flow):
-        with self.assertRaises(MultipleBacktestBlocksException):
-            spectrum_event_flow = SpectrumFlow(
-                MULTIPLE_STRATEGY_BLOCKS_RAISE_EXCEPTION["nodeList"],
-                MULTIPLE_STRATEGY_BLOCKS_RAISE_EXCEPTION["edgeList"],
-            )
-            spectrum_event_flow.run()
