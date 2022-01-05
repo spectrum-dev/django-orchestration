@@ -28,7 +28,7 @@ django-six==1.0.4
 djangorestframework==3.13.1
 empyrical==0.5.5
 factory-boy==3.2.1
-Faker==11.1.0
+Faker==11.3.0
 gunicorn==20.1.0
 idna==3.3
 isort==5.10.1
