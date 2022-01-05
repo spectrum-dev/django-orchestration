@@ -255,7 +255,7 @@ class SpectrumFlowRunTest(TestCase):
     )
     def test_monitor_all(self, mock_spectrum_flow):
         mock_spectrum_flow.return_value = (
-            "FOO_BLOCK-99-4",
+            "FOO_BLOCK-99-1",
             GenericCeleryMockClass(),
             None,
         )
