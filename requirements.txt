@@ -2,7 +2,7 @@ appdirs==1.4.4
 ariadne==0.14.0
 ariadne-django==0.2.0
 asgiref==3.4.1
-astroid==2.9.2
+astroid==2.9.3
 autoflake==1.4.0
 black==21.5b2
 celery==5.2.3
