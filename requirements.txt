@@ -16,7 +16,7 @@ cryptography==36.0.1
 defusedxml==0.7.1
 Django==3.2.12
 django-admin==2.0.1
-django-allauth==0.48.0
+django-allauth==0.49.0
 django-celery-beat==2.2.1
 django-celery-results==2.2.0
 django-cors-headers==3.11.0
