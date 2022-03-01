@@ -33,7 +33,7 @@ gunicorn==20.1.0
 idna==3.3
 isort==5.10.1
 lazy-object-proxy==1.7.1
-mccabe==0.6.1
+mccabe==0.7.0
 mypy-extensions==0.4.3
 oauthlib==3.2.0
 pandas==1.4.1
