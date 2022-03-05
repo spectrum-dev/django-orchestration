@@ -16,10 +16,4 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 # load tasks.py in django apps
 app.autodiscover_tasks()
 
-app.conf.beat_schedule = {
-    "run-every-15-seconds": {
-        "task": "strategy.tasks.scheduled_run_strategy",
-        "schedule": 15.0,
-        "options": {"queue": "backtest", "routing_key": "backtest_task"},
-    }
-}
+app.conf.beat_schedule = {}

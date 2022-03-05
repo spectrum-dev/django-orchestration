@@ -18,7 +18,7 @@ type_defs = [
     load_schema_from_path("strategy/schema.graphql"),
 ]
 
-# Query Implementations
+# Queries
 query = QueryType()
 query.set_field(
     "accountWhitelistStatus", authentication.resolvers.get_account_whitelist_status
@@ -37,7 +37,7 @@ query.set_field(
     "inputDependencyGraph", orchestrator.resolvers.get_input_dependency_graph
 )
 
-# Mutation Implementations
+# Mutations
 mutation = MutationType()
 
 mutation.set_field(
