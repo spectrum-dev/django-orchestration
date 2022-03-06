@@ -1,7 +1,7 @@
 # Spectrum (Backend)
 ## _Orchestration Service_
 
-![django](https://logodix.com/logo/1758961.png)
+<img src='https://camo.githubusercontent.com/d4d20d5aec9e28160c88c042ef37001b754a9ff5b30bb790164ed3fddb9e9b51/687474703a2f2f7777772e69636f6e617263686976652e636f6d2f646f776e6c6f61642f6937333032372f636f726e6d616e7468653372642f706c65782f4f746865722d707974686f6e2e69636f' width='50'> <img src='https://logodix.com/logo/1758961.png' width='50'>
 
 This reposiory manages the:
 
